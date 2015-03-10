@@ -1,0 +1,12 @@
+Package: mctoolsr
+Type: Package
+Title: microbial_community_analysis_tools
+Version: 0.0.0.9000
+Date: 2015-02-16
+Authors@R: person("Jonathan", "Leff", email = "jonathan.leff@colorado.edu", role = c("aut", "cre"))
+Maintainer: Jonathan Leff <jonathan.leff@colorado.edu>
+URL: https://github.com/leffj
+Description: This is to aid microbial community analysis
+License: GPL-3
+Imports: dplyr,
+    ggplot2
