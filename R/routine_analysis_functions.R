@@ -221,14 +221,14 @@ plot_ordination = function(data, ordination_axes, color_cat, shape_cat){
     to_plot = data.frame(to_plot, cat2 = data$map_loaded[,shape_cat])
     ggplot(to_plot, aes_string(headers[1], headers[2])) +
       geom_point(size = 3, alpha = 0.8, aes(color = cat, shape = cat2)) + theme_bw() +
-      scale_color_discrete('') + scale_shape_discrete('') +
+#       scale_color_discrete('') + scale_shape_discrete('') +
       xlab(colnames(to_plot)[1]) + ylab(colnames(to_plot)[2])
   }
   # plot without shape
   else{
     ggplot(to_plot, aes_string(headers[1], headers[2])) +
       geom_point(size = 3, alpha = 0.8, aes(color=cat)) + theme_bw() +
-      scale_color_discrete('') + scale_shape_discrete('') +
+#       scale_color_discrete('') + scale_shape_discrete('') +
       xlab(colnames(to_plot)[1]) + ylab(colnames(to_plot)[2])
   }
 }
