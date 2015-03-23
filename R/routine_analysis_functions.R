@@ -17,8 +17,9 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   require(biom)
   # load data
   if(file_ext(tab_fp) == 'biom'){
-    data = read_biom(tab_fp)
-    data = as.data.frame(as.matrix(biom_data(data)))
+    data_b = read_biom(tab_fp)
+    data = as.data.frame(as.matrix(biom_data(data_b)))
+    data_taxonomy = compile_taxonomy(data_b)
   }
   else if(file_ext(tab_fp) == 'txt'){
     data = read.table(tab_fp,sep='\t',skip=1,comment.char='',header=T,check.names=F,row.names=1)
@@ -47,8 +48,49 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   data.use = data[,match(samplesToUse,names(data))]
   data.use = data.use[rowSums(data.use)!=0,]
   map.use = map.f[match(samplesToUse,row.names(map.f)),]
-  # output
-  list(data_loaded = data.use, map_loaded = map.use)
+  if(exists('data_taxonomy')) {
+    data_taxonomy.use = data_taxonomy[match(row.names(data.use), row.names(data_taxonomy)), ]
+    list(data_loaded = data.use, map_loaded = map.use, data_taxonomy = data_taxonomy.use)
+  } else {
+    list(data_loaded = data.use, map_loaded = map.use)
+  }
+}
+
+
+# generates a data frame with all levels of taxanomic info as columns
+compile_taxonomy = function(biom_data){
+  # get only taxonomy observation metadata from a biom file
+  obs_md = observation_metadata(biom_data)
+  # replace label for otus with only 1 taxonomy level
+  obs_md = sapply(obs_md, function(x) {
+    names(x) = gsub('taxonomy$', 'taxonomy1', names(x))
+    list(x)})
+  # get the taxonomy levels
+  otu_full_md = names(which.max(sapply(obs_md, length))) # need to get the otu with all metadata levels
+  taxa_levels = names(obs_md[otu_full_md][[1]])[
+    grepl('taxonomy', names(obs_md[[1]]), ignore.case = TRUE)]
+  # compile taxonomy for each level
+  tax_comp = data.frame(row.names = names(obs_md))
+  for(l in 1:length(taxa_levels)){
+    level_tax_tmp = sapply(obs_md, function(x) x[taxa_levels[l]])
+    names(level_tax_tmp) = names(obs_md)
+    tax_comp[, taxa_levels[l]] = level_tax_tmp
+  }
+  tax_comp[is.na(tax_comp)] = 'unclassified'
+  tax_comp
+}
+
+# level is a single number referring to the taxonomic level
+# relative refers to whether output should be sequence counts or relative abundances
+# report_higher_tax indicates whether to display all higher taxonomic strings or just 
+  # the level of interest
+summarize_taxonomy = function(data, level, relative = TRUE, report_higher_tax = TRUE){
+  if(report_higher_tax) taxa_strings = apply(data$data_taxonomy[1:level], 1, paste0, collapse = '; ')
+  else taxa_strings = data$data_taxonomy[, level]
+  tax_sum = as.data.frame(apply(data$data_loaded, 2, function(x) by(x, taxa_strings, sum)))
+  if(relative){
+    tax_sum/colSums(data$data_loaded)
+  } else tax_sum
 }
 
 
@@ -156,13 +198,18 @@ filter_data = function(data, filter_cat, filter_vals, keep_vals){
     map.f = data$map_loaded[data$map_loaded[,filter_cat] %in% keep_vals, ]
   }
   else map.f = data$map_loaded
+  map.f[, filter_cat] = factor(map.f[, filter_cat])
   # match up data from dissimilarity matrix with mapping file
   samplesToUse = intersect(names(data$data_loaded),row.names(map.f))
   data.use = data$data_loaded[,match(samplesToUse,names(data$data_loaded))]
   data.use = data.use[rowSums(data.use)!=0,]
   map.use = map.f[match(samplesToUse,row.names(map.f)),]
-  # output
-  list(data_loaded = data.use, map_loaded = map.use)
+  if('data_taxonomy' %in% names(data)) {
+    data_taxonomy.use = data$data_taxonomy[match(row.names(data.use), row.names(data$data_taxonomy)), ]
+    list(data_loaded = data.use, map_loaded = map.use, data_taxonomy = data_taxonomy.use)
+  } else {
+    list(data_loaded = data.use, map_loaded = map.use)
+  }
 }
 
 filter_taxa = function(table, filter_thresh, taxa_to_keep, taxa_to_remove){
