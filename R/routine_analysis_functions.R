@@ -50,7 +50,7 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   map.use = map.f[match(samplesToUse,row.names(map.f)),]
   if(exists('data_taxonomy')) {
     data_taxonomy.use = data_taxonomy[match(row.names(data.use), row.names(data_taxonomy)), ]
-    list(data_loaded = data.use, map_loaded = map.use, data_taxonomy = data_taxonomy.use)
+    list(data_loaded = data.use, map_loaded = map.use, taxonomy_loaded = data_taxonomy.use)
   } else {
     list(data_loaded = data.use, map_loaded = map.use)
   }
