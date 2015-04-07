@@ -14,9 +14,9 @@
 #' @return A list variable with (1) the loaded taxon table, and (2) the loaded mapping file
 load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   require(tools)
-  require(biom)
   # load data
   if(file_ext(tab_fp) == 'biom'){
+    require(biom)
     data_b = read_biom(tab_fp)
     data = as.data.frame(as.matrix(biom_data(data_b)))
     data_taxonomy = compile_taxonomy(data_b)
@@ -96,9 +96,9 @@ summarize_taxonomy = function(data, level, relative = TRUE, report_higher_tax = 
 
 load_ts_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   require(tools)
-  require(biom)
   # load data
   if(file_ext(tab_fp) == 'biom'){
+    require(biom)
     data = read_biom(tab_fp)
     data = as.data.frame(as.matrix(biom_data(data)))
   }
