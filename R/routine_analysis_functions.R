@@ -85,7 +85,7 @@ compile_taxonomy = function(biom_data){
 # report_higher_tax indicates whether to display all higher taxonomic strings or just 
   # the level of interest
 summarize_taxonomy = function(data, level, relative = TRUE, report_higher_tax = TRUE){
-  if(report_higher_tax) taxa_strings = apply(data$data_taxonomy[1:level], 1, paste0, collapse = '; ')
+  if(report_higher_tax) taxa_strings = apply(data$taxonomy_loaded[1:level], 1, paste0, collapse = '; ')
   else taxa_strings = data$data_taxonomy[, level]
   tax_sum = as.data.frame(apply(data$data_loaded, 2, function(x) by(x, taxa_strings, sum)))
   if(relative){
@@ -199,14 +199,15 @@ filter_data = function(data, filter_cat, filter_vals, keep_vals){
   }
   else map.f = data$map_loaded
   map.f[, filter_cat] = factor(map.f[, filter_cat])
+  if(nrow(map.f) == 0) stop('All samples filtered out!')
   # match up data from dissimilarity matrix with mapping file
   samplesToUse = intersect(names(data$data_loaded),row.names(map.f))
   data.use = data$data_loaded[,match(samplesToUse,names(data$data_loaded))]
   data.use = data.use[rowSums(data.use)!=0,]
   map.use = map.f[match(samplesToUse,row.names(map.f)),]
-  if('data_taxonomy' %in% names(data)) {
-    data_taxonomy.use = data$data_taxonomy[match(row.names(data.use), row.names(data$data_taxonomy)), ]
-    list(data_loaded = data.use, map_loaded = map.use, data_taxonomy = data_taxonomy.use)
+  if('taxonomy_loaded' %in% names(data)) {
+    taxonomy_loaded.use = data$taxonomy_loaded[match(row.names(data.use), row.names(data$taxonomy_loaded)), ]
+    list(data_loaded = data.use, map_loaded = map.use, taxonomy_loaded = taxonomy_loaded.use)
   } else {
     list(data_loaded = data.use, map_loaded = map.use)
   }
@@ -233,6 +234,25 @@ export_otu_table = function(tab, tax_fp, seq_fp, outfp){
                        sequence = seqs[match(otus, row.names(seqs)),1])
   write.table(tab.out, outfp, sep='\t', col.names=NA)
 }
+
+
+single_rarefy = function(data, depth) {
+  require(vegan)
+  data_filt_samples = data$data_loaded[, colSums(data$data_loaded) >= depth]
+  data_rar = as.data.frame(t(rrarefy(t(data_filt_samples), depth)))
+  # match up data from dissimilarity matrix with mapping file
+  samplesToUse = intersect(names(data_rar), row.names(data$map_loaded))
+  data.use = data_rar[, match(samplesToUse, names(data_rar))]
+  data.use = data.use[rowSums(data.use) != 0,]
+  map.use = data$map_loaded[match(samplesToUse, row.names(data$map_loaded)), ]
+  if('taxonomy_loaded' %in% names(data)) {
+    taxonomy_loaded.use = data$taxonomy_loaded[match(row.names(data.use), row.names(data$taxonomy_loaded)), ]
+    list(data_loaded = data.use, map_loaded = map.use, taxonomy_loaded = taxonomy_loaded.use)
+  } else {
+    list(data_loaded = data.use, map_loaded = map.use)
+  }
+}
+
 
 calc_dm = function(tab){
   require(vegan)
