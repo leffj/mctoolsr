@@ -256,6 +256,11 @@ single_rarefy = function(data, depth) {
 
 calc_dm = function(tab){
   require(vegan)
+  # check for and warn about samples with no sequences
+  if(min(colSums(tab)) == 0){
+    warning('Some samples have no sequences. Samples with low sequence counts
+            should be filtered out by rarefying or another acceptable method.')
+  }
   # transform otu table (square root transformation)
   otuTable.xform = t(sqrt(tab))
   # create dissimilarity matrix from otu table
