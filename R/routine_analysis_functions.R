@@ -29,6 +29,7 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   }
   else stop('Input file must be either biom (.biom) or tab-delimited (.txt) format.')
   map = read.table(map_fp,sep='\t',comment.char='',header=T,check.names=F,row.names=1)
+  if(class(map) != 'data.frame') warning('Mapping file should have more than one metadata column.')
   # optionally, subset data
     # cant subset if trying to filter out certain values and keep certain values
     # use one or the other
@@ -86,7 +87,7 @@ compile_taxonomy = function(biom_data){
   # the level of interest
 summarize_taxonomy = function(data, level, relative = TRUE, report_higher_tax = TRUE){
   if(report_higher_tax) taxa_strings = apply(data$taxonomy_loaded[1:level], 1, paste0, collapse = '; ')
-  else taxa_strings = data$data_taxonomy[, level]
+  else taxa_strings = data$taxonomy_loaded[, level]
   tax_sum = as.data.frame(apply(data$data_loaded, 2, function(x) by(x, taxa_strings, sum)))
   if(relative){
     tax_sum/colSums(data$data_loaded)
@@ -214,6 +215,10 @@ filter_data = function(data, filter_cat, filter_vals, keep_vals){
 }
 
 filter_taxa = function(table, filter_thresh, taxa_to_keep, taxa_to_remove){
+  stop('Deprecated. Please use "filter_taxa_from_table"')
+}
+
+filter_taxa_from_table = function(table, filter_thresh, taxa_to_keep, taxa_to_remove){
   # filter taxa from otu table or taxa summary table based on mean abundance
   # optionally, specify additional taxa to keep
   means = apply(table[, 1:ncol(table)], 1, function(x){mean(x,na.rm=TRUE)})
@@ -223,7 +228,50 @@ filter_taxa = function(table, filter_thresh, taxa_to_keep, taxa_to_remove){
   if(!missing(taxa_to_remove)) {taxa_keep = taxa_keep[!taxa_keep %in% taxa_to_remove]}
   table[row.names(table) %in% taxa_keep, ]
 }
-# table = arch_data$data_loaded
+
+
+#' @details Can use one or more of the parameters to do filtering. Threshold 
+#'          filtering takes precidence over taxa filtering. If taxa to keep and 
+#'          taxa to remove are both included, taxa to remove will be 
+#'          removed if the parameter entries conflict.
+#' @param input Input data (a list variable) from 'load_data()' functions
+#' @param filter_thresh Filter OTUs less than this number based on mean OTU 
+#'        table values.
+#' @param taxa_to_keep Keep only taxa that contain these names. Vector or string.
+#' @param taxa_to_remove Remove taxa that contain these names. Vector or string.
+#' @param at_spec_level If included, only keep/remove matches at this specific 
+#'        taxonomy level(s) (a number/numbers referring to the taxonomy 
+#'        column(s)).
+filter_taxa_from_data = function(input, filter_thresh, taxa_to_keep, 
+                                 taxa_to_remove, at_spec_level){
+  rows_keep = seq(1, nrow(input$data_loaded))
+  if(!missing(filter_thresh)){
+    means = apply(input$data_loaded[, 1:ncol(input$data_loaded)], 1, 
+                  function(x){mean(x, na.rm=TRUE)})
+    number_retained = sum((means >= filter_thresh) *1)
+    rows_keep = rows_keep[means >= filter_thresh]
+  }
+  if(missing(at_spec_level)){
+    tax_levels = 1:ncol(input$taxonomy_loaded)
+  } else tax_levels = at_spec_level
+  if(!missing(taxa_to_keep)){
+    rows_keep_tmp = sapply(taxa_to_keep, FUN = function(x){
+      grep(x, apply(as.data.frame(input$taxonomy_loaded[, tax_levels]), 1, 
+                    paste0, collapse = ''))
+    })
+    rows_keep = intersect(rows_keep, rows_keep_tmp)
+    }
+  if(!missing(taxa_to_remove)){
+    rows_remove = sapply(taxa_to_remove, FUN = function(x){
+      grep(x, apply(as.data.frame(input$taxonomy_loaded[, tax_levels]), 1, 
+                    paste0, collapse = ''))
+      })
+    rows_keep = rows_keep[! rows_keep %in% unlist(rows_remove)]
+  }
+  list(data_loaded = input$data_loaded[rows_keep, ],
+       map_loaded = input$map_loaded, 
+       taxonomy_loaded = input$taxonomy_loaded[rows_keep, ])
+}
   
   
 export_otu_table = function(tab, tax_fp, seq_fp, outfp){
@@ -285,8 +333,11 @@ calc_ordination = function(dm, ord_type, map, constrain_factor){
 
 plot_ordination = function(data, ordination_axes, color_cat, shape_cat){
   require(ggplot2)
-  if(missing(color_cat)) stop('Must include a mapping category to color by.')
-  to_plot = data.frame(ordination_axes, cat = data$map_loaded[, color_cat])
+  if(missing(color_cat)){
+    warning('No mapping category to color by.')
+    color_vec = rep('none', length(labels(dm)))
+  } else color_vec = data$map_loaded[, color_cat]
+  to_plot = data.frame(ordination_axes, cat = color_vec)
   headers = colnames(to_plot)
   # plot w shape
   if(!missing(shape_cat)){
@@ -305,23 +356,26 @@ plot_ordination = function(data, ordination_axes, color_cat, shape_cat){
   }
 }
 
-plot_nmds = function(dm, map, color_cat, shape_cat){
+plot_nmds = function(dm, map = NULL, color_cat, shape_cat){
   require(ggplot2)
-  if(missing(color_cat)) stop('Must include a mapping category to color by.')
+  if(missing(color_cat)){
+    warning('No mapping category to color by.')
+    color_vec = rep('none', length(labels(dm)))
+  } else color_vec = map[, color_cat]
   # format data and do NMDS
   dm = as.dist(dm)
   dm.mds = metaMDS(dm, k=2)
   # plot w shape
   if(!missing(shape_cat)){
-    points = data.frame(dm.mds$points, cat = map[, color_cat], 
-                        cat2 = map[,shape_cat])
+    points = data.frame(dm.mds$points, cat = color_vec, 
+                        cat2 = map[, shape_cat])
     ggplot(points, aes(MDS1, MDS2, color = cat, shape = cat2)) +
       geom_point(size = 3, alpha = 0.8) + theme_bw() +
       scale_color_discrete('') + scale_shape_discrete('') 
   }
   # plot without shape
   else{
-    points = data.frame(dm.mds$points, cat = map[, color_cat])
+    points = data.frame(dm.mds$points, cat = color_vec)
     ggplot(points, aes(MDS1, MDS2, color = cat)) +
       geom_point(size = 3, alpha = 0.8) + theme_bw() +
       scale_color_discrete('') + scale_shape_discrete('') 
