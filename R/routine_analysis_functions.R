@@ -33,27 +33,50 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   # optionally, subset data
     # cant subset if trying to filter out certain values and keep certain values
     # use one or the other
+  if(!missing(filter_cat)){
+    map.f = .filt_map(map, filter_cat, filter_vals, keep_vals)
+  } else map.f = map
+  # match up data from dissimilarity matrix with mapping file
+  .match_data_components(data, map.f, data_taxonomy)
+}
+
+
+.filt_map = function(map, filter_cat, filter_vals, keep_vals){
   if(!missing(filter_vals) & !missing(keep_vals)){
+    stop('Can only handle filter_vals or keep_vals, not both.')
+  }
+  if(!filter_cat %in% names(map)){
+    stop('filter_cat not found in mapping file headers. Check spelling.')
   }
   # filter out values within mapping category
   else if(!missing(filter_cat) & !missing(filter_vals)){
-    map.f = map[!map[,filter_cat] %in% filter_vals, ]
+    map.f = map[!map[, filter_cat] %in% filter_vals, ]
+    map.f = droplevels(map.f)
+    if(nrow(map.f) == 0){
+      stop('All rows filtered out. Check spelling of filter parameters.')
+    }
   }
   # keep certain values with mapping category
   else if(!missing(filter_cat) & !missing(keep_vals)){
     map.f = map[map[,filter_cat] %in% keep_vals, ]
+    map.f = droplevels(map.f)
+    if(nrow(map.f) == 0){
+      stop('All rows filtered out. Check spelling of filter parameters.')
+    }
   }
-  else map.f = map
-  # match up data from dissimilarity matrix with mapping file
-  samplesToUse = intersect(names(data),row.names(map.f))
-  data.use = data[,match(samplesToUse,names(data))]
-  data.use = data.use[rowSums(data.use)!=0,]
-  map.use = map.f[match(samplesToUse,row.names(map.f)),]
-  if(exists('data_taxonomy')) {
-    data_taxonomy.use = data_taxonomy[match(row.names(data.use), row.names(data_taxonomy)), ]
-    list(data_loaded = data.use, map_loaded = map.use, taxonomy_loaded = data_taxonomy.use)
+  map.f
+}
+
+.match_data_components = function(tax_table, map, taxonomy){
+  samplesToUse = intersect(names(tax_table), row.names(map))
+  tax_table.use = tax_table[, match(samplesToUse, names(tax_table))]
+  tax_table.use = tax_table.use[rowSums(tax_table.use) != 0, ]
+  map.use = map[match(samplesToUse, row.names(map)),]
+  if(!missing('taxonomy')) {
+    taxonomy.use = taxonomy[match(row.names(tax_table.use), row.names(taxonomy)), ]
+    list(data_loaded = tax_table.use, map_loaded = map.use, taxonomy_loaded = taxonomy.use)
   } else {
-    list(data_loaded = data.use, map_loaded = map.use)
+    list(data_loaded = tax_table.use, map_loaded = map.use)
   }
 }
 
@@ -111,24 +134,11 @@ load_ts_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   # optionally, subset data
   # cant subset if trying to filter out certain values and keep certain values
   # use one or the other
-  if(!missing(filter_vals) & !missing(keep_vals)){
-  }
-  # filter out values within mapping category
-  else if(!missing(filter_cat) & !missing(filter_vals)){
-    map.f = map[!map[,filter_cat] %in% filter_vals, ]
-  }
-  # keep certain values with mapping category
-  else if(!missing(filter_cat) & !missing(keep_vals)){
-    map.f = map[map[,filter_cat] %in% keep_vals, ]
-  }
-  else map.f = map
+  if(!missing(filter_cat)){
+    map.f = .filt_map(map, filter_cat, filter_vals, keep_vals)
+  } else map.f = map
   # match up data from dissimilarity matrix with mapping file
-  samplesToUse = intersect(names(data),row.names(map.f))
-  data.use = data[,match(samplesToUse,names(data))]
-  data.use = data.use[rowSums(data.use)!=0,]
-  map.use = map.f[match(samplesToUse,row.names(map.f)),]
-  # output
-  list(data_loaded = data.use, map_loaded = map.use)
+  .match_data_components(data, map.f)
 }
 
 
@@ -138,17 +148,9 @@ load_dm = function(dm_fp, map_fp, filter_cat, filter_vals, keep_vals){
   # optionally, subset data
   # cant subset if trying to filter out certain values and keep certain values
   # use one or the other
-  if(!missing(filter_vals) & !missing(keep_vals)){
-  }
-  # filter out values within mapping category
-  else if(!missing(filter_cat) & !missing(filter_vals)){
-    map.f = map[!map[,filter_cat] %in% filter_vals, ]
-  }
-  # keep certain values with mapping category
-  else if(!missing(filter_cat) & !missing(keep_vals)){
-    map.f = map[map[,filter_cat] %in% keep_vals, ]
-  }
-  else map.f = map
+  if(!missing(filter_cat)){
+    map.f = .filt_map(map, filter_cat, filter_vals, keep_vals)
+  } else map.f = map
   # match up data from dissimilarity matrix with mapping file
   samplesToUse = intersect(names(dm), row.names(map.f))
   dm.use = as.dist(dm[match(samplesToUse,names(dm)), match(samplesToUse,names(dm))])
@@ -164,17 +166,9 @@ load_2_dms = function(dm1_fp, dm2_fp, map_fp, filter_cat, filter_vals, keep_vals
   # optionally, subset data
   # cant subset if trying to filter out certain values and keep certain values
   # use one or the other
-  if(!missing(filter_vals) & !missing(keep_vals)){
-  }
-  # filter out values within mapping category
-  else if(!missing(filter_cat) & !missing(filter_vals)){
-    map.f = map[!map[,filter_cat] %in% filter_vals, ]
-  }
-  # keep certain values with mapping category
-  else if(!missing(filter_cat) & !missing(keep_vals)){
-    map.f = map[map[,filter_cat] %in% keep_vals, ]
-  }
-  else map.f = map
+  if(!missing(filter_cat)){
+    map.f = .filt_map(map, filter_cat, filter_vals, keep_vals)
+  } else map.f = map
   # match up data from dissimilarity matrix with mapping file
   samplesToUse = intersect(intersect(names(dm1), row.names(map.f)), names(dm2))
   dm1.use = as.dist(dm1[match(samplesToUse,names(dm1)), match(samplesToUse,names(dm1))])
@@ -188,31 +182,17 @@ filter_data = function(data, filter_cat, filter_vals, keep_vals){
   # input is list from 'load_data' function
   # cant subset if trying to filter out certain values and keep certain values
   # use one or the other
-  if(!missing(filter_vals) & !missing(keep_vals)){
-  }
-  # filter out values within mapping category
-  else if(!missing(filter_cat) & !missing(filter_vals)){
-    map.f = data$map_loaded[!data$map_loaded[,filter_cat] %in% filter_vals, ]
-  }
-  # keep certain values with mapping category
-  else if(!missing(filter_cat) & !missing(keep_vals)){
-    map.f = data$map_loaded[data$map_loaded[,filter_cat] %in% keep_vals, ]
-  }
-  else map.f = data$map_loaded
-  map.f[, filter_cat] = factor(map.f[, filter_cat])
-  if(nrow(map.f) == 0) stop('All samples filtered out!')
+  if(!missing(filter_cat)){
+    map.f = .filt_map(data$map_loaded, filter_cat, filter_vals, keep_vals)
+  } else map.f = map
   # match up data from dissimilarity matrix with mapping file
-  samplesToUse = intersect(names(data$data_loaded),row.names(map.f))
-  data.use = data$data_loaded[,match(samplesToUse,names(data$data_loaded))]
-  data.use = data.use[rowSums(data.use)!=0,]
-  map.use = map.f[match(samplesToUse,row.names(map.f)),]
-  if('taxonomy_loaded' %in% names(data)) {
-    taxonomy_loaded.use = data$taxonomy_loaded[match(row.names(data.use), row.names(data$taxonomy_loaded)), ]
-    list(data_loaded = data.use, map_loaded = map.use, taxonomy_loaded = taxonomy_loaded.use)
+  if('taxonomy_loaded' %in% names(data)){
+    .match_data_components(data$data_loaded, map.f, data$taxonomy_loaded)
   } else {
-    list(data_loaded = data.use, map_loaded = map.use)
+    .match_data_components(data$data_loaded, map.f)
   }
 }
+
 
 filter_taxa = function(table, filter_thresh, taxa_to_keep, taxa_to_remove){
   stop('Deprecated. Please use "filter_taxa_from_table"')

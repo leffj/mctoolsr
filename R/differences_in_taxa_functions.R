@@ -1,6 +1,6 @@
 #################################################################################
 ### R code to find the taxa driving differences between microbial communities ###
-### given a taxa summary table and mapping file from QIIME                    ###
+###                                                                           ###
 ### -- Jon Leff -- January 16, 2015 --                                        ###
 #################################################################################
 
