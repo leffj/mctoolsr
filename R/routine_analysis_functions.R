@@ -1,3 +1,4 @@
+source('~/Software/mctoolsr/R/differences_in_taxa_functions.R')
 
 #############
 # FUNCTIONS #
@@ -491,3 +492,39 @@ calc_mean_dissimilarities = function(dissim_mat, map, summarize_by_factor){
 }
 
 
+#' @details Function to show contributions of specific taxa to variation among 
+#'          communities using Mann-Whitney (2 factor levels), Kruskal-Wallis 
+#'          (more than 2) tests, or more complex models
+#' @param taxa_smry_df Taxa summary data frame
+#' @param metadata_map Mapping file
+#' @param out_fp Test results output filepath (OPTIONAL)
+#' @param factor Mapping file header (in quotation marks) of factor for which 
+#'        you are testing for differences
+#' @param filter_level The minimum mean value needed in at least one 
+#'        of the factor levels for a taxon to be retained in the analysis
+#' @param test_type either 'MW', 'KW', or 'custom' (i.e. Wilcoxon/Mann-Whitney U 
+#'        for 2 factor levels or Kruskal-Wallis for more than two factor levels).
+#'        See details for custom test/model implementation.
+#' @param custom_test_function Name of custom test function
+taxa_summary_by_sample_type = function(taxa_smry_df, metadata_map, factor, 
+                                       filter_level, test_type, grouping_factor, 
+                                       custom_test_function, out_fp){
+  if(!missing(filter_level)){
+    # filter taxa summary table by abundance in any/either factor level
+    taxa_smry_df = .filter_taxa_dit(taxa_smry_df, metadata_map, filter_level, 
+                                    factor)
+  }
+  if(!missing(grouping_factor)){
+    test_results = .run_test(taxa_smry_df, metadata_map, factor, test_type, 
+                             grouping_factor)
+  }
+  else test_results = .run_test(taxa_smry_df, metadata_map, factor, test_type,
+                                cust_test = custom_test_function)
+  # Sort by pvalues 
+  test_results = test_results[with(test_results, order(pvals)), ]
+  # output data
+  if(!missing(out_fp)){
+    write.table(test_results, file = out_fp, sep = ",", row.names = TRUE, 
+                col.names = NA)  
+  } else test_results
+}
