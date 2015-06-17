@@ -21,7 +21,7 @@ library(nlme)
 }
 
 # function to filter taxa
-.filter_taxa_dit = function(t_table, map_file, f_level, f_factor){
+.filter_taxa_dit = function(t_table, map_file, f_level, f_factor, smry_fun){
   # Check if the t_table only has one sample
   if(class(t_table) == "numeric"){
     "skip"
@@ -33,7 +33,7 @@ library(nlme)
       #   greater than filter
       meanAbunds <- NULL
       meanAbunds <- aggregate(as.numeric(t(t_table[i, ])), list(factorMeta), 
-                              mean)
+                              smry_fun)
       if(max(meanAbunds$x) >= f_level){
         rowsToKeep <- c(rowsToKeep, i)
       }
@@ -72,7 +72,7 @@ library(nlme)
 
 # run statistical test (Mann-whitney, Kruskal-Wallis, or 2-way NP) on each taxon
 # in a provided taxa table
-.run_test = function(t_table, map_file, fctr, type, g_fctr, cust_test){
+.run_test = function(t_table, map_file, fctr, type, g_fctr, cust_test, smry_fun){
   fctrMeta = as.factor(as.vector(.get_metadata(t_table, map_file, fctr)))
   if(!missing(g_fctr)) gfctrMeta = as.factor(as.vector(.get_metadata(t_table, 
                                                                      map_file, 
@@ -89,9 +89,9 @@ library(nlme)
       t_table[i, ])), cust_test))
     else print('Invalid test type specified')
     if(i == 1){
-      meanAbunds = aggregate(as.numeric(t(t_table[i, ])), list(fctrMeta), mean)
+      meanAbunds = aggregate(as.numeric(t(t_table[i, ])), list(fctrMeta), smry_fun)
     } else{
-      means = aggregate(as.numeric(t(t_table[i, ])), list(fctrMeta), mean)[, 2]
+      means = aggregate(as.numeric(t(t_table[i, ])), list(fctrMeta), smry_fun)[, 2]
       meanAbunds = cbind(meanAbunds, means)
     }
   }

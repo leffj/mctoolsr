@@ -27,6 +27,7 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
     if(names(data)[ncol(data)] == 'taxonomy'){
       data$taxonomy = NULL
     }
+    data_taxonomy = NULL
   }
   else stop('Input file must be either biom (.biom) or tab-delimited (.txt) format.')
   map = read.table(map_fp,sep='\t',comment.char='',header=T,check.names=F,row.names=1)
@@ -73,6 +74,7 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   tax_table.use = tax_table[, match(samplesToUse, names(tax_table))]
   tax_table.use = tax_table.use[rowSums(tax_table.use) != 0, ]
   map.use = map[match(samplesToUse, row.names(map)),]
+  map.use = droplevels(map.use)
   if(!missing('taxonomy')) {
     taxonomy.use = taxonomy[match(row.names(tax_table.use), row.names(taxonomy)), ]
     list(data_loaded = tax_table.use, map_loaded = map.use, taxonomy_loaded = taxonomy.use)
@@ -105,6 +107,7 @@ compile_taxonomy = function(biom_data){
   tax_comp
 }
 
+# Means if relative abundance
 # level is a single number referring to the taxonomic level
 # relative refers to whether output should be sequence counts or relative abundances
 # report_higher_tax indicates whether to display all higher taxonomic strings or just 
@@ -312,29 +315,40 @@ calc_ordination = function(dm, ord_type, map, constrain_factor){
   
 }
 
-plot_ordination = function(data, ordination_axes, color_cat, shape_cat){
+plot_ordination = function(data, ordination_axes, color_cat, shape_cat, 
+                           hulls = FALSE){
   require(ggplot2)
+  require(dplyr)
   if(missing(color_cat)){
     warning('No mapping category to color by.')
     color_vec = rep('none', length(labels(dm)))
   } else color_vec = data$map_loaded[, color_cat]
   to_plot = data.frame(ordination_axes, cat = color_vec)
+  names(to_plot)[3] = 'cat'
   headers = colnames(to_plot)
-  # plot w shape
+  # hulls prep
+  if(hulls){
+    .find_hulls = function(df) {df[chull(df), ]}
+    hull_vals = do(group_by(to_plot, cat), .find_hulls(.))
+  }
+  # plot w/ shape
   if(!missing(shape_cat)){
     to_plot = data.frame(to_plot, cat2 = data$map_loaded[,shape_cat])
-    ggplot(to_plot, aes_string(headers[1], headers[2])) +
-      geom_point(size = 3, alpha = 0.8, aes(color = cat, shape = cat2)) + theme_bw() +
-#       scale_color_discrete('') + scale_shape_discrete('') +
-      xlab(colnames(to_plot)[1]) + ylab(colnames(to_plot)[2])
+    p = ggplot(to_plot, aes_string(headers[1], headers[2]))
+    p = p + geom_point(size = 3, alpha = 0.8, aes(color = cat, shape = cat2)) + theme_bw()
+    p = p + xlab(colnames(to_plot)[1]) + ylab(colnames(to_plot)[2])
   }
   # plot without shape
   else{
-    ggplot(to_plot, aes_string(headers[1], headers[2])) +
-      geom_point(size = 3, alpha = 0.8, aes(color=cat)) + theme_bw() +
-#       scale_color_discrete('') + scale_shape_discrete('') +
-      xlab(colnames(to_plot)[1]) + ylab(colnames(to_plot)[2])
+    p = ggplot(to_plot, aes_string(headers[1], headers[2]))
+    p = p + geom_point(size = 3, alpha = 0.8, aes(color=cat)) + theme_bw()
+    p = p + xlab(colnames(to_plot)[1]) + ylab(colnames(to_plot)[2])
   }
+  if(hulls){
+    p = p + geom_polygon(data = hull_vals, aes(fill = cat, color = cat), 
+                         alpha = 0.1)
+  }
+  p
 }
 
 plot_nmds = function(dm, map = NULL, color_cat, shape_cat){
@@ -409,7 +423,11 @@ convert_dm_to_3_column = function(dm){
   dmat.clmns
 }
 
-add_metadata_to_df = function(dmat_clmns, map, cat){
+add_metadata_to_df = function(){
+  stop('Deprecated - Please use "add_metadata_to_dm_clmns".')
+}
+
+add_metadata_to_dm_clmns = function(dmat_clmns, map, cat){
   cat1 = map[match(dmat_clmns$x1,row.names(map)),cat]
   cat2 = map[match(dmat_clmns$x2,row.names(map)),cat]
   dmat_clmns_wCat = cbind(dmat_clmns, cat1, cat2)
@@ -431,7 +449,7 @@ get_combination_category = function(x, accepted_categories){
 
 #' Get the combination category of two vectors containing strings. 
 #' This command dereplicates reverse order combinations.
-id_treatment_combination = function(col1, col2){
+.id_treatment_combination = function(col1, col2){
   # get the list of unique categories
   unique_levels = unique(c(as.character(col1), as.character(col2)))
   # get all possible combinations
@@ -445,7 +463,7 @@ id_treatment_combination = function(col1, col2){
 }
 
 #' convert 3 column dissimilarities back to matrix format
-convert_one_column_to_matrix = function(df){
+.convert_one_column_to_matrix = function(df){
   # initialize matrix with dimensions equal to number of unique categories
   uNames = unique(c(as.character(df[, 1]), as.character(df[, 2])))
   mean_dists_mat = data.frame(matrix(ncol = length(uNames), nrow = length(uNames)))
@@ -470,9 +488,21 @@ convert_one_column_to_matrix = function(df){
 #' 
 #' @param dissim_mat Dissimilarity matrix - typically created using 'calc_dm()'
 #' @param summarize_by_factor Category in mapping file to summarize by
+#' @param return_map Whether or not to return summarized mapping files. If true,
+#'  will return a list (default: FALSE)
 #' @return Mean dissimilarities
-calc_mean_dissimilarities = function(dissim_mat, map, summarize_by_factor){
+calc_mean_dissimilarities = function(dissim_mat, map, summarize_by_factor, 
+                                     return_map = FALSE){
   require(dplyr)
+  .sumry_fun = function(x){
+    if(is.numeric(x)){
+      mean(x)
+    } else {
+      if(length(unique(x)) == 1){
+        unique(x)
+      } else NA
+    }
+  }
   dm_clmns = convert_dm_to_3_column(dissim_mat)
   # list sample 1 and sample 2 factor categories in new clmns
   dm_clmns_wCat = add_metadata_to_df(dm_clmns, map, summarize_by_factor)
@@ -481,14 +511,21 @@ calc_mean_dissimilarities = function(dissim_mat, map, summarize_by_factor){
   # remove rows where distances are comparing samples from the same cat
   dm_clmns_wCat_reduced = dm_clmns_wCat[dm_clmns_wCat[, 4] != dm_clmns_wCat[, 5], ]
   # get pairwise comparison while accounting for differences in category order
-  tx_combo = id_treatment_combination(col1 = dm_clmns_wCat_reduced[, 4], col2 = dm_clmns_wCat_reduced[, 5])
+  tx_combo = .id_treatment_combination(col1 = dm_clmns_wCat_reduced[, 4], 
+                                       col2 = dm_clmns_wCat_reduced[, 5])
   dm_clmns_wCat_reduced = cbind(dm_clmns_wCat_reduced, tx_combo)
   # calc mean dissimilarities
-  means = summarize(group_by(dm_clmns_wCat_reduced, tx_combo), mean_dist = mean(dist))
+  means = summarize(group_by(dm_clmns_wCat_reduced, tx_combo), 
+                    mean_dist = mean(dist))
   # convert back to matrix format
-  means2 = data.frame(do.call(rbind, strsplit(as.character(means$tx_combo), split = '__')), 
+  means2 = data.frame(do.call(rbind, strsplit(as.character(means$tx_combo), 
+                                              split = '__')), 
              mean_dist = means$mean_dist)
-  convert_one_column_to_matrix(means2)
+  if(return_map){
+    mean_map = summarise_each(group_by_(map, summarize_by_factor), 
+                                   funs(.sumry_fun))
+    list(dm = as.dist(.convert_one_column_to_matrix(means2)), map_loaded = mean_map)
+  } else as.dist(.convert_one_column_to_matrix(means2))
 }
 
 
@@ -506,20 +543,29 @@ calc_mean_dissimilarities = function(dissim_mat, map, summarize_by_factor){
 #'        for 2 factor levels or Kruskal-Wallis for more than two factor levels).
 #'        See details for custom test/model implementation.
 #' @param custom_test_function Name of custom test function
+#' @param smry_fun The function to summarize values by (Default: mean)
 taxa_summary_by_sample_type = function(taxa_smry_df, metadata_map, factor, 
                                        filter_level, test_type, grouping_factor, 
-                                       custom_test_function, out_fp){
+                                       custom_test_function, smry_fun = mean, 
+                                       out_fp){
   if(!missing(filter_level)){
     # filter taxa summary table by abundance in any/either factor level
     taxa_smry_df = .filter_taxa_dit(taxa_smry_df, metadata_map, filter_level, 
-                                    factor)
+                                    factor, smry_fun = smry_fun)
   }
   if(!missing(grouping_factor)){
     test_results = .run_test(taxa_smry_df, metadata_map, factor, test_type, 
-                             grouping_factor)
+                             grouping_factor, smry_fun = smry_fun)
   }
-  else test_results = .run_test(taxa_smry_df, metadata_map, factor, test_type,
-                                cust_test = custom_test_function)
+  else if(!missing(custom_test_function)){
+    test_results = .run_test(taxa_smry_df, metadata_map, factor, test_type,
+                             cust_test = custom_test_function, 
+                             smry_fun = smry_fun)
+  } 
+  else{
+    test_results = .run_test(taxa_smry_df, metadata_map, factor, test_type,
+                             smry_fun = smry_fun)
+  }
   # Sort by pvalues 
   test_results = test_results[with(test_results, order(pvals)), ]
   # output data
