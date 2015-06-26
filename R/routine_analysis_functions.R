@@ -85,9 +85,9 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
 
 
 # generates a data frame with all levels of taxanomic info as columns
-compile_taxonomy = function(biom_data){
+compile_taxonomy = function(biom_dat){
   # get only taxonomy observation metadata from a biom file
-  obs_md = observation_metadata(biom_data)
+  obs_md = observation_metadata(biom_dat)
   # replace label for otus with only 1 taxonomy level
   obs_md = sapply(obs_md, function(x) {
     names(x) = gsub('taxonomy$', 'taxonomy1', names(x))
@@ -117,7 +117,8 @@ summarize_taxonomy = function(data, level, relative = TRUE, report_higher_tax = 
   else taxa_strings = data$taxonomy_loaded[, level]
   tax_sum = as.data.frame(apply(data$data_loaded, 2, function(x) by(x, taxa_strings, sum)))
   if(relative){
-    tax_sum/colSums(data$data_loaded)
+    seq_cts = colSums(data$data_loaded)
+    as.data.frame(t(apply(tax_sum, 1, function(x) x / seq_cts)))
   } else tax_sum
 }
 
