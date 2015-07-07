@@ -2,7 +2,9 @@
 title: "mctoolsr examples"
 author: "Jon Leff"
 date: "July 7, 2015"
-output: pdf_document
+output: 
+  html_document: 
+    keep_md: yes
 ---
 
 This document serves as a brief introduction to using **mctoolsr**. This document will go through getting the pro-package working and a few examples using the most popular functions.
