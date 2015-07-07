@@ -1,10 +1,8 @@
-# mctoolsr
-Microbial community analysis tools in R
-
-# mctoolsr Examples
-
 ---
-updated: "July 7, 2015"
+title: "mctoolsr examples"
+author: "Jon Leff"
+date: "July 7, 2015"
+output: pdf_document
 ---
 
 This document serves as a brief introduction to using **mctoolsr**. This document will go through getting the pro-package working and a few examples using the most popular functions.
@@ -132,7 +130,7 @@ There are multiple taxa filtering options in **mctoolsr**. This example shows ho
 input_proteobact = filter_taxa_from_data(input, taxa_to_keep = 'p__Proteobacteria')
 sort(colSums(input_proteobact$data_loaded))
 input_proteobact_rar = single_rarefy(input_proteobact, 219)
-plot_nmds(calc_dm(input_proteobact_rar$data_loaded), map = input_proteobact_rar$map_loaded,
+plot_nmds(calc_dm(input_proteobact_rar$data_loaded), map = input_proteobact_rar$map_loaded, 
           color_cat = 'Sample_type')
 ```
 
@@ -144,7 +142,7 @@ It is often useful to determine the taxa driving differences between the communi
 
 ```{r}
 tax_sum_families = summarize_taxonomy(input_rar_filt, level = 5, report_higher_tax = FALSE)
-taxa_summary_by_sample_type(tax_sum_families, input_rar_filt$map_loaded,
+taxa_summary_by_sample_type(tax_sum_families, input_rar_filt$map_loaded, 
                             factor = 'Sample_type', filter_level = 0.05, test_type = 'KW')
 ```
 
@@ -158,7 +156,7 @@ Sometimes it is necessary to calculate mean dissimilarities. This is important i
 
 ```{r}
 dm = calc_dm(input_rar_filt$data_loaded)
-dm_aggregated = calc_mean_dissimilarities(dm, input_rar_filt$map_loaded,
+dm_aggregated = calc_mean_dissimilarities(dm, input_rar_filt$map_loaded, 
                                           'Sample_Farming', return_map = TRUE)
 ord = calc_ordination(dm_aggregated$dm, ord_type = 'nmds')
 plot_ordination(dm_aggregated, ord, color_cat = 'Sample_type')
@@ -167,3 +165,6 @@ plot_ordination(dm_aggregated, ord, color_cat = 'Sample_type')
 
 
 [ref1]: http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0059310
+
+
+
