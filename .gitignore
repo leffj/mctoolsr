@@ -3,3 +3,4 @@
 .RData
 *.DS_store
 testing
+examples/private_code

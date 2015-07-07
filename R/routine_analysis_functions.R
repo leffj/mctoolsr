@@ -20,7 +20,7 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
     require(biom)
     data_b = read_biom(tab_fp)
     data = as.data.frame(as.matrix(biom_data(data_b)))
-    data_taxonomy = compile_taxonomy(data_b)
+    data_taxonomy = .compile_taxonomy(data_b)
   }
   else if(file_ext(tab_fp) == 'txt'){
     data = read.table(tab_fp, sep='\t', skip=1, comment.char='', header=T, 
@@ -86,7 +86,7 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
 
 
 # generates a data frame with all levels of taxanomic info as columns
-compile_taxonomy = function(biom_dat){
+.compile_taxonomy = function(biom_dat){
   # get only taxonomy observation metadata from a biom file
   obs_md = observation_metadata(biom_dat)
   # replace label for otus with only 1 taxonomy level
