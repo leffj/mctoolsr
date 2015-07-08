@@ -29,9 +29,8 @@ source('~/Software/mctoolsr/R/routine_analysis_functions.R')
 
 ### Examples
 
-Note that the following examples use an example dataset taken from a study examining the bacterial communities associated with fruits and vegetables ([Leff et al. 2013][ref1]). You can find this dataset in the mctoolsr/examples directory.
+Note that the following examples use an example dataset taken from a study examining the bacterial communities associated with fruits and vegetables ([Leff et al. 2013][ref1]). You can find this dataset in the mctoolsr/examples directory.    
 
-\  
 
 #### Loading OTU tables and metadata
 
@@ -54,9 +53,8 @@ The loaded data will consist of three parts:
 2. The metadata: "map_loaded"
 3. The taxonomic classifiers (if provided in the biom file): "taxonomy_loaded"
 
-Any of these components can be quickly accessed using the '$' sign notation as shown in the next example.
+Any of these components can be quickly accessed using the '$' sign notation as shown in the next example.  
 
-\  
 
 #### Returning numbers of sequences per sample
 
@@ -64,9 +62,8 @@ This can be achieved simply by calculating column sums on the taxon table:
 
 ```{r}
 sort(colSums(input$data_loaded))
-```
+```  
 
-\  
 
 #### Rarefying
 
@@ -75,9 +72,8 @@ As you can see from the previous example, we can rarefy (i.e. normalize for vari
 ```{r}
 input_rar = single_rarefy(input, 1000)
 colSums(input_rar$data_loaded)
-```
+```  
 
-\  
 
 #### Summarize taxonomic relative abundances at a higher taxonomic level
 
@@ -86,9 +82,8 @@ It is useful to get a feel for the taxonomic composition of your samples early o
 ```{r}
 tax_sum_phyla = summarize_taxonomy(input_rar, level = 2, report_higher_tax = FALSE)
 tax_sum_phyla[1:5, 1:8]
-```
+```  
 
-\  
 
 #### Calculating a dissimilarity matrix
 
@@ -96,9 +91,8 @@ For dissimilarity-based analyses such as ordinations and PERMANOVA, it is necess
 
 ```{r}
 dm = calc_dm(input_rar$data_loaded)
-```
+```  
 
-\  
 
 #### Plotting an ordination
 
@@ -107,9 +101,8 @@ There are two ways to plot ordinations in **mctoolsr**. The multistep way is sho
 ```{r}
 ord = calc_ordination(dm, 'nmds')
 plot_ordination(input_rar, ord, 'Sample_type', 'Farm_type', hulls = TRUE)
-```
+```  
 
-\  
 
 #### Filtering samples
 
@@ -120,9 +113,8 @@ input_rar_filt = filter_data(input_rar, 'Sample_type', filter_vals = 'Lettuce')
 dm = calc_dm(input_rar_filt$data_loaded)
 ord = calc_ordination(dm, 'nmds')
 plot_ordination(input_rar_filt, ord, 'Sample_type', 'Farm_type', hulls = TRUE)
-```
+```  
 
-\  
 
 #### Filtering taxa
 
@@ -134,9 +126,8 @@ sort(colSums(input_proteobact$data_loaded))
 input_proteobact_rar = single_rarefy(input_proteobact, 219)
 plot_nmds(calc_dm(input_proteobact_rar$data_loaded), map = input_proteobact_rar$map_loaded, 
           color_cat = 'Sample_type')
-```
+```  
 
-\  
 
 #### Taxa based exploration
 
@@ -148,9 +139,8 @@ taxa_summary_by_sample_type(tax_sum_families, input_rar_filt$map_loaded,
                             factor = 'Sample_type', filter_level = 0.05, test_type = 'KW')
 ```
 
-This analysis demonstrates that Pseudomonadaceae and Sphingobacteriaceae tend to have higher relative abundances on mushrooms than spinach and strawberries. The p values are based on Kruskal-Wallis tests and two different corrections are reported to deal with the multiple comparisons (Bonferroni and FDR). Rare taxa are filtered out using the `filter_level` peramter. The values indicated under the sample types are mean relative abundances.
+This analysis demonstrates that Pseudomonadaceae and Sphingobacteriaceae tend to have higher relative abundances on mushrooms than spinach and strawberries. The p values are based on Kruskal-Wallis tests and two different corrections are reported to deal with the multiple comparisons (Bonferroni and FDR). Rare taxa are filtered out using the `filter_level` peramter. The values indicated under the sample types are mean relative abundances.    
 
-\  
 
 #### Calculating mean dissimilarities
 
