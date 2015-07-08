@@ -26,6 +26,14 @@ git clone https://github.com/leffj/mctoolsr.git
 source('~/Software/mctoolsr/R/routine_analysis_functions.R')
 ```
 
+### Updating **mctoolsr**
+
+**mctoolsr** is under active devlopment. Update regularly to use the latest features and for bug fixes. Open a terminal and change directories to your mctoolsr directory. Then type the following to update:
+
+```
+git pull
+```
+
 
 ### Examples
 
@@ -152,6 +160,15 @@ dm_aggregated = calc_mean_dissimilarities(dm, input_rar_filt$map_loaded,
                                           'Sample_Farming', return_map = TRUE)
 ord = calc_ordination(dm_aggregated$dm, ord_type = 'nmds')
 plot_ordination(dm_aggregated, ord, color_cat = 'Sample_type')
+```
+
+
+#### Exporting an OTU table
+
+OTU tables that have been edited in **mctoolsr* can be exported in text (tab delimited) format for later use. Use this function:
+
+```{r eval=FALSE}
+export_otu_table(input_rar_filt, "export/path/otu_table_export.txt")
 ```
 
 

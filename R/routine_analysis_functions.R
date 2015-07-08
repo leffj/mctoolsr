@@ -266,13 +266,22 @@ filter_taxa_from_data = function(input, filter_thresh, taxa_to_keep,
 }
   
   
-export_otu_table = function(tab, tax_fp, seq_fp, outfp){
-  tax = read.table(tax_fp,sep='\t',comment.char='',header=F,check.names=F,row.names=1)
-  seqs = read.table(seq_fp,sep='\t',comment.char='',header=F,check.names=F,row.names=1)
-  otus = row.names(tab)
-  tab.out = data.frame(tab, taxonomy = tax[match(otus, row.names(tax)),1],
-                       sequence = seqs[match(otus, row.names(seqs)),1])
-  write.table(tab.out, outfp, sep='\t', col.names=NA)
+# export_otu_table = function(tab, tax_fp, seq_fp, outfp){
+#   tax = read.table(tax_fp,sep='\t',comment.char='',header=F,check.names=F,row.names=1)
+#   seqs = read.table(seq_fp,sep='\t',comment.char='',header=F,check.names=F,row.names=1)
+#   otus = row.names(tab)
+#   tab.out = data.frame(tab, taxonomy = tax[match(otus, row.names(tax)),1],
+#                        sequence = seqs[match(otus, row.names(seqs)),1])
+#   write.table(tab.out, outfp, sep='\t', col.names=NA)
+# }
+
+export_otu_table = function(input, out_fp){
+  table = input$data_loaded
+  taxonomy = apply(input$taxonomy_loaded, 1, paste, collapse = '; ')
+  out_tab = data.frame(OTU_ID = row.names(table), table, taxonomy)
+  names(out_tab)[1] = '#OTU ID'
+  write('#Exported from mctoolsr', out_fp)
+  suppressWarnings(write.table(out_tab, out_fp, sep = '\t', row.names = FALSE, append = TRUE))
 }
 
 
