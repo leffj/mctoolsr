@@ -89,24 +89,50 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
 .compile_taxonomy = function(biom_dat){
   # get only taxonomy observation metadata from a biom file
   obs_md = observation_metadata(biom_dat)
-  # replace label for otus with only 1 taxonomy level
-  obs_md = sapply(obs_md, function(x) {
-    names(x) = gsub('taxonomy$', 'taxonomy1', names(x))
-    list(x)})
-  # get the taxonomy levels
-  otu_full_md = names(which.max(sapply(obs_md, length))) # need to get the otu with all metadata levels
-  taxa_levels = names(obs_md[otu_full_md][[1]])[
-    grepl('taxonomy', names(obs_md[[1]]), ignore.case = TRUE)]
-  # compile taxonomy for each level
-  tax_comp = data.frame(row.names = names(obs_md))
-  for(l in 1:length(taxa_levels)){
-    level_tax_tmp = sapply(obs_md, function(x) x[taxa_levels[l]])
-    names(level_tax_tmp) = names(obs_md)
-    tax_comp[, taxa_levels[l]] = level_tax_tmp
-  }
-  tax_comp[is.na(tax_comp)] = 'unclassified'
-  tax_comp
+  if(class(obs_md) == 'list'){
+    # replace label for otus with only 1 taxonomy level
+    obs_md = sapply(obs_md, function(x) {
+      names(x) = gsub('taxonomy$', 'taxonomy1', names(x))
+      list(x)})
+    # get the taxonomy levels
+    otu_full_md = names(which.max(sapply(obs_md, length))) # need to get the otu with all metadata levels
+    taxa_levels = names(obs_md[otu_full_md][[1]])[
+      grepl('taxonomy', names(obs_md[[1]]), ignore.case = TRUE)]
+    # compile taxonomy for each level
+    tax_comp = data.frame(row.names = names(obs_md))
+    for(l in 1:length(taxa_levels)){
+      level_tax_tmp = sapply(obs_md, function(x) x[taxa_levels[l]])
+      names(level_tax_tmp) = names(obs_md)
+      tax_comp[, taxa_levels[l]] = level_tax_tmp
+    }
+    tax_comp[is.na(tax_comp)] = 'unclassified'
+    tax_comp
+  } else if(class(obs_md) == 'data.frame'){
+    obs_md
+  } else stop('Error compiling taxonomy.')
 }
+
+
+#' @title convert_to_relative_abundances
+#' @description Convert taxon table or taxon table in data input to relative 
+#' abundances
+#' @param input Either a dataset as generated using 'load_taxon_table' which
+#' includes a mapping file or an individual taxon table
+convert_to_relative_abundances = function(input){
+  if('map_loaded' %in% names(input)){
+    seq_cts = colSums(input$data_loaded)
+    rel_abund_table = as.data.frame(t(apply(input$data_loaded, 1, 
+                                            function(x) x / seq_cts)))
+    list(data_loaded = rel_abund_table, map_loaded = input$map_loaded, 
+         taxonomy_loaded = input$taxonomy_loaded)
+  } else {
+    seq_cts = colSums(input)
+    rel_abund_table = as.data.frame(t(apply(input, 1, function(x) x / seq_cts)))
+    rel_abund_table
+  }
+    
+}
+
 
 # Means if relative abundance
 # level is a single number referring to the taxonomic level
@@ -118,8 +144,9 @@ summarize_taxonomy = function(data, level, relative = TRUE, report_higher_tax = 
   else taxa_strings = data$taxonomy_loaded[, level]
   tax_sum = as.data.frame(apply(data$data_loaded, 2, function(x) by(x, taxa_strings, sum)))
   if(relative){
-    seq_cts = colSums(data$data_loaded)
-    as.data.frame(t(apply(tax_sum, 1, function(x) x / seq_cts)))
+#     seq_cts = colSums(data$data_loaded)
+#     as.data.frame(t(apply(tax_sum, 1, function(x) x / seq_cts)))
+    convert_to_relative_abundances(tax_sum)
   } else tax_sum
 }
 
@@ -440,7 +467,7 @@ convert_dm_to_3_column = function(dm){
   dmat.clmns
 }
 
-add_metadata_to_df = function(x, y, z){
+.add_metadata_to_df = function(x, y, z){
   stop('Deprecated - Please use "add_metadata_to_dm_clmns".')
 }
 
@@ -452,13 +479,13 @@ add_metadata_to_df = function(x, y, z){
   dmat_clmns_wCat
 }
 
-cats_equal = function(x, col1, col2){
-  if(x[col1] == x[col2]){"same"} else{"different"}
-}
+# .cats_equal = function(x, col1, col2){
+#   if(x[col1] == x[col2]){"same"} else{"different"}
+# }
 
 #' Test which order of two paired strings is the recognized order by comparing to a vector of accepted
 #' categories
-get_combination_category = function(x, accepted_categories){
+.get_combination_category = function(x, accepted_categories){
   if(paste(x, collapse='__') %in% accepted_categories) {return(paste(x, collapse='__'))}
   else if(paste(rev(x), collapse='__') %in% accepted_categories) {return(paste(rev(x), collapse='__'))}
   else {return("Not accepted category")}
@@ -474,7 +501,7 @@ get_combination_category = function(x, accepted_categories){
                        t(as.data.frame(lapply(unique_levels, FUN=rep, times=2))))
   combinations = paste(combinations[,1], combinations[,2], sep='__')
   # identify the combination for each pair of categories testing each order
-  comparison_types = apply(data.frame(col1, col2), 1, get_combination_category, 
+  comparison_types = apply(data.frame(col1, col2), 1, .get_combination_category, 
                            accepted_categories = combinations)
   comparison_types
 }
