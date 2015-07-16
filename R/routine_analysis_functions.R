@@ -23,12 +23,18 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
     data_taxonomy = .compile_taxonomy(data_b)
   }
   else if(file_ext(tab_fp) == 'txt'){
-    data = read.table(tab_fp, sep='\t', skip=1, comment.char='', header=T, 
-                      check.names=F, row.names=1)
+    if(readChar(tab_fp, nchars = 4) == "#OTU"){
+      data = read.table(tab_fp, sep='\t', comment.char='', header=T, 
+                        check.names=F, row.names=1)
+    } else {
+      data = read.table(tab_fp, sep='\t', skip=1, comment.char='', header=T, 
+                        check.names=F, row.names=1)
+    }
     if(names(data)[ncol(data)] == 'taxonomy'){
+      data_taxonomy = .parse_taxonomy(data$taxonomy)
+      row.names(data_taxonomy) = row.names(data)
       data$taxonomy = NULL
     }
-    data_taxonomy = NULL
   }
   else stop('Input file must be either biom (.biom) or tab-delimited (.txt) format.')
   map = read.table(map_fp,sep='\t',comment.char='',header=T,check.names=F,row.names=1)
@@ -70,6 +76,7 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   map.f
 }
 
+
 .match_data_components = function(tax_table, map, taxonomy){
   samplesToUse = intersect(names(tax_table), row.names(map))
   tax_table.use = tax_table[, match(samplesToUse, names(tax_table))]
@@ -110,6 +117,20 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   } else if(class(obs_md) == 'data.frame'){
     obs_md
   } else stop('Error compiling taxonomy.')
+}
+
+
+#' @description Convert a taxonomy character vector pulled from a text OTU 
+#' table to a data frame
+.parse_taxonomy = function(taxonomy_vec){
+  tmp = t(sapply(taxonomy_vec, function(x) strsplit(as.character(x), split = '; *')[[1]]))
+  tmp = as.data.frame(tmp)
+  potential_names = c('taxonomy1', 'taxonomy2', 'taxonomy3', 'taxonomy4', 
+                      'taxonomy5', 'taxonomy6', 'taxonomy7', 'taxonomy8', 
+                      'taxonomy9', 'taxonomy10', 'taxonomy11', 'taxonomy12')
+  names(tmp) = potential_names[1:ncol(tmp)]
+  names(taxonomy_vec)
+  tmp
 }
 
 
