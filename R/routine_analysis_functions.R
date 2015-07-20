@@ -49,7 +49,6 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   .match_data_components(data, map.f, data_taxonomy)
 }
 
-
 .filt_map = function(map, filter_cat, filter_vals, keep_vals){
   if(!missing(filter_vals) & !missing(keep_vals)){
     stop('Can only handle filter_vals or keep_vals, not both.')
@@ -76,7 +75,6 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   map.f
 }
 
-
 .match_data_components = function(tax_table, map, taxonomy){
   samplesToUse = intersect(names(tax_table), row.names(map))
   tax_table.use = tax_table[, match(samplesToUse, names(tax_table))]
@@ -85,12 +83,12 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   map.use = droplevels(map.use)
   if(!missing('taxonomy')) {
     taxonomy.use = taxonomy[match(row.names(tax_table.use), row.names(taxonomy)), ]
+    taxonomy.use = droplevels(taxonomy.use)
     list(data_loaded = tax_table.use, map_loaded = map.use, taxonomy_loaded = taxonomy.use)
   } else {
     list(data_loaded = tax_table.use, map_loaded = map.use)
   }
 }
-
 
 # generates a data frame with all levels of taxanomic info as columns
 .compile_taxonomy = function(biom_dat){
@@ -119,20 +117,24 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   } else stop('Error compiling taxonomy.')
 }
 
-
 #' @description Convert a taxonomy character vector pulled from a text OTU 
 #' table to a data frame
 .parse_taxonomy = function(taxonomy_vec){
-  tmp = t(sapply(taxonomy_vec, function(x) strsplit(as.character(x), split = '; *')[[1]]))
-  tmp = as.data.frame(tmp)
+  tmp = sapply(taxonomy_vec, function(x) strsplit(as.character(x), split = '; *')[[1]])
+  # if not all taxonomic levels present for each OTU, this is necessary to 
+  # convert to data frame
+  if(class(tmp) == 'list'){
+    n_obs = sapply(tmp, length)
+    seq_max = seq_len(max(n_obs))
+    tmp = (sapply(tmp, "[", i = seq_max))
+  }
+  tmp = as.data.frame(t(tmp))
   potential_names = c('taxonomy1', 'taxonomy2', 'taxonomy3', 'taxonomy4', 
                       'taxonomy5', 'taxonomy6', 'taxonomy7', 'taxonomy8', 
                       'taxonomy9', 'taxonomy10', 'taxonomy11', 'taxonomy12')
   names(tmp) = potential_names[1:ncol(tmp)]
-  names(taxonomy_vec)
   tmp
 }
-
 
 #' @title convert_to_relative_abundances
 #' @description Convert taxon table or taxon table in data input to relative 
@@ -147,13 +149,12 @@ convert_to_relative_abundances = function(input){
     list(data_loaded = rel_abund_table, map_loaded = input$map_loaded, 
          taxonomy_loaded = input$taxonomy_loaded)
   } else {
-    seq_cts = colSums(input)
+    seq_cts = colSums(input, na.rm = TRUE)
     rel_abund_table = as.data.frame(t(apply(input, 1, function(x) x / seq_cts)))
     rel_abund_table
   }
     
 }
-
 
 # Means if relative abundance
 # level is a single number referring to the taxonomic level
@@ -170,7 +171,6 @@ summarize_taxonomy = function(data, level, relative = TRUE, report_higher_tax = 
     convert_to_relative_abundances(tax_sum)
   } else tax_sum
 }
-
 
 load_ts_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   require(tools)
@@ -195,10 +195,10 @@ load_ts_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   .match_data_components(data, map.f)
 }
 
-
 plot_taxa_bars = function(taxa_summary_df, metadata_map, factor, num_taxa){
   require(reshape2)
   require(dplyr)
+  require(ggplot2)
   taxa_summary_df$taxon = row.names(taxa_summary_df)
   taxa_summary_df_melted = melt(taxa_summary_df, variable.name = 'Sample_ID', 
                                 id.vars = 'taxon')
@@ -219,7 +219,6 @@ plot_taxa_bars = function(taxa_summary_df, metadata_map, factor, num_taxa){
     geom_bar(stat = 'identity') + ylab('') + xlab('') +
     theme(legend.title=element_blank())
 }
-
 
 load_dm = function(dm_fp, map_fp, filter_cat, filter_vals, keep_vals){
   dm = read.table(dm_fp,sep='\t',comment.char='',header=T,check.names=F,row.names=1)
@@ -272,6 +271,30 @@ filter_data = function(data, filter_cat, filter_vals, keep_vals){
   }
 }
 
+#' @description Function to match up sample order from two datasets that contain
+#' some overlapping sample IDs. Sample IDs that are not present in both
+#' datasets will be dropped. The output is a list containing the two filtered
+#' datasets in the same order as they were input.
+match_datasets = function(ds1, ds2){
+  common_samples = intersect(names(ds1$data_loaded), names(ds2$data_loaded))
+  ds1$map_loaded$common_sample = row.names(ds1$map_loaded) %in% common_samples
+  ds1_filt = filter_data(ds1, 'common_sample', FALSE)
+  ds1_filt$data_loaded = ds1_filt$data_loaded[, 
+                                              match(common_samples, 
+                                                    names(ds1_filt$data_loaded))]
+  ds1_filt$map_loaded = ds1_filt$map_loaded[match(common_samples, 
+                                                  row.names(ds1_filt$map_loaded)), 
+                                            ]
+  ds2$map_loaded$common_sample = row.names(ds2$map_loaded) %in% common_samples
+  ds2_filt = filter_data(ds2, 'common_sample', FALSE)
+  ds2_filt$data_loaded = ds2_filt$data_loaded[, 
+                                              match(common_samples, 
+                                                    names(ds2_filt$data_loaded))]
+  ds2_filt$map_loaded = ds2_filt$map_loaded[match(common_samples, 
+                                                  row.names(ds2_filt$map_loaded)), 
+                                            ]
+  list(ds1 = ds1_filt, ds2 = ds2_filt)
+}
 
 filter_taxa = function(table, filter_thresh, taxa_to_keep, taxa_to_remove){
   stop('Deprecated. Please use "filter_taxa_from_table"')
@@ -287,7 +310,6 @@ filter_taxa_from_table = function(table, filter_thresh, taxa_to_keep, taxa_to_re
   if(!missing(taxa_to_remove)) {taxa_keep = taxa_keep[!taxa_keep %in% taxa_to_remove]}
   table[row.names(table) %in% taxa_keep, ]
 }
-
 
 #' @details Can use one or more of the parameters to do filtering. Threshold 
 #'          filtering takes precidence over taxa filtering. If taxa to keep and 
@@ -337,8 +359,7 @@ filter_taxa_from_data = function(input, filter_thresh, taxa_to_keep,
        map_loaded = input$map_loaded, 
        taxonomy_loaded = input$taxonomy_loaded[rows_keep, ])
 }
-  
-  
+
 # export_otu_table = function(tab, tax_fp, seq_fp, outfp){
 #   tax = read.table(tax_fp,sep='\t',comment.char='',header=F,check.names=F,row.names=1)
 #   seqs = read.table(seq_fp,sep='\t',comment.char='',header=F,check.names=F,row.names=1)
@@ -347,7 +368,6 @@ filter_taxa_from_data = function(input, filter_thresh, taxa_to_keep,
 #                        sequence = seqs[match(otus, row.names(seqs)),1])
 #   write.table(tab.out, outfp, sep='\t', col.names=NA)
 # }
-
 export_otu_table = function(input, out_fp){
   table = input$data_loaded
   taxonomy = apply(input$taxonomy_loaded, 1, paste, collapse = '; ')
@@ -357,24 +377,12 @@ export_otu_table = function(input, out_fp){
   suppressWarnings(write.table(out_tab, out_fp, sep = '\t', row.names = FALSE, append = TRUE))
 }
 
-
 single_rarefy = function(data, depth) {
   require(vegan)
   data_filt_samples = data$data_loaded[, colSums(data$data_loaded) >= depth]
   data_rar = as.data.frame(t(rrarefy(t(data_filt_samples), depth)))
-  # match up data from dissimilarity matrix with mapping file
-  samplesToUse = intersect(names(data_rar), row.names(data$map_loaded))
-  data.use = data_rar[, match(samplesToUse, names(data_rar))]
-  data.use = data.use[rowSums(data.use) != 0,]
-  map.use = data$map_loaded[match(samplesToUse, row.names(data$map_loaded)), ]
-  if('taxonomy_loaded' %in% names(data)) {
-    taxonomy_loaded.use = data$taxonomy_loaded[match(row.names(data.use), row.names(data$taxonomy_loaded)), ]
-    list(data_loaded = data.use, map_loaded = map.use, taxonomy_loaded = taxonomy_loaded.use)
-  } else {
-    list(data_loaded = data.use, map_loaded = map.use)
-  }
+  .match_data_components(data_rar, data$map_loaded, data$taxonomy_loaded)
 }
-
 
 calc_dm = function(tab){
   require(vegan)
