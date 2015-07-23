@@ -525,7 +525,7 @@ convert_dm_to_3_column = function(dm){
   stop('Deprecated - Please use "add_metadata_to_dm_clmns".')
 }
 
-.add_metadata_to_dm_clmns = function(dmat_clmns, map, cat){
+add_metadata_to_dm_clmns = function(dmat_clmns, map, cat){
   cat1 = map[match(dmat_clmns$x1, row.names(map)), cat]
   cat2 = map[match(dmat_clmns$x2, row.names(map)), cat]
   dmat_clmns_wCat = cbind(dmat_clmns, cat1, cat2)
@@ -533,9 +533,9 @@ convert_dm_to_3_column = function(dm){
   dmat_clmns_wCat
 }
 
-# .cats_equal = function(x, col1, col2){
-#   if(x[col1] == x[col2]){"same"} else{"different"}
-# }
+cats_equal = function(x, col1, col2){
+  if(x[col1] == x[col2]){"same"} else{"different"}
+}
 
 #' Test which order of two paired strings is the recognized order by comparing to a vector of accepted
 #' categories
@@ -603,7 +603,7 @@ calc_mean_dissimilarities = function(dissim_mat, map, summarize_by_factor,
   }
   dm_clmns = convert_dm_to_3_column(dissim_mat)
   # list sample 1 and sample 2 factor categories in new clmns
-  dm_clmns_wCat = .add_metadata_to_dm_clmns(dm_clmns, map, summarize_by_factor)
+  dm_clmns_wCat = add_metadata_to_dm_clmns(dm_clmns, map, summarize_by_factor)
   # only take samples in mapping file
   dm_clmns_wCat = dm_clmns_wCat[!is.na(dm_clmns_wCat[, 4]) & !is.na(dm_clmns_wCat[, 5]), ]
   # remove rows where distances are comparing samples from the same cat
