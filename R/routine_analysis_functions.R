@@ -161,13 +161,17 @@ convert_to_relative_abundances = function(input){
 # relative refers to whether output should be sequence counts or relative abundances
 # report_higher_tax indicates whether to display all higher taxonomic strings or just 
   # the level of interest
-summarize_taxonomy = function(data, level, relative = TRUE, report_higher_tax = TRUE){
-  if(report_higher_tax) taxa_strings = apply(data$taxonomy_loaded[1:level], 1, paste0, collapse = '; ')
+summarize_taxonomy = function(data, level, relative = TRUE, 
+                              report_higher_tax = TRUE){
+  if(report_higher_tax) taxa_strings = apply(data$taxonomy_loaded[1:level], 1, 
+                                             paste0, collapse = '; ')
   else taxa_strings = data$taxonomy_loaded[, level]
-  tax_sum = as.data.frame(apply(data$data_loaded, 2, function(x) by(x, taxa_strings, sum)))
+  no_taxa = length(unique(taxa_strings))
+  tax_sum = apply(data$data_loaded, 2, function(x) by(x, taxa_strings, sum))
+  if(no_taxa == 1) tax_sum = data.frame(t(tax_sum), 
+                                        row.names = unique(taxa_strings))
+  else tax_sum = as.data.frame(tax_sum)
   if(relative){
-#     seq_cts = colSums(data$data_loaded)
-#     as.data.frame(t(apply(tax_sum, 1, function(x) x / seq_cts)))
     convert_to_relative_abundances(tax_sum)
   } else tax_sum
 }
@@ -350,14 +354,14 @@ filter_taxa_from_data = function(input, filter_thresh, taxa_to_keep,
       grep(x, apply(as.data.frame(input$taxonomy_loaded[, tax_levels]), 1, 
                     paste0, collapse = ''))
       })
-    if(length(rows_keep_tmp[[1]]) == 0){
+    if(length(rows_remove[[1]]) == 0){
       stop('Taxon not found.')
     }
     rows_keep = rows_keep[! rows_keep %in% unlist(rows_remove)]
   }
   list(data_loaded = input$data_loaded[rows_keep, ],
        map_loaded = input$map_loaded, 
-       taxonomy_loaded = input$taxonomy_loaded[rows_keep, ])
+       taxonomy_loaded = droplevels(input$taxonomy_loaded[rows_keep, ]))
 }
 
 # export_otu_table = function(tab, tax_fp, seq_fp, outfp){
