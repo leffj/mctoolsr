@@ -2,6 +2,7 @@
 % Please edit documentation in R/routine_analysis_functions.R
 \name{taxa_summary_by_sample_type}
 \alias{taxa_summary_by_sample_type}
+\title{Further summarize output from summarize_taxonomy by sample type}
 \usage{
 taxa_summary_by_sample_type(taxa_smry_df, metadata_map, factor, filter_level,
   test_type, grouping_factor, custom_test_function, smry_fun = mean, out_fp)
@@ -26,6 +27,9 @@ See details for custom test/model implementation.}
 \item{smry_fun}{The function to summarize values by (Default: mean)}
 
 \item{out_fp}{Test results output filepath (OPTIONAL)}
+}
+\description{
+Further summarize output from summarize_taxonomy by sample type
 }
 \details{
 Function to show contributions of specific taxa to variation among

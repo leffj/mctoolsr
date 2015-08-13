@@ -2,6 +2,7 @@
 % Please edit documentation in R/routine_analysis_functions.R
 \name{calc_diversity}
 \alias{calc_diversity}
+\title{Calculate diversity values}
 \usage{
 calc_diversity(taxon_table, metric)
 }

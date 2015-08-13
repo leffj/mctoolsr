@@ -2,6 +2,7 @@
 % Please edit documentation in R/routine_analysis_functions.R
 \name{plot_diversity}
 \alias{plot_diversity}
+\title{Plot diversity values}
 \usage{
 plot_diversity(input, variable, metric)
 }

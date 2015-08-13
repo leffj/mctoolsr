@@ -2,11 +2,15 @@
 % Please edit documentation in R/routine_analysis_functions.R
 \name{plot_venn_diagram}
 \alias{plot_venn_diagram}
+\title{Plot Venn Diagrams}
 \usage{
 plot_venn_diagram(input_data, category, pres_thresh)
 }
 \arguments{
 \item{pres_thresh}{The threshold relative abundance for an OTU to be
 considered present for a given sample category}
+}
+\description{
+Plot venn diagram showing OTU overlap between multiple sample categories
 }
 

@@ -2,8 +2,12 @@
 % Please edit documentation in R/routine_analysis_functions.R
 \name{match_datasets}
 \alias{match_datasets}
+\title{Match up samples from two datasets}
 \usage{
 match_datasets(ds1, ds2)
+}
+\arguments{
+\item{ds1,}{ds2 The two datasets as loaded by \code{load_taxon_table()}}
 }
 \description{
 Function to match up sample order from two datasets that contain

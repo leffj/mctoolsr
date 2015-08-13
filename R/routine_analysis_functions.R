@@ -160,8 +160,9 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   } else stop('Error compiling taxonomy.')
 }
 
-#' @description Convert a taxonomy character vector pulled from a text OTU 
-#' table to a data frame
+
+# Convert a taxonomy character vector pulled from a text OTU 
+# table to a data frame
 .parse_taxonomy = function(taxonomy_vec){
   tmp = sapply(taxonomy_vec, function(x) strsplit(as.character(x), split = '; *')[[1]])
   # if not all taxonomic levels present for each OTU, this is necessary to 
@@ -313,10 +314,12 @@ filter_data = function(data, filter_cat, filter_vals, keep_vals){
   }
 }
 
+#' @title Match up samples from two datasets
 #' @description Function to match up sample order from two datasets that contain
 #' some overlapping sample IDs. Sample IDs that are not present in both
 #' datasets will be dropped. The output is a list containing the two filtered
 #' datasets in the same order as they were input.
+#' @param ds1, ds2 The two datasets as loaded by \code{load_taxon_table()}
 match_datasets = function(ds1, ds2){
   common_samples = intersect(names(ds1$data_loaded), names(ds2$data_loaded))
   ds1$map_loaded$common_sample = row.names(ds1$map_loaded) %in% common_samples
@@ -353,6 +356,7 @@ filter_taxa_from_table = function(table, filter_thresh, taxa_to_keep, taxa_to_re
   table[row.names(table) %in% taxa_keep, ]
 }
 
+#' @title Filter taxa from a loaded dataset
 #' @details Can use one or more of the parameters to do filtering. Threshold 
 #'          filtering takes precidence over taxa filtering. If taxa to keep and 
 #'          taxa to remove are both included, taxa to remove will be 
@@ -585,16 +589,16 @@ cats_equal = function(x, col1, col2){
   if(x[col1] == x[col2]){"same"} else{"different"}
 }
 
-#' Test which order of two paired strings is the recognized order by comparing to a vector of accepted
-#' categories
+# Test which order of two paired strings is the recognized order by comparing to a vector of accepted
+# categories
 .get_combination_category = function(x, accepted_categories){
   if(paste(x, collapse='__') %in% accepted_categories) {return(paste(x, collapse='__'))}
   else if(paste(rev(x), collapse='__') %in% accepted_categories) {return(paste(rev(x), collapse='__'))}
   else {return("Not accepted category")}
 }
 
-#' Get the combination category of two vectors containing strings. 
-#' This command dereplicates reverse order combinations.
+# Get the combination category of two vectors containing strings. 
+# This command dereplicates reverse order combinations.
 .id_treatment_combination = function(col1, col2){
   # get the list of unique categories
   unique_levels = unique(c(as.character(col1), as.character(col2)))
@@ -608,7 +612,7 @@ cats_equal = function(x, col1, col2){
   comparison_types
 }
 
-#' convert 3 column dissimilarities back to matrix format
+# convert 3 column dissimilarities back to matrix format
 .convert_one_column_to_matrix = function(df){
   # initialize matrix with dimensions equal to number of unique categories
   uNames = unique(c(as.character(df[, 1]), as.character(df[, 2])))
@@ -673,7 +677,7 @@ calc_mean_dissimilarities = function(dissim_mat, map, summarize_by_factor,
   } else as.dist(.convert_one_column_to_matrix(means2))
 }
 
-
+#' @title Further summarize output from summarize_taxonomy by sample type
 #' @details Function to show contributions of specific taxa to variation among 
 #'          communities using Mann-Whitney (2 factor levels), Kruskal-Wallis 
 #'          (more than 2) tests, or more complex models
@@ -720,7 +724,8 @@ taxa_summary_by_sample_type = function(taxa_smry_df, metadata_map, factor,
   } else test_results
 }
 
-# Plot venn diagram showing OTU overlap between multiple sample categories
+#' @title Plot Venn Diagrams
+#' @description Plot venn diagram showing OTU overlap between multiple sample categories
 #' @param pres_thresh The threshold relative abundance for an OTU to be 
 #' considered present for a given sample category
 ## testing
@@ -791,6 +796,7 @@ plot_venn_diagram = function(input_data, category, pres_thresh){
   }
 }
 
+#' @title Calculate diversity values
 #' @description Calculate diversity values from a taxon table
 calc_diversity = function(taxon_table, metric){
   metrics = c('richness', 'shannon', 'simpson')
@@ -806,6 +812,7 @@ calc_diversity = function(taxon_table, metric){
   }
 }
 
+#' @title Plot diversity values
 #' @description Plot diversity using boxplots across levels of a given factor
 #' @param variable Variable in mapping file to plot by
 plot_diversity = function(input, variable, metric){

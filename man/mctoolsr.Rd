@@ -13,7 +13,7 @@ metadata after the initial processing has been accomplished.
 }
 \details{
 There are multiple functions used to load in data, but the most useful is:
-load_taxon_table(). This function will make sure your community data and
+\code{load_taxon_table()}. This function will make sure your community data and
 metadata correspond to one another and the samples are in the same order.
 }
 \section{Loading data into R using mctoolsr}{

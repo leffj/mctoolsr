@@ -2,6 +2,7 @@
 % Please edit documentation in R/routine_analysis_functions.R
 \name{filter_taxa_from_data}
 \alias{filter_taxa_from_data}
+\title{Filter taxa from a loaded dataset}
 \usage{
 filter_taxa_from_data(input, filter_thresh, taxa_to_keep, taxa_to_remove,
   at_spec_level)
@@ -19,6 +20,9 @@ table values.}
 \item{at_spec_level}{If included, only keep/remove matches at this specific
 taxonomy level(s) (a number/numbers referring to the taxonomy
 column(s)).}
+}
+\description{
+Filter taxa from a loaded dataset
 }
 \details{
 Can use one or more of the parameters to do filtering. Threshold
