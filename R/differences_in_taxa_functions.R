@@ -12,7 +12,7 @@
 # for 2 factor levels and K-W for more than 2. (3) Output results including 
 # adjusted (Bonferroni and FDR) p-values and means.
 
-library(nlme)
+# devtools::use_package('nlme')
 
 # get metadata values for a specific variable in the same order as the samples
 # in the taxa table

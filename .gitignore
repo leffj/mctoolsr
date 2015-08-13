@@ -4,3 +4,4 @@
 *.DS_store
 testing
 examples/private_code
+inst/doc

@@ -1,12 +1,24 @@
 Package: mctoolsr
 Type: Package
-Title: microbial_community_analysis_tools
+Title: Microbial Community Data Analysis Tools
 Version: 0.0.0.9000
-Date: 2015-02-16
-Authors@R: person("Jonathan", "Leff", email = "jonathan.leff@colorado.edu", role = c("aut", "cre"))
+Date: 2015-08-13
+Authors@R: person("Jonathan", "Leff", email = "jonathan.leff@colorado.edu",
+                  role = c("aut", "cre"))
 Maintainer: Jonathan Leff <jonathan.leff@colorado.edu>
-URL: https://github.com/leffj
-Description: This is to aid microbial community analysis
+URL: https://github.com/leffj/mctoolsr
+BugReports: https://github.com/leffj/mctoolsr/issues
+Description: This package is intended to aid microbial community data analysis
+Depends: R (>= 3.1.0)
 License: GPL-3
 Imports: dplyr,
-    ggplot2
+    ggplot2,
+    tools,
+    biom,
+    reshape2,
+    vegan,
+    nlme
+Suggests: VennDiagram,
+    knitr
+LazyData: true
+VignetteBuilder: knitr

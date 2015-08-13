@@ -1,25 +1,66 @@
 # source('~/Software/mctoolsr/R/differences_in_taxa_functions.R')
+# devtools::use_package('tools')
+# devtools::use_package('biom')
+# devtools::use_package('reshape2')
+# devtools::use_package('dplyr')
+# devtools::use_package('ggplot2')
+# devtools::use_package('vegan')
+# devtools::use_package('nlme')
+# devtools::use_package('VennDiagram', 'Suggests')
+
+.onAttach = function(libname, pkgname) {
+  packageStartupMessage("You're loading mctoolsr. Direct inquiries to:
+                        'https://github.com/leffj/mctoolsr'")
+}
+
+.onLoad = function(libname, pkgname) {
+  op = options()
+  op.devtools = list(
+    mctoolsr.path = "",
+    mctoolsr.install.args = "",
+    mctoolsr.name = "mctoolsr",
+    mctoolsr.desc.author = '"Jon Leff <jonathan.leff@colorado.edu> [aut, cre]"',
+    mctoolsr.desc.license = "GPL-3",
+    mctoolsr.desc.suggests = NULL,
+    mctoolsr.desc = list()
+  )
+  toset = !(names(op.devtools) %in% names(op))
+  if(any(toset)) options(op.devtools[toset])
+  
+  invisible()
+}
 
 #############
 # FUNCTIONS #
 #############
 
 #' @title Load a taxon table for use with mctoolsr
-#' @description Load in a taxon table (aka. an OTU table) and a corresponding mapping file 
-#' with metadata values. The samples in the loaded taxon table and mapping file 
-#' will be in the same order and only samples in both will be loaded. The function
-#' can optionally filter samples of a specific type based on the mapping file.
-#' This can also be done later via the filter_data() function.
-#' 
-#' @param tab_fp Taxon table file path
-#' @return A list variable with (1) the loaded taxon table, and (2) the loaded mapping file
+#' @description Load in a taxon table (aka. an OTU table) and a corresponding 
+#'  mapping file with metadata values. The samples in the loaded taxon table 
+#'  and mapping file will be in the same order and only samples in both will 
+#'  be loaded. The function can optionally filter samples of a specific type 
+#'  based on the mapping file. This can also be done later via the filter_data() 
+#'  function.
+#' @param tab_fp Taxon table filepath.
+#' @param map_fp Metadata mapping filepath.
+#' @param filter_cat The map_fp header string for the factor you would like 
+#'  to use to filter samples.
+#' @param filter_vals The values within the filter category (vector or single 
+#'  value) you would like to use to remove samples from the imported data.
+#' @param keep_vals Alternatively, keep only samples represented by these 
+#'  values.
+#' @return A list variable with (1) the loaded taxon table, and (2) the loaded 
+#'  mapping file.
+#' @examples 
+#' \dontrun{
+#' load_taxon_table("filepath_to_OTU_table.txt", "filepath_to_mapping_file.txt",
+#'   "sample_type", filter_vals = "blank")
+#' }
 load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
-  require(tools)
   # load data
-  if(file_ext(tab_fp) == 'biom'){
-    require(biom)
-    data_b = read_biom(tab_fp)
-    data = as.data.frame(as.matrix(biom_data(data_b)))
+  if(tools::file_ext(tab_fp) == 'biom'){
+    data_b = biom::read_biom(tab_fp)
+    data = as.data.frame(as.matrix(biom::biom_data(data_b)))
     data_taxonomy = .compile_taxonomy(data_b)
   }
   else if(file_ext(tab_fp) == 'txt'){
@@ -37,7 +78,8 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
     }
   }
   else stop('Input file must be either biom (.biom) or tab-delimited (.txt) format.')
-  map = read.table(map_fp,sep='\t',comment.char='',header=T,check.names=F,row.names=1)
+  map = read.table(map_fp, sep = '\t', comment.char = '', header = T, 
+                   check.names = F, row.names = 1)
   if(class(map) != 'data.frame') warning('Mapping file should have more than one metadata column.')
   # optionally, subset data
     # cant subset if trying to filter out certain values and keep certain values
@@ -49,6 +91,7 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   .match_data_components(data, map.f, data_taxonomy)
 }
 
+#' @keywords internal
 .filt_map = function(map, filter_cat, filter_vals, keep_vals){
   if(!missing(filter_vals) & !missing(keep_vals)){
     stop('Can only handle filter_vals or keep_vals, not both.')
@@ -93,7 +136,7 @@ load_taxon_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
 # generates a data frame with all levels of taxanomic info as columns
 .compile_taxonomy = function(biom_dat){
   # get only taxonomy observation metadata from a biom file
-  obs_md = observation_metadata(biom_dat)
+  obs_md = biom::observation_metadata(biom_dat)
   if(class(obs_md) == 'list'){
     # replace label for otus with only 1 taxonomy level
     obs_md = sapply(obs_md, function(x) {
@@ -177,10 +220,8 @@ summarize_taxonomy = function(data, level, relative = TRUE,
 }
 
 load_ts_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
-  require(tools)
   # load data
   if(file_ext(tab_fp) == 'biom'){
-    require(biom)
     data = read_biom(tab_fp)
     data = as.data.frame(as.matrix(biom_data(data)))
   }
@@ -200,9 +241,6 @@ load_ts_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
 }
 
 plot_taxa_bars = function(taxa_summary_df, metadata_map, factor, num_taxa){
-  require(reshape2)
-  require(dplyr)
-  require(ggplot2)
   taxa_summary_df$taxon = row.names(taxa_summary_df)
   taxa_summary_df_melted = melt(taxa_summary_df, variable.name = 'Sample_ID', 
                                 id.vars = 'taxon')
@@ -382,14 +420,12 @@ export_otu_table = function(input, out_fp){
 }
 
 single_rarefy = function(data, depth) {
-  require(vegan)
   data_filt_samples = data$data_loaded[, colSums(data$data_loaded) >= depth]
-  data_rar = as.data.frame(t(rrarefy(t(data_filt_samples), depth)))
+  data_rar = as.data.frame(t(vegan::rrarefy(t(data_filt_samples), depth)))
   .match_data_components(data_rar, data$map_loaded, data$taxonomy_loaded)
 }
 
 calc_dm = function(tab){
-  require(vegan)
   # check for and warn about samples with no sequences
   if(min(colSums(tab)) == 0){
     warning('Some samples have no sequences. Samples with low sequence counts
@@ -398,20 +434,19 @@ calc_dm = function(tab){
   # transform otu table (square root transformation)
   otuTable.xform = t(sqrt(tab))
   # create dissimilarity matrix from otu table
-  otuTable.dist = vegdist(otuTable.xform, method='bray')
+  otuTable.dist = vegan::vegdist(otuTable.xform, method='bray')
   otuTable.dist
 }
 
 calc_ordination = function(dm, ord_type, map, constrain_factor){
-  require(vegan)
   dm = as.dist(dm)
   if(ord_type == 'NMDS' | ord_type == 'nmds'){
-    dm_mds = metaMDS(dm, k=2)
+    dm_mds = vegan::metaMDS(dm, k=2)
     data.frame(dm_mds$points)
   }
   else if(ord_type == 'constrained'){
-    cap = capscale(formula = dm ~ map[, constrain_factor])
-    data.frame(scores(cap)$sites)
+    cap = vegan::capscale(formula = dm ~ map[, constrain_factor])
+    data.frame(vegan::scores(cap)$sites)
   }
   else stop('Only NMDS implementd so far.')
   
@@ -419,8 +454,6 @@ calc_ordination = function(dm, ord_type, map, constrain_factor){
 
 plot_ordination = function(data, ordination_axes, color_cat, shape_cat, 
                            hulls = FALSE){
-  require(ggplot2)
-  require(dplyr)
   if(missing(color_cat)){
     warning('No mapping category to color by.')
     color_vec = rep('none', length(labels(dm)))
@@ -431,51 +464,61 @@ plot_ordination = function(data, ordination_axes, color_cat, shape_cat,
   # hulls prep
   if(hulls){
     .find_hulls = function(df) {df[chull(df), ]}
-    hull_vals = do(group_by(to_plot, cat), .find_hulls(.))
+    hull_vals = dplyr::do(dplyr::group_by(to_plot, cat), .find_hulls(.))
   }
   # plot w/ shape
   if(!missing(shape_cat)){
     to_plot = data.frame(to_plot, cat2 = data$map_loaded[,shape_cat])
-    p = ggplot(to_plot, aes_string(headers[1], headers[2]))
-    p = p + geom_point(size = 3, alpha = 0.8, aes(color = cat, shape = cat2)) + theme_bw()
-    p = p + xlab(colnames(to_plot)[1]) + ylab(colnames(to_plot)[2])
+    p = ggplot2::ggplot(to_plot, ggplot2::aes_string(headers[1], headers[2]))
+    p = p + ggplot2::geom_point(size = 3, alpha = 0.8, 
+                                ggplot2::aes(color = cat, shape = cat2))
+    p = p + ggplot2::theme_bw()
+    p = p + ggplot2::xlab(colnames(to_plot)[1]) + 
+      ggplot2::ylab(colnames(to_plot)[2])
   }
   # plot without shape
   else{
-    p = ggplot(to_plot, aes_string(headers[1], headers[2]))
-    p = p + geom_point(size = 3, alpha = 0.8, aes(color=cat)) + theme_bw()
-    p = p + xlab(colnames(to_plot)[1]) + ylab(colnames(to_plot)[2])
+    p = ggplot2::ggplot(to_plot, ggplot2::aes_string(headers[1], headers[2]))
+    p = p + ggplot2::geom_point(size = 3, alpha = 0.8, ggplot2::aes(color=cat))
+    p = p + ggplot2::theme_bw()
+    p = p + ggplot2::xlab(colnames(to_plot)[1]) + 
+      ggplot2::ylab(colnames(to_plot)[2])
   }
   if(hulls){
-    p = p + geom_polygon(data = hull_vals, aes(fill = cat, color = cat), 
-                         alpha = 0.1)
+    p = p + ggplot2::geom_polygon(data = hull_vals, 
+                                  ggplot2::aes(fill = cat, color = cat), 
+                                  alpha = 0.1)
   }
   p
 }
 
 plot_nmds = function(dm, map = NULL, color_cat, shape_cat){
-  require(ggplot2)
   if(missing(color_cat)){
     warning('No mapping category to color by.')
     color_vec = rep('none', length(labels(dm)))
   } else color_vec = map[, color_cat]
   # format data and do NMDS
   dm = as.dist(dm)
-  dm.mds = metaMDS(dm, k=2)
+  dm.mds = vegan::metaMDS(dm, k=2)
   # plot w shape
   if(!missing(shape_cat)){
     points = data.frame(dm.mds$points, cat = color_vec, 
                         cat2 = map[, shape_cat])
-    ggplot(points, aes(MDS1, MDS2, color = cat, shape = cat2)) +
-      geom_point(size = 3, alpha = 0.8) + theme_bw() +
-      scale_color_discrete('') + scale_shape_discrete('') 
+    ggplot2::ggplot(points, 
+                    ggplot2::aes(MDS1, MDS2, color = cat, shape = cat2)) +
+      ggplot2::geom_point(size = 3, alpha = 0.8) + 
+      ggplot2::theme_bw() +
+      ggplot2::scale_color_discrete('') + 
+      ggplot2::scale_shape_discrete('') 
   }
   # plot without shape
   else{
     points = data.frame(dm.mds$points, cat = color_vec)
-    ggplot(points, aes(MDS1, MDS2, color = cat)) +
-      geom_point(size = 3, alpha = 0.8) + theme_bw() +
-      scale_color_discrete('') + scale_shape_discrete('') 
+    ggplot2::ggplot(points, ggplot2::aes(MDS1, MDS2, color = cat)) +
+      ggplot2::geom_point(size = 3, alpha = 0.8) + 
+      ggplot2::theme_bw() +
+      ggplot2::scale_color_discrete('') + 
+      ggplot2::scale_shape_discrete('') 
   }
 }
 
@@ -533,7 +576,8 @@ add_metadata_to_dm_clmns = function(dmat_clmns, map, cat){
   cat1 = map[match(dmat_clmns$x1, row.names(map)), cat]
   cat2 = map[match(dmat_clmns$x2, row.names(map)), cat]
   dmat_clmns_wCat = cbind(dmat_clmns, cat1, cat2)
-  names(dmat_clmns_wCat) = c(names(dmat_clmns), paste(cat, "_1", sep=''), paste(cat, "_2", sep=''))
+  names(dmat_clmns_wCat) = c(names(dmat_clmns), paste(cat, "_1", sep=''), 
+                             paste(cat, "_2", sep=''))
   dmat_clmns_wCat
 }
 
@@ -595,7 +639,6 @@ cats_equal = function(x, col1, col2){
 #' @return Mean dissimilarities
 calc_mean_dissimilarities = function(dissim_mat, map, summarize_by_factor, 
                                      return_map = FALSE){
-  require(dplyr)
   .sumry_fun = function(x){
     if(is.numeric(x)){
       mean(x)
@@ -617,15 +660,15 @@ calc_mean_dissimilarities = function(dissim_mat, map, summarize_by_factor,
                                        col2 = dm_clmns_wCat_reduced[, 5])
   dm_clmns_wCat_reduced = cbind(dm_clmns_wCat_reduced, tx_combo)
   # calc mean dissimilarities
-  means = summarize(group_by(dm_clmns_wCat_reduced, tx_combo), 
+  means = dplyr::summarize(dplyr::group_by(dm_clmns_wCat_reduced, tx_combo), 
                     mean_dist = mean(dist))
   # convert back to matrix format
   means2 = data.frame(do.call(rbind, strsplit(as.character(means$tx_combo), 
                                               split = '__')), 
              mean_dist = means$mean_dist)
   if(return_map){
-    mean_map = summarise_each(group_by_(map, summarize_by_factor), 
-                                   funs(.sumry_fun))
+    mean_map = dplyr::summarise_each(dplyr::group_by_(map, summarize_by_factor), 
+                                   dplyr::funs(.sumry_fun))
     list(dm = as.dist(.convert_one_column_to_matrix(means2)), map_loaded = mean_map)
   } else as.dist(.convert_one_column_to_matrix(means2))
 }
@@ -684,10 +727,10 @@ taxa_summary_by_sample_type = function(taxa_smry_df, metadata_map, factor,
 # infp = '/Users/leffj/Software/mctoolsr/testing/otu_tab1.biom'
 # mapfp = '/Users/leffj/Software/mctoolsr/testing/map1.txt'
 plot_venn_diagram = function(input_data, category, pres_thresh){
-  require(vegan)
-  require(dplyr)
-  require(reshape2)
-  require(VennDiagram)
+  if (!requireNamespace("VennDiagram", quietly = TRUE)) {
+    stop("'VennDiagram' package needed for this function to work. Please 
+         install it.", call. = FALSE)
+  }
   .venn_3cat = function(data, thresh){
     c1count = sum(data[, 2] >= thresh)
     c2count = sum(data[, 3] >= thresh)
@@ -734,10 +777,11 @@ plot_venn_diagram = function(input_data, category, pres_thresh){
   otu_RAs_t = as.data.frame(t(otu_RAs))
   otu_RAs_t$cat = input_data$map_loaded[, category]
   otu_RAs_melted = melt(otu_RAs_t, id.vars = 'cat')
-  otu_RAs_means = summarize(group_by(otu_RAs_melted, variable, cat), 
+  otu_RAs_means = dplyr::summarize(dplyr::group_by(otu_RAs_melted, variable, 
+                                                   cat), 
                             mean_RA = mean(value))
   # plot diagram, discount OTUs with relative abundances lower than threshold
-  otu_RAs_means_cast = dcast(otu_RAs_means, variable ~ cat, value.var = 'mean_RA')
+  otu_RAs_means_cast = reshape::dcast(otu_RAs_means, variable ~ cat, value.var = 'mean_RA')
   if(ncol(otu_RAs_means_cast) - 1 == 3){
     .venn_3cat(otu_RAs_means_cast, pres_thresh)
   } else if (ncol(otu_RAs_means_cast) - 1 == 4){
@@ -749,7 +793,6 @@ plot_venn_diagram = function(input_data, category, pres_thresh){
 
 #' @description Calculate diversity values from a taxon table
 calc_diversity = function(taxon_table, metric){
-  require(vegan)
   metrics = c('richness', 'shannon', 'simpson')
   if(metric == 'richness'){
     apply(taxon_table, 2, function(x) length(x[x > 0]))
@@ -773,118 +816,5 @@ plot_diversity = function(input, variable, metric){
     geom_boxplot() + theme_bw() + xlab('')
 }
 
-
-#################################################################################
-### R code to find the taxa driving differences between microbial communities ###
-###                                                                           ###
-### -- Jon Leff -- June 3, 2015 --                                            ###
-#################################################################################
-
-# This code will: (1) Filter the taxa summary to remove taxa that do not meet
-# an abundance threshold in any factor level. This is based on mean abundance.
-# (2) Calculate which taxa have differences in relative abundance among factor
-# levels. This is based on either Mann-Whitney tests or Kruskal-Wallis (both
-# non-parametric tests), although custom models can be used. Use Mann-Whitney 
-# for 2 factor levels and K-W for more than 2. (3) Output results including 
-# adjusted (Bonferroni and FDR) p-values and means.
-
-library(nlme)
-
-# get metadata values for a specific variable in the same order as the samples
-# in the taxa table
-.get_metadata = function(t_table, map_file, variable){
-  map_file[match(names(t_table), row.names(map_file)), variable]
-}
-
-# function to filter taxa
-.filter_taxa_dit = function(t_table, map_file, f_level, f_factor, smry_fun){
-  # Check if the t_table only has one sample
-  if(class(t_table) == "numeric"){
-    "skip"
-  } else {
-    factorMeta = .get_metadata(t_table, map_file, f_factor)
-    rowsToKeep = c()
-    for(i in 1:nrow(t_table)){
-      #   in the row, calculate means for each factor level and keep if one is 
-      #   greater than filter
-      meanAbunds <- NULL
-      meanAbunds <- aggregate(as.numeric(t(t_table[i, ])), list(factorMeta), 
-                              smry_fun)
-      if(max(meanAbunds$x) >= f_level){
-        rowsToKeep <- c(rowsToKeep, i)
-      }
-    }
-    t_table[rowsToKeep, ]
-  }
-}
-
-# Run Wilcoxon Rank-Sum test (Mann-Whitney U test) and return p-value
-.run_MW_test = function(dependent, factor){
-  # check for only two factor levels
-  if(length(unique(factor)) != 2) print('Mann-Whitney test requires exacly two 
-                                        factor levels.')
-  wilcox.test(formula = dependent ~ factor)$p.value
-}
-
-# Run Kruskal-Wallis test
-.run_KW_test = function(dependent, factor){
-  kruskal.test(formula = dependent ~ factor)$p.value
-}
-
-# Run 2-way NP test
-# uses a rank transformation then lme model
-.run_2WNP_test = function(dependent, factor, g_factor){
-  dep.ranked = rank(dependent, ties.method = 'average')
-  model = lme(fixed = dep.ranked ~ factor, random =~ 1|g_factor)
-  anova(model)[["p-value"]][2]
-}
-
-# Run custom test
-# custom function should take a vector of values for an individual taxon
-# and return a p-value corresponding to the test performed
-.run_custom_test = function(dependent, cust_func_name){
-  cust_func_name(dependent)
-}
-
-# run statistical test (Mann-whitney, Kruskal-Wallis, or 2-way NP) on each taxon
-# in a provided taxa table
-.run_test = function(t_table, map_file, fctr, type, g_fctr, cust_test, smry_fun){
-  fctrMeta = as.factor(as.vector(.get_metadata(t_table, map_file, fctr)))
-  if(!missing(g_fctr)) gfctrMeta = as.factor(as.vector(.get_metadata(t_table, 
-                                                                     map_file, 
-                                                                     g_fctr)))
-  pvals = c()
-  for(i in 1:nrow(t_table)){
-    if(type == 'MW') pvals = c(pvals, .run_MW_test(as.vector(t(t_table[i, ])), 
-                                                   fctrMeta))
-    else if(type == 'KW') pvals = c(pvals, .run_KW_test(as.vector(t(
-      t_table[i, ])), fctrMeta))
-    else if(type == '2WNP') pvals = c(pvals, .run_2WNP_test(as.vector(t(
-      t_table[i, ])), fctrMeta, gfctrMeta))
-    else if(type == 'custom') pvals = c(pvals, .run_custom_test(as.vector(t(
-      t_table[i, ])), cust_test))
-    else print('Invalid test type specified')
-    if(i == 1){
-      meanAbunds = aggregate(as.numeric(t(t_table[i, ])), list(fctrMeta), smry_fun)
-    } else{
-      means = aggregate(as.numeric(t(t_table[i, ])), list(fctrMeta), smry_fun)[, 2]
-      meanAbunds = cbind(meanAbunds, means)
-    }
-  }
-  # generate bonforroni corrected pvals
-  pvalsBon = pvals * length(pvals)
-  # generate FDR corrected pvals (taken from otu_category_significance.py)
-  # Ranks p-values low to high and multiplies each p-value by the number of
-  # comparisons divided by the rank.
-  pvalsFDR = pvals * (length(pvals) / rank(pvals, ties.method="average"))
-  # prep means to be added
-  factorLevels = as.character(meanAbunds[, 1])
-  meanAbunds[, 1] = NULL
-  # make result df
-  result = as.data.frame(cbind(pvals, pvalsBon, pvalsFDR, t(meanAbunds)))
-  row.names(result) = row.names(t_table)
-  colnames(result) = c("pvals", "pvalsBon", "pvalsFDR", factorLevels)
-  result
-}
 
 
