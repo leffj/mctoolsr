@@ -243,24 +243,27 @@ load_ts_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
 
 plot_taxa_bars = function(taxa_summary_df, metadata_map, factor, num_taxa){
   taxa_summary_df$taxon = row.names(taxa_summary_df)
-  taxa_summary_df_melted = melt(taxa_summary_df, variable.name = 'Sample_ID', 
+  taxa_summary_df_melted = reshape2::melt(taxa_summary_df, variable.name = 'Sample_ID', 
                                 id.vars = 'taxon')
   group_by_levels = metadata_map[match(taxa_summary_df_melted$Sample_ID, 
                                        row.names(metadata_map)), factor]
   taxa_summary_df_melted$group_by = group_by_levels
-  mean_tax_vals = summarise(group_by(taxa_summary_df_melted, group_by, taxon), 
+  mean_tax_vals = dplyr::summarise(dplyr::group_by(taxa_summary_df_melted, 
+                                                   group_by, taxon), 
                             mean_value = mean(value))
   # get top taxa and convert other to 'other'
   mean_tax_vals_sorted = mean_tax_vals[order(mean_tax_vals$mean_value, 
                                              decreasing = TRUE), ]
   top_taxa = unique(mean_tax_vals_sorted$taxon)[1:num_taxa]
   mean_tax_vals_sorted$taxon[!mean_tax_vals_sorted$taxon %in% top_taxa] = 'Other'
-  to_plot = summarise(group_by(mean_tax_vals_sorted, group_by, taxon), 
+  to_plot = dplyr::summarise(dplyr::group_by(mean_tax_vals_sorted, group_by, 
+                                             taxon), 
                       mean_value = sum(mean_value))
   # plot
-  ggplot(to_plot, aes(group_by, mean_value, fill = taxon)) +
-    geom_bar(stat = 'identity') + ylab('') + xlab('') +
-    theme(legend.title=element_blank())
+  ggplot2::ggplot(to_plot, ggplot2::aes(group_by, mean_value, fill = taxon)) +
+    ggplot2::geom_bar(stat = 'identity') + 
+    ggplot2::ylab('') + ggplot2::xlab('') +
+    ggplot2::theme(legend.title = ggplot2::element_blank())
 }
 
 load_dm = function(dm_fp, map_fp, filter_cat, filter_vals, keep_vals){
@@ -781,7 +784,7 @@ plot_venn_diagram = function(input_data, category, pres_thresh){
   }
   otu_RAs_t = as.data.frame(t(otu_RAs))
   otu_RAs_t$cat = input_data$map_loaded[, category]
-  otu_RAs_melted = melt(otu_RAs_t, id.vars = 'cat')
+  otu_RAs_melted = reshape2::melt(otu_RAs_t, id.vars = 'cat')
   otu_RAs_means = dplyr::summarize(dplyr::group_by(otu_RAs_melted, variable, 
                                                    cat), 
                             mean_RA = mean(value))
@@ -821,8 +824,9 @@ plot_diversity = function(input, variable, metric){
   diversity = calc_diversity(input$data_loaded, metric)
   to_plot = data_frame(diversity, input$map_loaded[, variable])
   names(to_plot) = c(metric, variable)
-  ggplot(to_plot, aes_string(variable, metric, fill = variable)) +
-    geom_boxplot() + theme_bw() + xlab('')
+  ggplot2::ggplot(to_plot, ggplot2::aes_string(variable, metric, 
+                                               fill = variable)) +
+    ggplot2::geom_boxplot() + ggplot2::theme_bw() + ggplot2::xlab('')
 }
 
 
