@@ -6,6 +6,11 @@
 \usage{
 calc_diversity(taxon_table, metric)
 }
+\arguments{
+\item{taxon_table}{The taxon table}
+
+\item{metric}{The diversity metric to calculate}
+}
 \description{
 Calculate diversity values from a taxon table
 }

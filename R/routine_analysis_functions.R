@@ -798,6 +798,8 @@ plot_venn_diagram = function(input_data, category, pres_thresh){
 
 #' @title Calculate diversity values
 #' @description Calculate diversity values from a taxon table
+#' @param taxon_table The taxon table
+#' @param metric The diversity metric to calculate
 calc_diversity = function(taxon_table, metric){
   metrics = c('richness', 'shannon', 'simpson')
   if(metric == 'richness'){
