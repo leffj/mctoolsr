@@ -12,12 +12,12 @@
 #' @return A variable of class 'dist'.
 calc_dm = function(tax_table){
   # check for and warn about samples with no sequences
-  if(min(colSums(tab)) == 0){
+  if(min(colSums(tax_table)) == 0){
     warning('Some samples have no sequences. Samples with low sequence counts
             should be filtered out by rarefying or another acceptable method.')
   }
   # transform otu table (square root transformation)
-  otuTable.xform = t(sqrt(tab))
+  otuTable.xform = t(sqrt(tax_table))
   # create dissimilarity matrix from otu table
   otuTable.dist = vegan::vegdist(otuTable.xform, method='bray')
   otuTable.dist

@@ -158,7 +158,7 @@ filter_data = function(input, filter_cat, filter_vals, keep_vals){
   } else map.f = map
   # match up data from dissimilarity matrix with mapping file
   if('taxonomy_loaded' %in% names(input)){
-    .match_data_components(input$data_loaded, map.f, data$taxonomy_loaded)
+    .match_data_components(input$data_loaded, map.f, input$taxonomy_loaded)
   } else {
     .match_data_components(input$data_loaded, map.f)
   }
