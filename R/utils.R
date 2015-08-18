@@ -33,10 +33,10 @@
 
 #' @keywords internal
 .match_data_components = function(tax_table, metadata_map, taxonomy){
-  samplesToUse = intersect(names(tax_table), row.names(map))
+  samplesToUse = intersect(names(tax_table), row.names(metadata_map))
   tax_table.use = tax_table[, match(samplesToUse, names(tax_table))]
   tax_table.use = tax_table.use[rowSums(tax_table.use) != 0, ]
-  map.use = map[match(samplesToUse, row.names(map)),]
+  map.use = metadata_map[match(samplesToUse, row.names(metadata_map)),]
   map.use = droplevels(map.use)
   if(!missing('taxonomy')) {
     taxonomy.use = taxonomy[match(row.names(tax_table.use), row.names(taxonomy)), ]
