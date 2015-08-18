@@ -1,8 +1,8 @@
-#################################################################################
-### R code to find the taxa driving differences between microbial communities ###
-###                                                                           ###
-### -- Jon Leff -- June 3, 2015 --                                            ###
-#################################################################################
+# mctoolsr
+
+#######################
+# TAXA BY SAMPLE TYPE #
+#######################
 
 # This code will: (1) Filter the taxa summary to remove taxa that do not meet
 # an abundance threshold in any factor level. This is based on mean abundance.
@@ -12,14 +12,14 @@
 # for 2 factor levels and K-W for more than 2. (3) Output results including 
 # adjusted (Bonferroni and FDR) p-values and means.
 
-# devtools::use_package('nlme')
-
+#' @keywords internal
 # get metadata values for a specific variable in the same order as the samples
 # in the taxa table
 .get_metadata = function(t_table, map_file, variable){
   map_file[match(names(t_table), row.names(map_file)), variable]
 }
 
+#' @keywords internal
 # function to filter taxa
 .filter_taxa_dit = function(t_table, map_file, f_level, f_factor, smry_fun){
   # Check if the t_table only has one sample
@@ -42,6 +42,7 @@
   }
 }
 
+#' @keywords internal
 # Run Wilcoxon Rank-Sum test (Mann-Whitney U test) and return p-value
 .run_MW_test = function(dependent, factor){
   # check for only two factor levels
@@ -50,11 +51,13 @@
   wilcox.test(formula = dependent ~ factor)$p.value
 }
 
+#' @keywords internal
 # Run Kruskal-Wallis test
 .run_KW_test = function(dependent, factor){
   kruskal.test(formula = dependent ~ factor)$p.value
 }
 
+#' @keywords internal
 # Run 2-way NP test
 # uses a rank transformation then lme model
 .run_2WNP_test = function(dependent, factor, g_factor){
@@ -63,6 +66,7 @@
   anova(model)[["p-value"]][2]
 }
 
+#' @keywords internal
 # Run custom test
 # custom function should take a vector of values for an individual taxon
 # and return a p-value corresponding to the test performed
@@ -70,6 +74,7 @@
   cust_func_name(dependent)
 }
 
+#' @keywords internal
 # run statistical test (Mann-whitney, Kruskal-Wallis, or 2-way NP) on each taxon
 # in a provided taxa table
 .run_test = function(t_table, map_file, fctr, type, g_fctr, cust_test, smry_fun){
@@ -111,3 +116,49 @@
   result
 }
 
+#' @title Further summarize output from summarize_taxonomy by sample type
+#' @details Function to show contributions of specific taxa to variation among 
+#'          communities using Mann-Whitney (2 factor levels), Kruskal-Wallis 
+#'          (more than 2) tests, or more complex models
+#' @param taxa_smry_df Taxa summary data frame
+#' @param metadata_map Mapping file
+#' @param out_fp Test results output filepath (OPTIONAL)
+#' @param factor Mapping file header (in quotation marks) of factor for which 
+#'        you are testing for differences
+#' @param filter_level The minimum mean value needed in at least one 
+#'        of the factor levels for a taxon to be retained in the analysis
+#' @param test_type either 'MW', 'KW', or 'custom' (i.e. Wilcoxon/Mann-Whitney U 
+#'        for 2 factor levels or Kruskal-Wallis for more than two factor levels).
+#'        See details for custom test/model implementation.
+#' @param custom_test_function Name of custom test function
+#' @param smry_fun The function to summarize values by (Default: mean)
+taxa_summary_by_sample_type = function(taxa_smry_df, metadata_map, factor, 
+                                       filter_level, test_type, grouping_factor, 
+                                       custom_test_function, smry_fun = mean, 
+                                       out_fp){
+  if(!missing(filter_level)){
+    # filter taxa summary table by abundance in any/either factor level
+    taxa_smry_df = .filter_taxa_dit(taxa_smry_df, metadata_map, filter_level, 
+                                    factor, smry_fun = smry_fun)
+  }
+  if(!missing(grouping_factor)){
+    test_results = .run_test(taxa_smry_df, metadata_map, factor, test_type, 
+                             grouping_factor, smry_fun = smry_fun)
+  }
+  else if(!missing(custom_test_function)){
+    test_results = .run_test(taxa_smry_df, metadata_map, factor, test_type,
+                             cust_test = custom_test_function, 
+                             smry_fun = smry_fun)
+  } 
+  else{
+    test_results = .run_test(taxa_smry_df, metadata_map, factor, test_type,
+                             smry_fun = smry_fun)
+  }
+  # Sort by pvalues 
+  test_results = test_results[with(test_results, order(pvals)), ]
+  # output data
+  if(!missing(out_fp)){
+    write.table(test_results, file = out_fp, sep = ",", row.names = TRUE, 
+                col.names = NA)  
+  } else test_results
+}
