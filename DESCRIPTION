@@ -19,6 +19,7 @@ Imports: dplyr,
     vegan,
     nlme
 Suggests: VennDiagram,
-    knitr
+    knitr,
+    testthat
 LazyData: true
 VignetteBuilder: knitr

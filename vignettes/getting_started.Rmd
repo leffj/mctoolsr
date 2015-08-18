@@ -45,17 +45,18 @@ Note that the following examples use an example dataset taken from a study exami
 
 #### Loading OTU tables and metadata
 
-You can load a taxon (i.e. OTU) table in biom format using the following approach. Note that filepaths are specific to your system, so they will likely have to be altered depending on where you cloned **mctoolsr** into.
+You can load a taxa (i.e. OTU) table in biom format using the following approach. Note that filepaths are specific to your system, so they will likely have to be altered depending on where you cloned **mctoolsr** into.
 
 One of the nice things about loading your data this way is that all the sample IDs will be matched between your taxon table and metadata so that they will be in the same order and any sample IDs not present in one or the other will be dropped.
 
 You can optionally filter out samples of a specific type during this step, but this can also be done separately as shown here.
 
 ```{r}
-tax_table_fp = '~/Software/mctoolsr/examples/fruits_veggies_taxon_table_wTax.biom'
-map_fp = '~/Software/mctoolsr/examples/fruits_veggies_metadata.txt'
-
-input = load_taxon_table(tax_table_fp, map_fp)
+tax_table_fp = system.file('extdata', 'fruits_veggies_taxa_table_wTax.biom', 
+                     package = 'mctoolsr')
+map_fp = system.file('extdata', 'fruits_veggies_metadata.txt', 
+                     package = 'mctoolsr')
+input = load_taxa_table(tax_table_fp, map_fp)
 ```
 
 The loaded data will consist of three parts:

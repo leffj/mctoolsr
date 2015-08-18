@@ -31,7 +31,7 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   if(tools::file_ext(tab_fp) == 'biom'){
     data_b = biom::read_biom(tab_fp)
     data = as.data.frame(as.matrix(biom::biom_data(data_b)))
-    data_taxonomy = .compile_taxonomy(data_b)
+    data_taxonomy = mctoolsr:::.compile_taxonomy(data_b)
   }
   else if(file_ext(tab_fp) == 'txt'){
     if(readChar(tab_fp, nchars = 4) == "#OTU"){
@@ -58,7 +58,7 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
     map.f = .filt_map(map, filter_cat, filter_vals, keep_vals)
   } else map.f = map
   # match up data from dissimilarity matrix with mapping file
-  .match_data_components(data, map.f, data_taxonomy)
+  mctoolsr:::.match_data_components(data, map.f, data_taxonomy)
 }
 
 #' @title Load a dissimilarity matrix for use with mctoolsr

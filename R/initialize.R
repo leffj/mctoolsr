@@ -8,8 +8,8 @@
 # devtools::use_package('VennDiagram', 'Suggests')
 
 .onAttach = function(libname, pkgname) {
-  packageStartupMessage("You're loading mctoolsr. Direct inquiries to:
-                        'https://github.com/leffj/mctoolsr'")
+  packageStartupMessage("You're using mctoolsr. Direct inquiries to:
+    'https://github.com/leffj/mctoolsr'")
 }
 
 .onLoad = function(libname, pkgname) {
