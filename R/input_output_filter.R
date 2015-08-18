@@ -33,7 +33,7 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
     data = as.data.frame(as.matrix(biom::biom_data(data_b)))
     data_taxonomy = mctoolsr:::.compile_taxonomy(data_b)
   }
-  else if(file_ext(tab_fp) == 'txt'){
+  else if(tools::file_ext(tab_fp) == 'txt'){
     if(readChar(tab_fp, nchars = 4) == "#OTU"){
       data = read.table(tab_fp, sep='\t', comment.char='', header=T, 
                         check.names=F, row.names=1)
