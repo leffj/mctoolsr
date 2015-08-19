@@ -62,7 +62,7 @@
 # uses a rank transformation then lme model
 .run_2WNP_test = function(dependent, factor, g_factor){
   dep.ranked = rank(dependent, ties.method = 'average')
-  model = lme(fixed = dep.ranked ~ factor, random =~ 1|g_factor)
+  model = nlme::lme(fixed = dep.ranked ~ factor, random =~ 1|g_factor)
   anova(model)[["p-value"]][2]
 }
 
@@ -130,6 +130,7 @@
 #' @param test_type either 'MW', 'KW', or 'custom' (i.e. Wilcoxon/Mann-Whitney U 
 #'        for 2 factor levels or Kruskal-Wallis for more than two factor levels).
 #'        See details for custom test/model implementation.
+#' @param grouping_factor Used with 2-way tests.
 #' @param custom_test_function Name of custom test function
 #' @param smry_fun The function to summarize values by (Default: mean)
 taxa_summary_by_sample_type = function(taxa_smry_df, metadata_map, factor, 

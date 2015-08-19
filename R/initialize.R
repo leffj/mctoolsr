@@ -5,6 +5,7 @@
 # devtools::use_package('ggplot2')
 # devtools::use_package('vegan')
 # devtools::use_package('nlme')
+# devtools::use_package('grid')
 # devtools::use_package('VennDiagram', 'Suggests')
 
 .onAttach = function(libname, pkgname) {

@@ -7,7 +7,9 @@
 match_datasets(ds1, ds2)
 }
 \arguments{
-\item{ds1,}{ds2 The two datasets as loaded by \code{load_taxa_table()}}
+\item{ds1}{The first dataset as loaded by \code{load_taxa_table()}}
+
+\item{ds2}{The second dataset.}
 }
 \value{
 A list variable with the matched ds1 as the first element and ds2

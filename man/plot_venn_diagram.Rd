@@ -4,13 +4,18 @@
 \alias{plot_venn_diagram}
 \title{Plot Venn Diagrams}
 \usage{
-plot_venn_diagram(input_data, category, pres_thresh)
+plot_venn_diagram(input, category, pres_thresh)
 }
 \arguments{
+\item{input}{The input dataset as loaded by \code{load_taxa_table()}.}
+
+\item{category}{The category (header in map) to group samples by.}
+
 \item{pres_thresh}{The threshold relative abundance for an OTU to be
-considered present for a given sample category}
+considered present for a given sample category.}
 }
 \description{
-Plot venn diagram showing OTU overlap between multiple sample categories
+Plot venn diagram showing OTU overlap between multiple sample
+ categories.
 }
 

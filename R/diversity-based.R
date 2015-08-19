@@ -11,10 +11,10 @@
 calc_diversity = function(tax_table, metric){
   metrics = c('richness', 'shannon', 'simpson')
   if(metric == 'richness'){
-    apply(taxa_table, 2, function(x) length(x[x > 0]))
+    apply(tax_table, 2, function(x) length(x[x > 0]))
   }
   else if(metric %in% c('shannon', 'simpson')){
-    diversity(taxa_table, index = metric, MARGIN = 2)
+    vegan::diversity(tax_table, index = metric, MARGIN = 2)
   }
   else {
     stop(paste0('Metric, "', metric, '", is not a valid metric.\n  Valid metrics are: ',
@@ -29,7 +29,7 @@ calc_diversity = function(tax_table, metric){
 #' @param metric Diversity metric to use.
 plot_diversity = function(input, variable, metric){
   diversity = calc_diversity(input$data_loaded, metric)
-  to_plot = data_frame(diversity, input$map_loaded[, variable])
+  to_plot = data.frame(diversity, input$map_loaded[, variable])
   names(to_plot) = c(metric, variable)
   ggplot2::ggplot(to_plot, ggplot2::aes_string(variable, metric, 
                                                fill = variable)) +

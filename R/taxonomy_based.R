@@ -64,7 +64,9 @@
 #'   than the indecated level (default = TRUE)
 #' @examples 
 #' ## Return relative abundances of phyla for each sample
+#' \dontrun{
 #' summarize_taxonomy(input = example_input, level = 2)
+#' }
 summarize_taxonomy = function(input, level, relative = TRUE, 
                               report_higher_tax = TRUE){
   if(report_higher_tax) taxa_strings = apply(data$taxonomy_loaded[1:level], 1, 

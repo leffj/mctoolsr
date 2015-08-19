@@ -27,7 +27,9 @@ Filter out or keep particular samples in a dataset based on
  contextual metadata.
 }
 \examples{
+\dontrun{
 ex_in_filt = filter_data(input = "example_input", filter_cat = "Sample_type",
                          filter_vals = c("mushrooms", "strawberries"))
+}
 }
 

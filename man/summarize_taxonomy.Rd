@@ -24,6 +24,8 @@ Given input as generated from \code{load_taxon_table()},
 }
 \examples{
 ## Return relative abundances of phyla for each sample
+\dontrun{
 summarize_taxonomy(input = example_input, level = 2)
+}
 }
 

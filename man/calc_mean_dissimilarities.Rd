@@ -4,19 +4,21 @@
 \alias{calc_mean_dissimilarities}
 \title{Calculate mean dissimilarities using a metadata factor}
 \usage{
-calc_mean_dissimilarities(dissim_mat, map, summarize_by_factor,
+calc_mean_dissimilarities(dissim_mat, metadata_map, summarize_by_factor,
   return_map = FALSE)
 }
 \arguments{
-\item{dissim_mat}{Dissimilarity matrix - typically created using 'calc_dm()'}
+\item{dissim_mat}{Dissimilarity matrix - typically created using 'calc_dm()'.}
 
-\item{summarize_by_factor}{Category in mapping file to summarize by}
+\item{metadata_map}{The metadata mapping dataframe.}
+
+\item{summarize_by_factor}{Category in mapping file to summarize by.}
 
 \item{return_map}{Whether or not to return summarized mapping files. If true,
-will return a list (default: FALSE)}
+will return a list (default: FALSE).}
 }
 \value{
-Mean dissimilarities
+Mean dissimilarities.
 }
 \description{
 Calculate mean dissimilarities across all levels of a given factor

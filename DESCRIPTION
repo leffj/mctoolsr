@@ -17,7 +17,8 @@ Imports: dplyr,
     biom,
     reshape2,
     vegan,
-    nlme
+    nlme,
+    grid
 Suggests: VennDiagram,
     knitr,
     testthat

@@ -31,7 +31,7 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   if(tools::file_ext(tab_fp) == 'biom'){
     data_b = biom::read_biom(tab_fp)
     data = as.data.frame(as.matrix(biom::biom_data(data_b)))
-    data_taxonomy = mctoolsr:::.compile_taxonomy(data_b)
+    data_taxonomy = .compile_taxonomy(data_b)
   }
   else if(tools::file_ext(tab_fp) == 'txt'){
     if(readChar(tab_fp, nchars = 4) == "#OTU"){
@@ -58,7 +58,7 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
     map.f = .filt_map(map, filter_cat, filter_vals, keep_vals)
   } else map.f = map
   # match up data from dissimilarity matrix with mapping file
-  mctoolsr:::.match_data_components(data, map.f, data_taxonomy)
+  .match_data_components(data, map.f, data_taxonomy)
 }
 
 #' @title Load a dissimilarity matrix for use with mctoolsr
@@ -147,15 +147,14 @@ load_2_dms = function(dm1_fp, dm2_fp, map_fp, filter_cat, filter_vals, keep_vals
 #' @return A list variable with (1) the loaded dissimilarity matrix, (2) 
 #'  the loaded mapping file, and optionally (3) the loaded taxonomy information
 #' @examples 
+#' \dontrun{
 #' ex_in_filt = filter_data(input = "example_input", filter_cat = "Sample_type", 
 #'                          filter_vals = c("mushrooms", "strawberries"))
+#' }
 filter_data = function(input, filter_cat, filter_vals, keep_vals){
-  # input is list from 'load_data' function
-  # cant subset if trying to filter out certain values and keep certain values
-  # use one or the other
   if(!missing(filter_cat)){
     map.f = .filt_map(input$map_loaded, filter_cat, filter_vals, keep_vals)
-  } else map.f = map
+  } else map.f = input$map_loaded
   # match up data from dissimilarity matrix with mapping file
   if('taxonomy_loaded' %in% names(input)){
     .match_data_components(input$data_loaded, map.f, input$taxonomy_loaded)
@@ -169,7 +168,8 @@ filter_data = function(input, filter_cat, filter_vals, keep_vals){
 #'  some overlapping sample IDs. Sample IDs that are not present in both
 #'  datasets will be dropped. The output is a list containing the two filtered
 #'  datasets in the same order as they were input.
-#' @param ds1, ds2 The two datasets as loaded by \code{load_taxa_table()}
+#' @param ds1 The first dataset as loaded by \code{load_taxa_table()}
+#' @param ds2 The second dataset.
 #' @return A list variable with the matched ds1 as the first element and ds2
 #'  as the second element
 match_datasets = function(ds1, ds2){

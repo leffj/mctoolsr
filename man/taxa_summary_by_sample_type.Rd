@@ -22,6 +22,8 @@ of the factor levels for a taxon to be retained in the analysis}
 for 2 factor levels or Kruskal-Wallis for more than two factor levels).
 See details for custom test/model implementation.}
 
+\item{grouping_factor}{Used with 2-way tests.}
+
 \item{custom_test_function}{Name of custom test function}
 
 \item{smry_fun}{The function to summarize values by (Default: mean)}

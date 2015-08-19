@@ -139,7 +139,7 @@ There are multiple taxa filtering options in **mctoolsr**. This example shows ho
 input_proteobact = filter_taxa_from_data(input, taxa_to_keep = 'p__Proteobacteria')
 sort(colSums(input_proteobact$data_loaded))
 input_proteobact_rar = single_rarefy(input_proteobact, 219)
-plot_nmds(calc_dm(input_proteobact_rar$data_loaded), map = input_proteobact_rar$map_loaded, 
+plot_nmds(calc_dm(input_proteobact_rar$data_loaded), metadata_map = input_proteobact_rar$map_loaded, 
           color_cat = 'Sample_type')
 ```  
 

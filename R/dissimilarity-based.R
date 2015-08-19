@@ -23,26 +23,41 @@ calc_dm = function(tax_table){
   otuTable.dist
 }
 
-calc_ordination = function(dm, ord_type, map, constrain_factor){
+#' @title Calculate Point Coordinates in an Ordination
+#' @description Use before plotting ordination.
+#' @param dm Dissimilarity matrix.
+#' @param ord_type The type of ordination. 'NMDS' or 'constrained' are the 
+#'  current accepted values.
+#' @param metadata_map Required if 'constrained' ord_type.
+#' @param constrain_factor Required if 'constrained' ord_type.
+calc_ordination = function(dm, ord_type, metadata_map, constrain_factor){
   dm = as.dist(dm)
   if(ord_type == 'NMDS' | ord_type == 'nmds'){
     dm_mds = vegan::metaMDS(dm, k=2)
     data.frame(dm_mds$points)
   }
   else if(ord_type == 'constrained'){
-    cap = vegan::capscale(formula = dm ~ map[, constrain_factor])
+    cap = vegan::capscale(formula = dm ~ metadata_map[, constrain_factor])
     data.frame(vegan::scores(cap)$sites)
   }
   else stop('Only NMDS implementd so far.')
   
 }
 
-plot_ordination = function(data, ordination_axes, color_cat, shape_cat, 
+#' @title Generate an Ordination Plot
+#' @description Used to generate a plot from the output of \code{
+#'  calc_ordination()}
+#' @param input The input dataset as loaded by \code{load_taxa_table()}.
+#' @param ordination_axes The output of \code{calc_ordination()}.
+#' @param color_cat The metadata map header used to color points.
+#' @param shape_cat The metadata map header used for points' shapes (optional).
+#' @param hulls Whether or not to include an outline around sample categories.
+plot_ordination = function(input, ordination_axes, color_cat, shape_cat, 
                            hulls = FALSE){
   if(missing(color_cat)){
     warning('No mapping category to color by.')
     color_vec = rep('none', length(labels(dm)))
-  } else color_vec = data$map_loaded[, color_cat]
+  } else color_vec = input$map_loaded[, color_cat]
   to_plot = data.frame(ordination_axes, cat = color_vec)
   names(to_plot)[3] = 'cat'
   headers = colnames(to_plot)
@@ -53,7 +68,7 @@ plot_ordination = function(data, ordination_axes, color_cat, shape_cat,
   }
   # plot w/ shape
   if(!missing(shape_cat)){
-    to_plot = data.frame(to_plot, cat2 = data$map_loaded[,shape_cat])
+    to_plot = data.frame(to_plot, cat2 = input$map_loaded[,shape_cat])
     p = ggplot2::ggplot(to_plot, ggplot2::aes_string(headers[1], headers[2]))
     p = p + ggplot2::geom_point(size = 3, alpha = 0.8, 
                                 ggplot2::aes(color = cat, shape = cat2))
@@ -77,18 +92,24 @@ plot_ordination = function(data, ordination_axes, color_cat, shape_cat,
   p
 }
 
-plot_nmds = function(dm, map = NULL, color_cat, shape_cat){
+#' @title Generate an NMDS Plot Quickly
+#' @description Used to generate a quick ordination.
+#' @param dm Dissimilarity matrix.
+#' @param metadata_map The metadata mapping dataframe.
+#' @param color_cat The metadata map header used to color points.
+#' @param shape_cat The metadata map header used for points' shapes (optional).
+plot_nmds = function(dm, metadata_map = NULL, color_cat, shape_cat){
   if(missing(color_cat)){
     warning('No mapping category to color by.')
     color_vec = rep('none', length(labels(dm)))
-  } else color_vec = map[, color_cat]
+  } else color_vec = metadata_map[, color_cat]
   # format data and do NMDS
   dm = as.dist(dm)
   dm.mds = vegan::metaMDS(dm, k=2)
   # plot w shape
   if(!missing(shape_cat)){
     points = data.frame(dm.mds$points, cat = color_vec, 
-                        cat2 = map[, shape_cat])
+                        cat2 = metadata_map[, shape_cat])
     ggplot2::ggplot(points, 
                     ggplot2::aes(MDS1, MDS2, color = cat, shape = cat2)) +
       ggplot2::geom_point(size = 3, alpha = 0.8) + 
@@ -122,25 +143,27 @@ plot_nmds = function(dm, map = NULL, color_cat, shape_cat){
 # # color_by = 'group'
 # # output_dir = outdir
 
-# functions to convert and manipulate dissimilarity matrices in 3 column format
 
-secondary_permanova = function(data, split_cat, cat_level, test_factor){
-  data.tmp = filter_data(data, filter_cat = split_cat, keep_vals = cat_level)
-  data.tmp = filter_data(data.tmp, filter_cat = test_factor, filter_vals = '#N/A')
-  dm.tmp = calc_dm(data.tmp$data_loaded)
-  results = adonis(dm.tmp ~ data.tmp$map_loaded[, test_factor])
-  results
-}
+# secondary_permanova = function(data, split_cat, cat_level, test_factor){
+#   data.tmp = filter_data(data, filter_cat = split_cat, keep_vals = cat_level)
+#   data.tmp = filter_data(data.tmp, filter_cat = test_factor, filter_vals = '#N/A')
+#   dm.tmp = calc_dm(data.tmp$data_loaded)
+#   results = adonis(dm.tmp ~ data.tmp$map_loaded[, test_factor])
+#   results
+# }
+# 
+# assess_within_category_effects = function(data, category, test_factor){
+#   for(i in 1:length(unique(data$map_loaded[, category]))){
+#     level = unique(data$map_loaded[, category])[i]
+#     print(paste(cat('\n'), level, cat('\n')))
+#     results = secondary_permanova(data, category, level, test_factor)
+#     print(results)
+#   }
+# }
 
-assess_within_category_effects = function(data, category, test_factor){
-  for(i in 1:length(unique(data$map_loaded[, category]))){
-    level = unique(data$map_loaded[, category])[i]
-    print(paste(cat('\n'), level, cat('\n')))
-    results = secondary_permanova(data, category, level, test_factor)
-    print(results)
-  }
-}
-
+#' @title Convert dissimilarity matrix to 3 column format
+#' @description This is useful for performing analyses on dissimilarity values
+#' @param dm Dissimilarity matrix of either class 'dist' or class 'data.frame'
 convert_dm_to_3_column = function(dm){
   if(class(dm) == 'data.frame'){
     dmat = as.dist(dm)
@@ -154,10 +177,10 @@ convert_dm_to_3_column = function(dm){
 }
 
 .add_metadata_to_df = function(x, y, z){
-  stop('Deprecated - Please use "add_metadata_to_dm_clmns".')
+  stop('Deprecated - Please use ".add_metadata_to_dm_clmns".')
 }
 
-add_metadata_to_dm_clmns = function(dmat_clmns, map, cat){
+.add_metadata_to_dm_clmns = function(dmat_clmns, map, cat){
   cat1 = map[match(dmat_clmns$x1, row.names(map)), cat]
   cat2 = map[match(dmat_clmns$x2, row.names(map)), cat]
   dmat_clmns_wCat = cbind(dmat_clmns, cat1, cat2)
@@ -166,9 +189,9 @@ add_metadata_to_dm_clmns = function(dmat_clmns, map, cat){
   dmat_clmns_wCat
 }
 
-cats_equal = function(x, col1, col2){
-  if(x[col1] == x[col2]){"same"} else{"different"}
-}
+# cats_equal = function(x, col1, col2){
+#   if(x[col1] == x[col2]){"same"} else{"different"}
+# }
 
 #' @keywords internal
 # Test which order of two paired strings is the recognized order by comparing to a vector of accepted
@@ -220,12 +243,13 @@ cats_equal = function(x, col1, col2){
 #' @title Calculate mean dissimilarities using a metadata factor
 #' @description Calculate mean dissimilarities across all levels of a given factor
 #' 
-#' @param dissim_mat Dissimilarity matrix - typically created using 'calc_dm()'
-#' @param summarize_by_factor Category in mapping file to summarize by
+#' @param dissim_mat Dissimilarity matrix - typically created using 'calc_dm()'.
+#' @param metadata_map The metadata mapping dataframe.
+#' @param summarize_by_factor Category in mapping file to summarize by.
 #' @param return_map Whether or not to return summarized mapping files. If true,
-#'  will return a list (default: FALSE)
-#' @return Mean dissimilarities
-calc_mean_dissimilarities = function(dissim_mat, map, summarize_by_factor, 
+#'  will return a list (default: FALSE).
+#' @return Mean dissimilarities.
+calc_mean_dissimilarities = function(dissim_mat, metadata_map, summarize_by_factor, 
                                      return_map = FALSE){
   .sumry_fun = function(x){
     if(is.numeric(x)){
@@ -238,7 +262,7 @@ calc_mean_dissimilarities = function(dissim_mat, map, summarize_by_factor,
   }
   dm_clmns = convert_dm_to_3_column(dissim_mat)
   # list sample 1 and sample 2 factor categories in new clmns
-  dm_clmns_wCat = add_metadata_to_dm_clmns(dm_clmns, map, summarize_by_factor)
+  dm_clmns_wCat = .add_metadata_to_dm_clmns(dm_clmns, metadata_map, summarize_by_factor)
   # only take samples in mapping file
   dm_clmns_wCat = dm_clmns_wCat[!is.na(dm_clmns_wCat[, 4]) & !is.na(dm_clmns_wCat[, 5]), ]
   # remove rows where distances are comparing samples from the same cat
@@ -255,7 +279,7 @@ calc_mean_dissimilarities = function(dissim_mat, map, summarize_by_factor,
                                               split = '__')), 
                       mean_dist = means$mean_dist)
   if(return_map){
-    mean_map = dplyr::summarise_each(dplyr::group_by_(map, summarize_by_factor), 
+    mean_map = dplyr::summarise_each(dplyr::group_by_(metadata_map, summarize_by_factor), 
                                      dplyr::funs(.sumry_fun))
     list(dm = as.dist(.convert_one_column_to_matrix(means2)), map_loaded = mean_map)
   } else as.dist(.convert_one_column_to_matrix(means2))
