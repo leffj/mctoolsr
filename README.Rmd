@@ -1,7 +1,7 @@
 ---
-title: "mctoolsr examples"
-author: "Jon Leff"
-date: "July 7, 2015"
+title: "Getting Started with mctoolsr"
+author: "Jonathan Leff"
+date: "`r Sys.Date()`"
 output: 
   html_document: 
     keep_md: yes
@@ -15,24 +15,28 @@ This document serves as a brief introduction to using **mctoolsr**. This documen
 
 To use:
 
-1. [Install git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) if you haven't already
-2. Open a terminal window and clone **mctoolsr** in a directory where you keep software on your machine
+```{r eval=FALSE}
+install.packages("devtools")
+devtools::install_github("leffj/mctoolsr", ref = "package_prep")
 ```
-git clone https://github.com/leffj/mctoolsr.git
-```
-3. When using **mctoolsr** in an R script, source the "routine_analysis_functions.R" file in the mctoolsr/R directory. For example, I include the following line at the top of all my R scripts using **mctoolsr**:
 
-```{r}
-source('~/Software/mctoolsr/R/routine_analysis_functions.R')
+```{r eval=FALSE}
+library(mctoolsr)
+```
+```{r include=FALSE}
+devtools::load_all(".")
 ```
 
 ### Updating **mctoolsr**
 
-**mctoolsr** is under active devlopment. Update regularly to use the latest features and for bug fixes. Open a terminal and change directories to your mctoolsr directory. Then type the following to update:
+**mctoolsr** is under active devlopment. Update regularly to use the latest features and for bug fixes.
 
+```{r eval=FALSE}
+devtools::install_github("leffj/mctoolsr", ref = "package_prep")
 ```
-git pull
-```
+
+### To report bugs or request features, go to:
+https://github.com/leffj/mctoolsr/issues
 
 
 ### Examples
@@ -42,17 +46,18 @@ Note that the following examples use an example dataset taken from a study exami
 
 #### Loading OTU tables and metadata
 
-You can load a taxon (i.e. OTU) table in biom format using the following approach. Note that filepaths are specific to your system, so they will likely have to be altered depending on where you cloned **mctoolsr** into.
+You can load a taxa (i.e. OTU) table in biom format using the following approach. Note that filepaths are specific to your system, so they will likely have to be altered depending on where you cloned **mctoolsr** into.
 
 One of the nice things about loading your data this way is that all the sample IDs will be matched between your taxon table and metadata so that they will be in the same order and any sample IDs not present in one or the other will be dropped.
 
 You can optionally filter out samples of a specific type during this step, but this can also be done separately as shown here.
 
 ```{r}
-tax_table_fp = '~/Software/mctoolsr/examples/fruits_veggies_taxon_table_wTax.biom'
-map_fp = '~/Software/mctoolsr/examples/fruits_veggies_metadata.txt'
-
-input = load_taxon_table(tax_table_fp, map_fp)
+tax_table_fp = system.file('extdata', 'fruits_veggies_taxa_table_wTax.biom', 
+                     package = 'mctoolsr')
+map_fp = system.file('extdata', 'fruits_veggies_metadata.txt', 
+                     package = 'mctoolsr')
+input = load_taxa_table(tax_table_fp, map_fp)
 ```
 
 The loaded data will consist of three parts:
@@ -106,7 +111,7 @@ dm = calc_dm(input_rar$data_loaded)
 
 There are two ways to plot ordinations in **mctoolsr**. The multistep way is shown here, but there is also a shortcut using the `plot_nmds()` function.
 
-```{r}
+```{r fig.width = 4}
 ord = calc_ordination(dm, 'nmds')
 plot_ordination(input_rar, ord, 'Sample_type', 'Farm_type', hulls = TRUE)
 ```  
@@ -116,7 +121,7 @@ plot_ordination(input_rar, ord, 'Sample_type', 'Farm_type', hulls = TRUE)
 
 It is easy to filter samples from your dataset in **mctoolsr**. You can specify to remove samples meeting a specified condition in the metadata or keep those samples. In the example below, lettuce samples are removed, and the ordination is plotted again.
 
-```{r}
+```{r fig.width = 4}
 input_rar_filt = filter_data(input_rar, 'Sample_type', filter_vals = 'Lettuce')
 dm = calc_dm(input_rar_filt$data_loaded)
 ord = calc_ordination(dm, 'nmds')
@@ -128,11 +133,11 @@ plot_ordination(input_rar_filt, ord, 'Sample_type', 'Farm_type', hulls = TRUE)
 
 There are multiple taxa filtering options in **mctoolsr**. This example shows how to explore the proteobacteria sequences across the samples. Taxa can also be filtered based on their relative abundance.
 
-```{r}
+```{r fig.width = 4}
 input_proteobact = filter_taxa_from_data(input, taxa_to_keep = 'p__Proteobacteria')
 sort(colSums(input_proteobact$data_loaded))
 input_proteobact_rar = single_rarefy(input_proteobact, 219)
-plot_nmds(calc_dm(input_proteobact_rar$data_loaded), map = input_proteobact_rar$map_loaded, 
+plot_nmds(calc_dm(input_proteobact_rar$data_loaded), metadata_map = input_proteobact_rar$map_loaded, 
           color_cat = 'Sample_type')
 ```  
 
@@ -154,7 +159,7 @@ This analysis demonstrates that Pseudomonadaceae and Sphingobacteriaceae tend to
 
 Sometimes it is necessary to calculate mean dissimilarities. This is important in cases where sample types are pseudoreplecated. This is not the case here, but this example demonstrates this functionality.
 
-```{r}
+```{r fig.width = 4}
 dm = calc_dm(input_rar_filt$data_loaded)
 dm_aggregated = calc_mean_dissimilarities(dm, input_rar_filt$map_loaded, 
                                           'Sample_Farming', return_map = TRUE)
@@ -174,6 +179,3 @@ export_otu_table(input_rar_filt, "export/path/otu_table_export.txt")
 
 
 [ref1]: http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0059310
-
-
-

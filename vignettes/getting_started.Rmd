@@ -1,6 +1,6 @@
 ---
 title: "Getting Started with mctoolsr"
-author: "Jonathan Leff"
+author: "Jonathan W. Leff"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
