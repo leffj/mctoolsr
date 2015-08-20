@@ -4,38 +4,40 @@
 \alias{taxa_summary_by_sample_type}
 \title{Further summarize output from summarize_taxonomy by sample type}
 \usage{
-taxa_summary_by_sample_type(taxa_smry_df, metadata_map, factor, filter_level,
-  test_type, grouping_factor, custom_test_function, smry_fun = mean, out_fp)
+taxa_summary_by_sample_type(taxa_smry_df, metadata_map, type_header,
+  filter_level, test_type, grouping_factor, custom_test_function,
+  smry_fun = mean, out_fp)
 }
 \arguments{
-\item{taxa_smry_df}{Taxa summary data frame}
+\item{taxa_smry_df}{Taxa summary data frame.}
 
-\item{metadata_map}{Mapping file}
+\item{metadata_map}{Mapping file.}
 
-\item{factor}{Mapping file header (in quotation marks) of factor for which
-you are testing for differences}
+\item{type_header}{Mapping file header (in quotation marks) of factor for
+which you are testing for differences.}
 
-\item{filter_level}{The minimum mean value needed in at least one
-of the factor levels for a taxon to be retained in the analysis}
+\item{filter_level}{(Optional) The minimum mean value needed in at least one.
+of the factor levels for a taxon to be retained in the analysis.}
 
-\item{test_type}{either 'MW', 'KW', or 'custom' (i.e. Wilcoxon/Mann-Whitney U
-for 2 factor levels or Kruskal-Wallis for more than two factor levels).
-See details for custom test/model implementation.}
+\item{test_type}{(Optional). If omitted, no test is performed and no p-values
+are reported. Otherwise, either 'MW', 'KW', or 'custom' (i.e.
+Wilcoxon/Mann-Whitney U for 2 factor levels or Kruskal-Wallis for more than
+two factor levels). See details for custom test/model implementation.}
 
-\item{grouping_factor}{Used with 2-way tests.}
+\item{grouping_factor}{(Optional) Used with 2-way tests.}
 
-\item{custom_test_function}{Name of custom test function}
+\item{custom_test_function}{(Optional) Name of custom test function.}
 
-\item{smry_fun}{The function to summarize values by (Default: mean)}
+\item{smry_fun}{(Optional) The function to summarize values by (Default: mean).}
 
-\item{out_fp}{Test results output filepath (OPTIONAL)}
+\item{out_fp}{(Optional) Test results output filepath.}
 }
 \description{
 Further summarize output from summarize_taxonomy by sample type
 }
 \details{
 Function to show contributions of specific taxa to variation among
-         communities using Mann-Whitney (2 factor levels), Kruskal-Wallis
-         (more than 2) tests, or more complex models
+ communities using Mann-Whitney (2 factor levels), Kruskal-Wallis (more
+ than 2) tests, or more complex models.
 }
 
