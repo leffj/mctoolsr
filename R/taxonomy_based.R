@@ -211,22 +211,23 @@ plot_ts_heatmap = function(tax_table, metadata_map, min_rel_abund, type_header, 
   sumtax_smry = round(sumtax_smry*100, 1)
   melted = melt(sumtax_smry)
   if (scale_by == 'sample_types') {
-    to_plot = mutate(group_by(melted, Var2), scaled = scale(value))
+    to_plot = mutate(group_by(melted, Var2), scaled = scales::rescale(value))
   } else if (scale_by == 'taxa') {
-    to_plot = mutate(group_by(melted, Var1), scaled = scale(value))
+    to_plot = mutate(group_by(melted, Var1), scaled = scales::rescale(value))
   } else if (scale_by == 'all') {
-    to_plot$scaled = to_plot$value
+    to_plot = mutate(melted, scaled = scales::rescale(value))
   } else stop("scale_by must be 'sample_types' or 'taxa' or 'all'.")
-  to_plot$scaled = round(as.vector(to_plot$scaled), 1)
+  # to_plot$scaled = round(as.vector(to_plot$scaled), 4)
   # https://learnr.wordpress.com/2010/01/26/ggplot2-quick-heatmap-plotting/
   p = ggplot(to_plot, aes(Var1, Var2, fill = scaled)) +
     geom_tile(color = 'black', size = 0.25) + 
-    scale_fill_gradient(low = 'blue', high = 'orangered') + 
+    # scale_fill_gradient2(low = 'blue', mid = 'white', high = 'red') +
+    scale_fill_gradientn(colours = c('blue', 'white', 'red'), values = c(min(to_plot$scaled), mean(to_plot$scaled), max(to_plot$scaled))) +
     xlab('') + ylab('') +
     theme(legend.position = 'none', axis.ticks = element_blank(), 
-          axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.25)) +
+          axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.25),
+          axis.text = element_text(color = 'gray20'))+
     geom_text(data = to_plot, aes(label = value), size = 3) +
     scale_x_discrete(expand = c(0, 0)) + scale_y_discrete(expand = c(0, 0))
-  # theme_gray()
   p
 }

@@ -18,7 +18,8 @@ Imports: dplyr,
     reshape2,
     vegan,
     nlme,
-    grid
+    grid,
+    scales
 Suggests: VennDiagram,
     knitr,
     testthat
