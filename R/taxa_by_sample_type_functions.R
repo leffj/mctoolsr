@@ -118,48 +118,58 @@
 
 #' @title Further summarize output from summarize_taxonomy by sample type
 #' @details Function to show contributions of specific taxa to variation among 
-#'          communities using Mann-Whitney (2 factor levels), Kruskal-Wallis 
-#'          (more than 2) tests, or more complex models
-#' @param taxa_smry_df Taxa summary data frame
-#' @param metadata_map Mapping file
-#' @param out_fp Test results output filepath (OPTIONAL)
-#' @param factor Mapping file header (in quotation marks) of factor for which 
-#'        you are testing for differences
-#' @param filter_level The minimum mean value needed in at least one 
-#'        of the factor levels for a taxon to be retained in the analysis
-#' @param test_type either 'MW', 'KW', or 'custom' (i.e. Wilcoxon/Mann-Whitney U 
-#'        for 2 factor levels or Kruskal-Wallis for more than two factor levels).
-#'        See details for custom test/model implementation.
-#' @param grouping_factor Used with 2-way tests.
-#' @param custom_test_function Name of custom test function
-#' @param smry_fun The function to summarize values by (Default: mean)
-taxa_summary_by_sample_type = function(taxa_smry_df, metadata_map, factor, 
+#'  communities using Mann-Whitney (2 factor levels), Kruskal-Wallis (more 
+#'  than 2) tests, or more complex models.
+#' @param taxa_smry_df Taxa summary data frame.
+#' @param metadata_map Mapping file.
+#' @param out_fp (Optional) Test results output filepath.
+#' @param type_header Mapping file header (in quotation marks) of factor for 
+#'  which you are testing for differences.
+#' @param filter_level (Optional) The minimum mean value needed in at least one.
+#'  of the factor levels for a taxon to be retained in the analysis.
+#' @param test_type (Optional). If omitted, no test is performed and no p-values
+#'  are reported. Otherwise, either 'MW', 'KW', or 'custom' (i.e. 
+#'  Wilcoxon/Mann-Whitney U for 2 factor levels or Kruskal-Wallis for more than 
+#'  two factor levels). See details for custom test/model implementation.
+#' @param grouping_factor (Optional) Used with 2-way tests.
+#' @param custom_test_function (Optional) Name of custom test function.
+#' @param smry_fun (Optional) The function to summarize values by (Default: mean).
+taxa_summary_by_sample_type = function(taxa_smry_df, metadata_map, type_header, 
                                        filter_level, test_type, grouping_factor, 
                                        custom_test_function, smry_fun = mean, 
                                        out_fp){
   if(!missing(filter_level)){
     # filter taxa summary table by abundance in any/either factor level
     taxa_smry_df = .filter_taxa_dit(taxa_smry_df, metadata_map, filter_level, 
-                                    factor, smry_fun = smry_fun)
+                                    type_header, smry_fun = smry_fun)
   }
-  if(!missing(grouping_factor)){
-    test_results = .run_test(taxa_smry_df, metadata_map, factor, test_type, 
-                             grouping_factor, smry_fun = smry_fun)
+  # if no tests, just summarize by factor
+  if(missing(test_type)){
+    results = t(apply(taxa_smry_df, 1, function(x) {
+      tapply(as.numeric(x), metadata_map[, type_header], mean)
+    }))
   }
-  else if(!missing(custom_test_function)){
-    test_results = .run_test(taxa_smry_df, metadata_map, factor, test_type,
-                             cust_test = custom_test_function, 
-                             smry_fun = smry_fun)
-  } 
+  # else run test
   else{
-    test_results = .run_test(taxa_smry_df, metadata_map, factor, test_type,
-                             smry_fun = smry_fun)
+    if(!missing(grouping_factor)){
+      results = .run_test(taxa_smry_df, metadata_map, type_header, test_type, 
+                               grouping_factor, smry_fun = smry_fun)
+    }
+    else if(!missing(custom_test_function)){
+      results = .run_test(taxa_smry_df, metadata_map, type_header, test_type,
+                               cust_test = custom_test_function, 
+                               smry_fun = smry_fun)
+    } 
+    else{
+      results = .run_test(taxa_smry_df, metadata_map, type_header, test_type,
+                               smry_fun = smry_fun)
+    }
+    # Sort by pvalues 
+    results = results[with(results, order(pvals)), ]
   }
-  # Sort by pvalues 
-  test_results = test_results[with(test_results, order(pvals)), ]
   # output data
   if(!missing(out_fp)){
-    write.table(test_results, file = out_fp, sep = ",", row.names = TRUE, 
+    write.table(results, file = out_fp, sep = ",", row.names = TRUE, 
                 col.names = NA)  
-  } else test_results
+  } else results
 }
