@@ -222,7 +222,9 @@ plot_ts_heatmap = function(tax_table, metadata_map, min_rel_abund, type_header, 
   p = ggplot(to_plot, aes(Var1, Var2, fill = scaled)) +
     geom_tile(color = 'black', size = 0.25) + 
     # scale_fill_gradient2(low = 'blue', mid = 'white', high = 'red') +
-    scale_fill_gradientn(colours = c('blue', 'white', 'red'), values = c(min(to_plot$scaled), mean(to_plot$scaled), max(to_plot$scaled))) +
+    scale_fill_gradientn(colours = c('blue', 'white', 'red'), 
+                         values = c(min(to_plot$scaled), mean(to_plot$scaled), 
+                                    max(to_plot$scaled))) +
     xlab('') + ylab('') +
     theme(legend.position = 'none', axis.ticks = element_blank(), 
           axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.25),
