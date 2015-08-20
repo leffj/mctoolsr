@@ -188,3 +188,45 @@ filter_taxa_from_data = function(input, filter_thresh, taxa_to_keep,
        map_loaded = input$map_loaded, 
        taxonomy_loaded = droplevels(input$taxonomy_loaded[rows_keep, ]))
 }
+
+#' @title Plot Taxa Summary Heatmap
+#' @description A quick way to create a heatmap from a taxa summary dataframe.
+#'  Samples are grouped by a category that is specified in 'type_header'.
+#' @param tax_table A taxo table dataframe.
+#' @param metadata_map A metadata mapping dataframe.
+#' @param min_rel_abund The minimum mean relative abundance for a taxon to not
+#'  be grouped into 'Other'.
+#' @param type_header The metadata_map header label used to group samples.
+#' @param scale_by Whether to scale colors by (a) 'sample_types', (b) 'taxa', or
+#'  (c) 'all'.
+plot_ts_heatmap = function(tax_table, metadata_map, min_rel_abund, type_header, scale_by) {
+  # group all taxa lower than threshold into other
+  lt_thresh = sumtax[rowMeans(sumtax) < min_rel_abund, ]
+  gt_thresh = sumtax[rowMeans(sumtax) >= min_rel_abund, ]
+  Other = colSums(lt_thresh)
+  sumtax_mod = rbind(gt_thresh, Other = Other)
+  # get means
+  sumtax_smry = taxa_summary_by_sample_type(sumtax_mod, metadata_map, 
+                                            type_header, smry_fun = mean)
+  sumtax_smry = round(sumtax_smry*100, 1)
+  melted = melt(sumtax_smry)
+  if (scale_by == 'sample_types') {
+    to_plot = mutate(group_by(melted, Var2), scaled = scale(value))
+  } else if (scale_by == 'taxa') {
+    to_plot = mutate(group_by(melted, Var1), scaled = scale(value))
+  } else if (scale_by == 'all') {
+    to_plot$scaled = to_plot$value
+  } else stop("scale_by must be 'sample_types' or 'taxa' or 'all'.")
+  to_plot$scaled = round(as.vector(to_plot$scaled), 1)
+  # https://learnr.wordpress.com/2010/01/26/ggplot2-quick-heatmap-plotting/
+  p = ggplot(to_plot, aes(Var1, Var2, fill = scaled)) +
+    geom_tile(color = 'black', size = 0.25) + 
+    scale_fill_gradient(low = 'blue', high = 'orangered') + 
+    xlab('') + ylab('') +
+    theme(legend.position = 'none', axis.ticks = element_blank(), 
+          axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.25)) +
+    geom_text(data = to_plot, aes(label = value), size = 3) +
+    scale_x_discrete(expand = c(0, 0)) + scale_y_discrete(expand = c(0, 0))
+  # theme_gray()
+  p
+}
