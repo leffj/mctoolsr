@@ -14,21 +14,21 @@
   }
   # filter out values within mapping category
   else if(!missing(filter_cat) & !missing(filter_vals)){
-    map.f = map[!map[, filter_cat] %in% filter_vals, ]
-    map.f = droplevels(map.f)
-    if(nrow(map.f) == 0){
+    map_f = map[!map[, filter_cat] %in% filter_vals, ]
+    map_f = droplevels(map_f)
+    if(nrow(map_f) == 0){
       stop('All rows filtered out. Check spelling of filter parameters.')
     }
   }
   # keep certain values with mapping category
   else if(!missing(filter_cat) & !missing(keep_vals)){
-    map.f = map[map[,filter_cat] %in% keep_vals, ]
-    map.f = droplevels(map.f)
-    if(nrow(map.f) == 0){
+    map_f = map[map[,filter_cat] %in% keep_vals, ]
+    map_f = droplevels(map_f)
+    if(nrow(map_f) == 0){
       stop('All rows filtered out. Check spelling of filter parameters.')
     }
   }
-  map.f
+  map_f
 }
 
 #' @keywords internal
@@ -39,9 +39,11 @@
   map.use = metadata_map[match(samplesToUse, row.names(metadata_map)),]
   map.use = droplevels(map.use)
   if(!missing('taxonomy')) {
-    taxonomy.use = taxonomy[match(row.names(tax_table.use), row.names(taxonomy)), ]
+    taxonomy.use = taxonomy[match(row.names(tax_table.use), 
+                                  row.names(taxonomy)), ]
     taxonomy.use = droplevels(taxonomy.use)
-    list(data_loaded = tax_table.use, map_loaded = map.use, taxonomy_loaded = taxonomy.use)
+    list(data_loaded = tax_table.use, map_loaded = map.use, 
+         taxonomy_loaded = taxonomy.use)
   } else {
     list(data_loaded = tax_table.use, map_loaded = map.use)
   }

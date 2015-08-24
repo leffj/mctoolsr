@@ -16,5 +16,8 @@
 single_rarefy = function(input, depth) {
   data_filt_samples = input$data_loaded[, colSums(input$data_loaded) >= depth]
   data_rar = as.data.frame(t(vegan::rrarefy(t(data_filt_samples), depth)))
-  .match_data_components(data_rar, input$map_loaded, input$taxonomy_loaded)
+  matched_data = .match_data_components(data_rar, input$map_loaded, 
+                                        input$taxonomy_loaded)
+  message(paste0(nrow(matched_data$map_loaded), ' samples remaining'))
+  matched_data
 }

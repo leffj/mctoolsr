@@ -65,10 +65,14 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
     # cant subset if trying to filter out certain values and keep certain values
     # use one or the other
   if(!missing(filter_cat)){
-    map.f = .filt_map(map, filter_cat, filter_vals, keep_vals)
-  } else map.f = map
+    map_f = .filt_map(map, filter_cat, filter_vals, keep_vals)
+  } else {
+    map_f = map
+  }
   # match up data from dissimilarity matrix with mapping file
-  .match_data_components(data, map.f, data_taxonomy)
+  matched_data = .match_data_components(data, map_f, data_taxonomy)
+  message(paste0(nrow(matched_data$map_loaded), ' samples loaded'))
+  matched_data
 }
 
 #' @title Load a dissimilarity matrix for use with mctoolsr
@@ -96,12 +100,12 @@ load_dm = function(dm_fp, map_fp, filter_cat, filter_vals, keep_vals){
   # cant subset if trying to filter out certain values and keep certain values
   # use one or the other
   if(!missing(filter_cat)){
-    map.f = .filt_map(map, filter_cat, filter_vals, keep_vals)
-  } else map.f = map
+    map_f = .filt_map(map, filter_cat, filter_vals, keep_vals)
+  } else map_f = map
   # match up data from dissimilarity matrix with mapping file
-  samplesToUse = intersect(names(dm), row.names(map.f))
+  samplesToUse = intersect(names(dm), row.names(map_f))
   dm.use = as.dist(dm[match(samplesToUse,names(dm)), match(samplesToUse,names(dm))])
-  map.use = map.f[match(samplesToUse,row.names(map.f)), ]
+  map.use = map_f[match(samplesToUse,row.names(map_f)), ]
   # output
   list(dm_loaded = dm.use, map_loaded = map.use)
 }
@@ -133,13 +137,13 @@ load_2_dms = function(dm1_fp, dm2_fp, map_fp, filter_cat, filter_vals, keep_vals
   # cant subset if trying to filter out certain values and keep certain values
   # use one or the other
   if(!missing(filter_cat)){
-    map.f = .filt_map(map, filter_cat, filter_vals, keep_vals)
-  } else map.f = map
+    map_f = .filt_map(map, filter_cat, filter_vals, keep_vals)
+  } else map_f = map
   # match up data from dissimilarity matrix with mapping file
-  samplesToUse = intersect(intersect(names(dm1), row.names(map.f)), names(dm2))
+  samplesToUse = intersect(intersect(names(dm1), row.names(map_f)), names(dm2))
   dm1.use = as.dist(dm1[match(samplesToUse,names(dm1)), match(samplesToUse,names(dm1))])
   dm2.use = as.dist(dm2[match(samplesToUse,names(dm2)), match(samplesToUse,names(dm2))])
-  map.use = map.f[match(samplesToUse,row.names(map.f)), ]
+  map.use = map_f[match(samplesToUse,row.names(map_f)), ]
   # output
   list(dm1_loaded = dm1.use, dm2_loaded = dm2.use, map_loaded = map.use)
 }
@@ -163,13 +167,17 @@ load_2_dms = function(dm1_fp, dm2_fp, map_fp, filter_cat, filter_vals, keep_vals
 #' }
 filter_data = function(input, filter_cat, filter_vals, keep_vals){
   if(!missing(filter_cat)){
-    map.f = .filt_map(input$map_loaded, filter_cat, filter_vals, keep_vals)
-  } else map.f = input$map_loaded
+    map_f = .filt_map(input$map_loaded, filter_cat, filter_vals, keep_vals)
+  } else map_f = input$map_loaded
   # match up data from dissimilarity matrix with mapping file
   if('taxonomy_loaded' %in% names(input)){
-    .match_data_components(input$data_loaded, map.f, input$taxonomy_loaded)
+    matched_data = .match_data_components(input$data_loaded, map_f, input$taxonomy_loaded)
+    message(paste0(nrow(matched_data$map_loaded), ' samples remaining'))
+    matched_data
   } else {
-    .match_data_components(input$data_loaded, map.f)
+    matched_data = .match_data_components(input$data_loaded, map_f)
+    message(paste0(nrow(matched_data$map_loaded), ' samples remaining'))
+    matched_data
   }
 }
 
