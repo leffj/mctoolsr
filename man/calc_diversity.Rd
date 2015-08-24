@@ -9,9 +9,15 @@ calc_diversity(tax_table, metric)
 \arguments{
 \item{tax_table}{The taxa table.}
 
-\item{metric}{The diversity metric to calculate.}
+\item{metric}{The diversity metric to calculate. Acceptable values are:
+'richness', 'shannon', and 'simpson'.}
 }
 \description{
 Calculate diversity values from a taxa table.
+}
+\details{
+Richness is the number of uniaue species per sample. Simpson's
+ diversity metric quantifies evenness, and Shannon diversity is a combination
+ of richness and evenness.
 }
 

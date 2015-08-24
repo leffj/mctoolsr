@@ -11,9 +11,15 @@ plot_diversity(input, variable, metric)
 
 \item{variable}{Variable in mapping file to plot by.}
 
-\item{metric}{Diversity metric to use.}
+\item{metric}{Diversity metric to use. Acceptable values are:
+'richness', 'shannon', and 'simpson'.}
 }
 \description{
 Plot diversity using boxplots across levels of a given factor.
+}
+\details{
+Richness is the number of uniaue species per sample. Simpson's
+ diversity metric quantifies evenness, and Shannon diversity is a combination
+ of richness and evenness.
 }
 
