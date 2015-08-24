@@ -7,7 +7,11 @@
 #' @title Calculate diversity values
 #' @description Calculate diversity values from a taxa table.
 #' @param tax_table The taxa table.
-#' @param metric The diversity metric to calculate.
+#' @param metric The diversity metric to calculate. Acceptable values are: 
+#'  'richness', 'shannon', and 'simpson'.
+#' @details Richness is the number of uniaue species per sample. Simpson's 
+#'  diversity metric quantifies evenness, and Shannon diversity is a combination
+#'  of richness and evenness.
 calc_diversity = function(tax_table, metric){
   metrics = c('richness', 'shannon', 'simpson')
   if(metric == 'richness'){
@@ -26,7 +30,11 @@ calc_diversity = function(tax_table, metric){
 #' @description Plot diversity using boxplots across levels of a given factor.
 #' @param input The input dataset as loaded by \code{load_taxa_table()}.
 #' @param variable Variable in mapping file to plot by.
-#' @param metric Diversity metric to use.
+#' @param metric Diversity metric to use. Acceptable values are: 
+#'  'richness', 'shannon', and 'simpson'.
+#' @details Richness is the number of uniaue species per sample. Simpson's 
+#'  diversity metric quantifies evenness, and Shannon diversity is a combination
+#'  of richness and evenness.
 plot_diversity = function(input, variable, metric){
   diversity = calc_diversity(input$data_loaded, metric)
   to_plot = data.frame(diversity, input$map_loaded[, variable])
