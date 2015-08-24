@@ -48,9 +48,19 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
     }
   }
   else stop('Input file must be either biom (.biom) or tab-delimited (.txt) format.')
-  map = read.table(map_fp, sep = '\t', comment.char = '', header = T, 
-                   check.names = F, row.names = 1)
-  if(class(map) != 'data.frame') warning('Mapping file should have more than one metadata column.')
+  # import mapping file
+  map = tryCatch(read.table(map_fp, sep = '\t', comment.char = '', header = T, 
+                            check.names = F, row.names = 1),
+                 error = function(c) conditionMessage(c),
+                 warning = function(c) {
+                   c$message = paste0("Error loading mapping file. Please ",
+                            "check that there are no quotation marks.")
+                   stop(c)
+                   },
+                 message = function(c) conditionMessage(c)
+                 )
+  if(class(map) != 'data.frame') {
+    warning('Mapping file should have more than one metadata column.')}
   # optionally, subset data
     # cant subset if trying to filter out certain values and keep certain values
     # use one or the other
