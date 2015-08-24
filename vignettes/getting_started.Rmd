@@ -24,6 +24,7 @@ install.packages("devtools")
 devtools::install_github("leffj/mctoolsr", ref = "package_prep")
 ```
 
+To use in a script, load and attach the package using:
 ```{r eval=FALSE}
 library(mctoolsr)
 ```
@@ -33,7 +34,7 @@ devtools::load_all(".")
 
 ### Updating **mctoolsr**
 
-**mctoolsr** is under active devlopment. Update regularly to use the latest features and for bug fixes.
+**mctoolsr** is under active devlopment. Update regularly to use the latest features and for bug fixes. You will have to load and attach as above after updating.
 
 ```{r eval=FALSE}
 devtools::install_github("leffj/mctoolsr", ref = "package_prep")
@@ -50,11 +51,12 @@ Note that the following examples use an example dataset taken from a study exami
 
 #### Loading OTU tables and metadata
 
-You can load a taxa (i.e. OTU) table in biom format using the following approach. Note that filepaths are specific to your system, so they will likely have to be altered depending on where you cloned **mctoolsr** into.
+You can load a taxa (i.e. OTU) table in biom format using the following approach. Note that you don't need to use `system.file()` when using your own filepaths -- just use the filepath directly. This function just helps your system find the example files.
 
 One of the nice things about loading your data this way is that all the sample IDs will be matched between your taxon table and metadata so that they will be in the same order and any sample IDs not present in one or the other will be dropped.
 
 You can optionally filter out samples of a specific type during this step, but this can also be done separately as shown here.
+
 
 ```{r}
 tax_table_fp = system.file('extdata', 'fruits_veggies_taxa_table_wTax.biom', 
