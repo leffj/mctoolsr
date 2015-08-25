@@ -69,7 +69,7 @@
 #' }
 summarize_taxonomy = function(input, level, relative = TRUE, 
                               report_higher_tax = TRUE){
-  if(report_higher_tax) taxa_strings = apply(data$taxonomy_loaded[1:level], 1, 
+  if(report_higher_tax) taxa_strings = apply(input$taxonomy_loaded[1:level], 1, 
                                              paste0, collapse = '; ')
   else taxa_strings = input$taxonomy_loaded[, level]
   no_taxa = length(unique(taxa_strings))
