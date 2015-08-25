@@ -192,14 +192,15 @@ filter_taxa_from_data = function(input, filter_thresh, taxa_to_keep,
 #' @title Plot Taxa Summary Heatmap
 #' @description A quick way to create a heatmap from a taxa summary dataframe.
 #'  Samples are grouped by a category that is specified in 'type_header'.
-#' @param tax_table A taxo table dataframe.
+#' @param tax_table A taxa table dataframe.
 #' @param metadata_map A metadata mapping dataframe.
 #' @param min_rel_abund The minimum mean relative abundance for a taxon to not
 #'  be grouped into 'Other'.
 #' @param type_header The metadata_map header label used to group samples.
 #' @param scale_by Whether to scale colors by (a) 'sample_types', (b) 'taxa', or
 #'  (c) 'all'.
-plot_ts_heatmap = function(tax_table, metadata_map, min_rel_abund, type_header, scale_by) {
+plot_ts_heatmap = function(tax_table, metadata_map, min_rel_abund, type_header, 
+                           scale_by) {
   # group all taxa lower than threshold into other
   lt_thresh = sumtax[rowMeans(sumtax) < min_rel_abund, ]
   gt_thresh = sumtax[rowMeans(sumtax) >= min_rel_abund, ]
@@ -209,27 +210,31 @@ plot_ts_heatmap = function(tax_table, metadata_map, min_rel_abund, type_header, 
   sumtax_smry = taxa_summary_by_sample_type(sumtax_mod, metadata_map, 
                                             type_header, smry_fun = mean)
   sumtax_smry = round(sumtax_smry*100, 1)
-  melted = melt(sumtax_smry)
+  melted = reshape2::melt(sumtax_smry)
   if (scale_by == 'sample_types') {
-    to_plot = mutate(group_by(melted, Var2), scaled = scales::rescale(value))
+    to_plot = dplyr::mutate(dplyr::group_by(melted, Var2), 
+                            scaled = scales::rescale(value))
   } else if (scale_by == 'taxa') {
-    to_plot = mutate(group_by(melted, Var1), scaled = scales::rescale(value))
+    to_plot = dplyr::mutate(dplyr::group_by(melted, Var1), 
+                            scaled = scales::rescale(value))
   } else if (scale_by == 'all') {
-    to_plot = mutate(melted, scaled = scales::rescale(value))
+    to_plot = dplyr::mutate(melted, scaled = scales::rescale(value))
   } else stop("scale_by must be 'sample_types' or 'taxa' or 'all'.")
-  # to_plot$scaled = round(as.vector(to_plot$scaled), 4)
   # https://learnr.wordpress.com/2010/01/26/ggplot2-quick-heatmap-plotting/
-  p = ggplot(to_plot, aes(Var1, Var2, fill = scaled)) +
-    geom_tile(color = 'black', size = 0.25) + 
-    # scale_fill_gradient2(low = 'blue', mid = 'white', high = 'red') +
-    scale_fill_gradientn(colours = c('blue', 'white', 'red'), 
-                         values = c(min(to_plot$scaled), mean(to_plot$scaled), 
-                                    max(to_plot$scaled))) +
-    xlab('') + ylab('') +
-    theme(legend.position = 'none', axis.ticks = element_blank(), 
-          axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.25),
-          axis.text = element_text(color = 'gray20'))+
-    geom_text(data = to_plot, aes(label = value), size = 3) +
-    scale_x_discrete(expand = c(0, 0)) + scale_y_discrete(expand = c(0, 0))
+  p = ggplot2::ggplot(to_plot, ggplot2::aes(Var1, Var2, fill = scaled)) +
+    ggplot2::geom_tile(color = 'black', size = 0.25) + 
+    ggplot2::scale_fill_gradientn(colours = c('blue', 'white', 'red'), 
+                                  values = c(min(to_plot$scaled), 
+                                             mean(to_plot$scaled), 
+                                             max(to_plot$scaled))) +
+    ggplot2::xlab('') + ggplot2::ylab('') +
+    ggplot2::theme(legend.position = 'none', 
+                   axis.ticks = ggplot2::element_blank(), 
+                   axis.text.x = ggplot2::element_text(angle = 90, 
+                                                       hjust = 1, vjust = 0.25), 
+                   axis.text = ggplot2::element_text(color = 'gray20'))+
+    ggplot2::geom_text(data = to_plot, ggplot2::aes(label = value), size = 3) +
+    ggplot2::scale_x_discrete(expand = c(0, 0)) + 
+    ggplot2::scale_y_discrete(expand = c(0, 0))
   p
 }
