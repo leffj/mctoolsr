@@ -202,8 +202,8 @@ filter_taxa_from_data = function(input, filter_thresh, taxa_to_keep,
 plot_ts_heatmap = function(tax_table, metadata_map, min_rel_abund, type_header, 
                            scale_by) {
   # group all taxa lower than threshold into other
-  lt_thresh = sumtax[rowMeans(sumtax) < min_rel_abund, ]
-  gt_thresh = sumtax[rowMeans(sumtax) >= min_rel_abund, ]
+  lt_thresh = tax_table[rowMeans(tax_table) < min_rel_abund, ]
+  gt_thresh = tax_table[rowMeans(tax_table) >= min_rel_abund, ]
   Other = colSums(lt_thresh)
   sumtax_mod = rbind(gt_thresh, Other = Other)
   # get means

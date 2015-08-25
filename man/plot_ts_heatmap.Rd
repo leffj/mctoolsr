@@ -7,7 +7,7 @@
 plot_ts_heatmap(tax_table, metadata_map, min_rel_abund, type_header, scale_by)
 }
 \arguments{
-\item{tax_table}{A taxo table dataframe.}
+\item{tax_table}{A taxa table dataframe.}
 
 \item{metadata_map}{A metadata mapping dataframe.}
 
