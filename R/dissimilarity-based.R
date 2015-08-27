@@ -68,13 +68,14 @@ plot_ordination = function(input, ordination_axes, color_cat, shape_cat,
   }
   # plot w/ shape
   if(!missing(shape_cat)){
-    to_plot = data.frame(to_plot, cat2 = input$map_loaded[,shape_cat])
+    to_plot = data.frame(to_plot, cat2 = input$map_loaded[, shape_cat])
     p = ggplot2::ggplot(to_plot, ggplot2::aes_string(headers[1], headers[2]))
     p = p + ggplot2::geom_point(size = 3, alpha = 0.8, 
                                 ggplot2::aes(color = cat, shape = cat2))
     p = p + ggplot2::theme_bw()
     p = p + ggplot2::xlab(colnames(to_plot)[1]) + 
       ggplot2::ylab(colnames(to_plot)[2])
+    p = p + ggplot2::scale_color_discrete('')
   }
   # plot without shape
   else{
@@ -83,11 +84,13 @@ plot_ordination = function(input, ordination_axes, color_cat, shape_cat,
     p = p + ggplot2::theme_bw()
     p = p + ggplot2::xlab(colnames(to_plot)[1]) + 
       ggplot2::ylab(colnames(to_plot)[2])
+    p = p + ggplot2::scale_color_discrete('')
   }
   if(hulls){
     p = p + ggplot2::geom_polygon(data = hull_vals, 
                                   ggplot2::aes(fill = cat, color = cat), 
                                   alpha = 0.1)
+    p = p + ggplot2::scale_fill_discrete('')
   }
   p
 }
@@ -115,7 +118,7 @@ plot_nmds = function(dm, metadata_map = NULL, color_cat, shape_cat){
       ggplot2::geom_point(size = 3, alpha = 0.8) + 
       ggplot2::theme_bw() +
       ggplot2::scale_color_discrete('') + 
-      ggplot2::scale_shape_discrete('') 
+      ggplot2::scale_shape_discrete('')
   }
   # plot without shape
   else{
@@ -124,7 +127,7 @@ plot_nmds = function(dm, metadata_map = NULL, color_cat, shape_cat){
       ggplot2::geom_point(size = 3, alpha = 0.8) + 
       ggplot2::theme_bw() +
       ggplot2::scale_color_discrete('') + 
-      ggplot2::scale_shape_discrete('') 
+      ggplot2::scale_shape_discrete('')
   }
 }
 

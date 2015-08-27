@@ -80,3 +80,15 @@ plot_venn_diagram = function(input, category, pres_thresh){
     stop('Can only plot Venn with 3 or 4 category levels.')
   }
 }
+
+# interactive plots
+# plot_interactive = function(ordination_axes, input, color_by, name_by, out_fp){
+#   to_plot = data.frame(ordination_axes, point_colors = input$map_loaded[, color_by], 
+#                        point_names = input$map_loaded[, name_by])
+#   clickme::clickme('points', to_plot[, 1], to_plot[, 2], 
+#                    color_groups = factor(to_plot$point_colors), 
+#                    names = to_plot$point_names, 
+#                    opacity = 0.8,
+#                    file_path = out_fp 
+#   )
+# }
