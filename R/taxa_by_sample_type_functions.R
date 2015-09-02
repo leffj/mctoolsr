@@ -122,7 +122,7 @@
 #'  than 2) tests, or more complex models.
 #' @param taxa_smry_df Taxa summary data frame.
 #' @param metadata_map Mapping file.
-#' @param out_fp (Optional) Test results output filepath.
+#' @param out_fp (Optional) Test results output filepath. Written as a csv file.
 #' @param type_header Mapping file header (in quotation marks) of factor for 
 #'  which you are testing for differences.
 #' @param filter_level (Optional) The minimum mean value needed in at least one.
