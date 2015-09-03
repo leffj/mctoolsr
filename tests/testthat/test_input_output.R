@@ -51,6 +51,6 @@ test_that("Example taxa table (txt) loads correctly.", {
                c(1199, 2819, 3390, 3291, 2312))
 })
 
-test_that("Dissimilarity matrix loads without error.", {
-  expect_that(load_dm(dm_fp = dm_fp, map_fp = map_fp), not(throws_error()))
-})
+# test_that("Dissimilarity matrix loads without error.", {
+#   expect_that(load_dm(dm_fp = dm_fp, map_fp = map_fp), not(throws_error()))
+# })

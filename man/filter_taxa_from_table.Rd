@@ -2,12 +2,14 @@
 % Please edit documentation in R/taxonomy_based.R
 \name{filter_taxa_from_table}
 \alias{filter_taxa_from_table}
-\title{Filter taxa from an individual taxon table}
+\title{Filter taxa from an individual taxa summary table}
 \usage{
-filter_taxa_from_table(tax_table, filter_thresh, taxa_to_keep, taxa_to_remove)
+filter_taxa_from_table(tax_table, filter_thresh = 0, taxa_to_keep,
+  taxa_to_remove)
 }
 \arguments{
-\item{tax_table}{Input taxon table (dataframe)}
+\item{tax_table}{Input taxa summary table from \code{summarize_taxonomy()}
+(dataframe).}
 
 \item{filter_thresh}{Filter taxa less than this number based on mean
 table values.}
@@ -17,7 +19,7 @@ table values.}
 \item{taxa_to_remove}{Remove taxa that contain these names. Vector or string.}
 }
 \description{
-Filter taxa from an individual taxon table
+Filter taxa from an individual taxa summary table
 }
 \details{
 Can use one or more of the parameters to do filtering. Threshold
