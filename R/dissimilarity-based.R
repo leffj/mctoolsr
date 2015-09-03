@@ -17,10 +17,10 @@ calc_dm = function(tax_table){
             should be filtered out by rarefying or another acceptable method.')
   }
   # transform otu table (square root transformation)
-  otuTable.xform = t(sqrt(tax_table))
+  otuTable_xform = t(sqrt(tax_table))
   # create dissimilarity matrix from otu table
-  otuTable.dist = vegan::vegdist(otuTable.xform, method='bray')
-  otuTable.dist
+  otuTable_dist = vegan::vegdist(otuTable_xform, method='bray')
+  otuTable_dist
 }
 
 #' @title Calculate Point Coordinates in an Ordination
