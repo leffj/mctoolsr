@@ -14,8 +14,8 @@
 #' 
 plot_venn_diagram = function(input, category, pres_thresh){
   if (!requireNamespace("VennDiagram", quietly = TRUE)) {
-    stop("'VennDiagram' package needed for this function to work. Please 
-         install it.", call. = FALSE)
+    stop(paste0("'VennDiagram' package (>= 1.6.15) needed for this function ", 
+                "to work. Please install it."), call. = FALSE)
   }
   #' @keywords internal
   .venn_3cat = function(data, thresh){

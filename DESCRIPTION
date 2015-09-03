@@ -20,7 +20,7 @@ Imports: dplyr,
     nlme,
     grid,
     scales
-Suggests: VennDiagram,
+Suggests: VennDiagram (>= 1.6.15),
     knitr,
     testthat
 LazyData: true
