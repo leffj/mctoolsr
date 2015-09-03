@@ -30,7 +30,7 @@ two factor levels). See details for custom test/model implementation.}
 
 \item{smry_fun}{(Optional) The function to summarize values by (Default: mean).}
 
-\item{out_fp}{(Optional) Test results output filepath.}
+\item{out_fp}{(Optional) Test results output filepath. Written as a csv file.}
 }
 \description{
 Further summarize output from summarize_taxonomy by sample type

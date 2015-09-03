@@ -4,30 +4,13 @@
 \alias{filter_taxa_from_data}
 \title{Filter taxa from a loaded dataset}
 \usage{
-filter_taxa_from_data(input, filter_thresh, taxa_to_keep, taxa_to_remove,
-  at_spec_level)
-}
-\arguments{
-\item{input}{Input data (a list variable) from \code{load_taxa_table()}.}
-
-\item{filter_thresh}{Filter OTUs less than this number based on mean OTU
-table values.}
-
-\item{taxa_to_keep}{Keep only taxa that contain these names. Vector or string.}
-
-\item{taxa_to_remove}{Remove taxa that contain these names. Vector or string.}
-
-\item{at_spec_level}{If included, only keep/remove matches at this specific
-taxonomy level(s) (a number/numbers referring to the taxonomy
-column(s)).}
+filter_taxa_from_data()
 }
 \description{
 Filter taxa from a loaded dataset
 }
 \details{
-Can use one or more of the parameters to do filtering. Threshold
-         filtering takes precidence over taxa filtering. If taxa to keep and
-         taxa to remove are both included, taxa to remove will be
-         removed if the parameter entries conflict.
+This function is now depricated to keep names consistent. Use
+  \code{filter_taxa_from_input()} instead.
 }
 

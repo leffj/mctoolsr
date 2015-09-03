@@ -60,6 +60,10 @@ map_fp = system.file('extdata', 'fruits_veggies_metadata.txt',
 input = load_taxa_table(tax_table_fp, map_fp)
 ```
 
+```
+## 32 samples loaded
+```
+
 The loaded data will consist of three parts:
 
 1. The taxon table itself: "data_loaded"
@@ -79,14 +83,14 @@ sort(colSums(input$data_loaded))
 ```
 
 ```
-## ProA37 ProB70 ProC66 ProB39 ProC40 ProB57 ProA12 ProC38 ProA58 ProB34 
-##   1009   1011   1068   1152   1179   1192   1199   1211   1216   1265 
-## ProC36 ProA65  ProB9 ProB60 ProC65 ProB35 ProB10 ProB67 ProA66 ProB36 
-##   1313   1367   1371   1395   1409   1492   1599   1611   1614   1642 
-## ProB71 ProB40 ProA36 ProB58 ProB33 ProA16 ProA35 ProA33 ProB12 ProA13 
-##   1745   1771   1802   1860   2257   2312   2530   2585   2642   2819 
-## ProA34 ProA15 ProA14 
-##   2982   3291   3390
+## ProA37 ProB70 ProC66 ProB39 ProC40 ProB57 ProA12 ProA58 ProB34 ProC36 
+##   1009   1011   1068   1152   1179   1192   1199   1216   1265   1313 
+## ProA65  ProB9 ProB60 ProC65 ProB35 ProB10 ProB67 ProA66 ProB36 ProB71 
+##   1367   1371   1395   1409   1492   1599   1611   1614   1642   1745 
+## ProB40 ProA36 ProB58 ProB33 ProA16 ProA35 ProA33 ProB12 ProA13 ProA34 
+##   1771   1802   1860   2257   2312   2530   2585   2642   2819   2982 
+## ProA15 ProA14 
+##   3291   3390
 ```
 
 
@@ -97,6 +101,13 @@ As you can see from the previous example, we can rarefy (i.e. normalize for vari
 
 ```r
 input_rar = single_rarefy(input, 1000)
+```
+
+```
+## 32 samples remaining
+```
+
+```r
 colSums(input_rar$data_loaded)
 ```
 
@@ -105,10 +116,10 @@ colSums(input_rar$data_loaded)
 ##   1000   1000   1000   1000   1000   1000   1000   1000   1000   1000 
 ## ProA58 ProA65 ProA66 ProB10 ProB12 ProB33 ProB34 ProB35 ProB36 ProB39 
 ##   1000   1000   1000   1000   1000   1000   1000   1000   1000   1000 
-## ProB40 ProB57 ProB58 ProB60 ProB67 ProB70 ProB71  ProB9 ProC36 ProC38 
+## ProB40 ProB57 ProB58 ProB60 ProB67 ProB70 ProB71  ProB9 ProC36 ProC40 
 ##   1000   1000   1000   1000   1000   1000   1000   1000   1000   1000 
-## ProC40 ProC65 ProC66 
-##   1000   1000   1000
+## ProC65 ProC66 
+##   1000   1000
 ```
 
 
@@ -125,10 +136,10 @@ tax_sum_phyla[1:5, 1:8]
 ```
 ##                    ProA12 ProA13 ProA14 ProA15 ProA16 ProA33 ProA34 ProA35
 ## p__                 0.001  0.000  0.000  0.000  0.000  0.000  0.000  0.000
-## p__[Thermi]         0.001  0.000  0.000  0.000  0.000  0.000  0.010  0.000
+## p__[Thermi]         0.001  0.000  0.000  0.000  0.000  0.000  0.002  0.000
 ## p__Acidobacteria    0.002  0.000  0.000  0.000  0.000  0.000  0.000  0.000
-## p__Actinobacteria   0.384  0.004  0.001  0.022  0.001  0.047  0.073  0.088
-## p__Armatimonadetes  0.000  0.000  0.000  0.001  0.000  0.000  0.000  0.000
+## p__Actinobacteria   0.386  0.008  0.001  0.020  0.002  0.056  0.062  0.098
+## p__Armatimonadetes  0.000  0.000  0.000  0.002  0.000  0.000  0.000  0.000
 ```
 
 
@@ -152,9 +163,10 @@ ord = calc_ordination(dm, 'nmds')
 ```
 
 ```
-## Run 0 stress 0.1141001 
-## Run 1 stress 0.1141011 
-## ... procrustes: rmse 0.0005184187  max resid 0.002084275 
+## Run 0 stress 0.1147183 
+## Run 1 stress 0.1283754 
+## Run 2 stress 0.1147195 
+## ... procrustes: rmse 0.000768083  max resid 0.003034752 
 ## *** Solution reached
 ```
 
@@ -172,16 +184,25 @@ It is easy to filter samples from your dataset in **mctoolsr**. You can specify 
 
 ```r
 input_rar_filt = filter_data(input_rar, 'Sample_type', filter_vals = 'Lettuce')
+```
+
+```
+## 28 samples remaining
+```
+
+```r
 dm = calc_dm(input_rar_filt$data_loaded)
 ord = calc_ordination(dm, 'nmds')
 ```
 
 ```
-## Run 0 stress 0.1052949 
-## Run 1 stress 0.1215064 
-## Run 2 stress 0.1052939 
+## Run 0 stress 0.106699 
+## Run 1 stress 0.1071067 
+## ... procrustes: rmse 0.02426307  max resid 0.09198371 
+## Run 2 stress 0.1255403 
+## Run 3 stress 0.1066985 
 ## ... New best solution
-## ... procrustes: rmse 0.0001745665  max resid 0.0007632681 
+## ... procrustes: rmse 0.0001277024  max resid 0.0005035317 
 ## *** Solution reached
 ```
 
@@ -198,47 +219,39 @@ There are multiple taxa filtering options in **mctoolsr**. This example shows ho
 
 
 ```r
-input_proteobact = filter_taxa_from_data(input, taxa_to_keep = 'p__Proteobacteria')
+input_proteobact = filter_taxa_from_input(input, taxa_to_keep = 'p__Proteobacteria')
 sort(colSums(input_proteobact$data_loaded))
 ```
 
 ```
-## ProC38 ProC40 ProA14 ProA12 ProA58 ProA16 ProB70 ProB10  ProB9 ProA37 
-##    219    231    435    459    614    780    843    889    940    980 
-## ProB12 ProC66 ProC36 ProB57 ProA13 ProA36 ProB39 ProB34 ProB60 ProA65 
-##   1019   1032   1051   1063   1080   1082   1082   1196   1196   1261 
-## ProA35 ProC65 ProB71 ProA34 ProB67 ProA66 ProB35 ProB58 ProB36 ProA15 
-##   1336   1369   1376   1406   1422   1436   1472   1544   1594   1601 
-## ProB40 ProA33 ProB33 
-##   1748   1768   2126
+## ProC40 ProA14 ProA12 ProA58 ProA16 ProB70 ProB10  ProB9 ProA37 ProB12 
+##    231    435    459    614    780    843    889    940    980   1019 
+## ProC66 ProC36 ProB57 ProA13 ProA36 ProB39 ProB34 ProB60 ProA65 ProA35 
+##   1032   1051   1063   1080   1082   1082   1196   1196   1261   1336 
+## ProC65 ProB71 ProA34 ProB67 ProA66 ProB35 ProB58 ProB36 ProA15 ProB40 
+##   1369   1376   1406   1422   1436   1472   1544   1594   1601   1748 
+## ProA33 ProB33 
+##   1768   2126
 ```
 
 ```r
 input_proteobact_rar = single_rarefy(input_proteobact, 219)
+```
+
+```
+## 32 samples remaining
+```
+
+```r
 plot_nmds(calc_dm(input_proteobact_rar$data_loaded), metadata_map = input_proteobact_rar$map_loaded, 
           color_cat = 'Sample_type')
 ```
 
 ```
-## Run 0 stress 0.1163954 
-## Run 1 stress 0.1353515 
-## Run 2 stress 0.116343 
+## Run 0 stress 0.1365429 
+## Run 1 stress 0.1365429 
 ## ... New best solution
-## ... procrustes: rmse 0.01700077  max resid 0.07325264 
-## Run 3 stress 0.1246085 
-## Run 4 stress 0.137605 
-## Run 5 stress 0.1162049 
-## ... New best solution
-## ... procrustes: rmse 0.004884241  max resid 0.02513072 
-## Run 6 stress 0.1392874 
-## Run 7 stress 0.1388575 
-## Run 8 stress 0.1169187 
-## Run 9 stress 0.1163942 
-## ... procrustes: rmse 0.01544434  max resid 0.07147385 
-## Run 10 stress 0.1238768 
-## Run 11 stress 0.1246103 
-## Run 12 stress 0.1162053 
-## ... procrustes: rmse 8.314017e-05  max resid 0.0002760848 
+## ... procrustes: rmse 0.0001376402  max resid 0.0004590103 
 ## *** Solution reached
 ```
 
@@ -258,21 +271,21 @@ taxa_summary_by_sample_type(tax_sum_families, input_rar_filt$map_loaded,
 
 ```
 ##                               pvals     pvalsBon     pvalsFDR Mushrooms
-## f__Pseudomonadaceae    1.277760e-05 0.0000894432 0.0000894432  0.144625
-## f__Sphingobacteriaceae 6.875898e-05 0.0004813129 0.0002406564  0.288500
-## f__[Weeksellaceae]     2.855779e-04 0.0019990455 0.0006663485  0.104500
-## f__Enterobacteriaceae  5.637487e-04 0.0039462411 0.0009865603  0.033500
-## unclassified           4.930423e-03 0.0345129623 0.0069025925  0.071625
-## f__Bacillaceae         7.326841e-03 0.0512878862 0.0085479810  0.002250
-## f__Sphingomonadaceae   3.044010e-02 0.2130806706 0.0304400958  0.007750
+## f__Pseudomonadaceae    1.828177e-05 0.0001279724 0.0001279724  0.146625
+## f__Sphingobacteriaceae 6.723696e-05 0.0004706587 0.0002353294  0.292375
+## f__[Weeksellaceae]     2.416694e-04 0.0016916860 0.0005638953  0.105625
+## f__Enterobacteriaceae  3.120009e-04 0.0021840065 0.0005460016  0.033250
+## unclassified           2.454632e-03 0.0171824212 0.0034364842  0.074375
+## f__Bacillaceae         1.902281e-02 0.1331596887 0.0221932815  0.003125
+## f__Sphingomonadaceae   3.572008e-02 0.2500405731 0.0357200819  0.008625
 ##                             Spinach Strawberries
-## f__Pseudomonadaceae    0.0631428571 0.0017857143
-## f__Sphingobacteriaceae 0.0031428571 0.0007857143
-## f__[Weeksellaceae]     0.0024285714 0.0015714286
-## f__Enterobacteriaceae  0.7352857143 0.5728571429
-## unclassified           0.0301428571 0.0223571429
-## f__Bacillaceae         0.0052857143 0.2040714286
-## f__Sphingomonadaceae   0.0005714286 0.0597142857
+## f__Pseudomonadaceae    0.0665714286 0.0012307692
+## f__Sphingobacteriaceae 0.0027142857 0.0007692308
+## f__[Weeksellaceae]     0.0018571429 0.0017692308
+## f__Enterobacteriaceae  0.7322857143 0.6131538462
+## unclassified           0.0277142857 0.0224615385
+## f__Bacillaceae         0.0047142857 0.1626153846
+## f__Sphingomonadaceae   0.0005714286 0.0586923077
 ```
 
 This analysis demonstrates that Pseudomonadaceae and Sphingobacteriaceae tend to have higher relative abundances on mushrooms than spinach and strawberries. The p values are based on Kruskal-Wallis tests and two different corrections are reported to deal with the multiple comparisons (Bonferroni and FDR). Rare taxa are filtered out using the `filter_level` peramter. The values indicated under the sample types are mean relative abundances.    
@@ -292,38 +305,42 @@ ord = calc_ordination(dm_aggregated$dm, ord_type = 'nmds')
 
 ```
 ## Run 0 stress 0 
-## Run 1 stress 7.817754e-05 
-## ... procrustes: rmse 0.2300914  max resid 0.3248218 
-## Run 2 stress 0.1842126 
-## Run 3 stress 0.2181459 
+## Run 1 stress 9.987573e-05 
+## ... procrustes: rmse 0.2136747  max resid 0.333809 
+## Run 2 stress 9.827712e-05 
+## ... procrustes: rmse 0.02997538  max resid 0.05744271 
+## Run 3 stress 0 
+## ... procrustes: rmse 0.2281944  max resid 0.4113574 
 ## Run 4 stress 0 
-## ... procrustes: rmse 0.2374432  max resid 0.3859426 
-## Run 5 stress 0.1620205 
-## Run 6 stress 0 
-## ... procrustes: rmse 0.2277343  max resid 0.3993559 
-## Run 7 stress 1.770316e-05 
-## ... procrustes: rmse 0.1933491  max resid 0.3298152 
-## Run 8 stress 0.1842127 
-## Run 9 stress 5.464585e-05 
-## ... procrustes: rmse 0.04267345  max resid 0.0574257 
+## ... procrustes: rmse 0.2149573  max resid 0.3557357 
+## Run 5 stress 2.59167e-05 
+## ... procrustes: rmse 0.133617  max resid 0.2551999 
+## Run 6 stress 1.461701e-05 
+## ... procrustes: rmse 0.2715083  max resid 0.3957383 
+## Run 7 stress 8.529716e-05 
+## ... procrustes: rmse 0.2245984  max resid 0.3342253 
+## Run 8 stress 0.1849321 
+## Run 9 stress 9.239552e-05 
+## ... procrustes: rmse 0.1350724  max resid 0.2684111 
 ## Run 10 stress 0 
-## ... procrustes: rmse 0.03562742  max resid 0.05779507 
-## Run 11 stress 0 
-## ... procrustes: rmse 0.2346409  max resid 0.3324536 
-## Run 12 stress 0.1842126 
-## Run 13 stress 0.1842126 
-## Run 14 stress 5.066109e-05 
-## ... procrustes: rmse 0.02243704  max resid 0.03920004 
-## Run 15 stress 0.1620205 
-## Run 16 stress 6.812099e-05 
-## ... procrustes: rmse 0.2520065  max resid 0.3320533 
-## Run 17 stress 0.1842126 
+## ... procrustes: rmse 0.1990935  max resid 0.3473675 
+## Run 11 stress 0.1849321 
+## Run 12 stress 0.1499987 
+## Run 13 stress 0.1499987 
+## Run 14 stress 0 
+## ... procrustes: rmse 0.2221914  max resid 0.3668782 
+## Run 15 stress 6.413958e-05 
+## ... procrustes: rmse 0.2027233  max resid 0.3791181 
+## Run 16 stress 2.850214e-05 
+## ... procrustes: rmse 0.1413578  max resid 0.2307743 
+## Run 17 stress 0.0004061822 
+## ... procrustes: rmse 0.1735088  max resid 0.2349369 
 ## Run 18 stress 0 
-## ... procrustes: rmse 0.1857967  max resid 0.3262958 
+## ... procrustes: rmse 0.2090858  max resid 0.3751477 
 ## Run 19 stress 0 
-## ... procrustes: rmse 0.02410486  max resid 0.03804542 
-## Run 20 stress 9.91874e-05 
-## ... procrustes: rmse 0.2591665  max resid 0.3915439
+## ... procrustes: rmse 0.0924434  max resid 0.1452034 
+## Run 20 stress 7.667097e-05 
+## ... procrustes: rmse 0.1227981  max resid 0.191329
 ```
 
 ```

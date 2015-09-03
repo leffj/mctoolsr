@@ -140,7 +140,7 @@ plot_ordination(input_rar_filt, ord, 'Sample_type', 'Farm_type', hulls = TRUE)
 There are multiple taxa filtering options in **mctoolsr**. This example shows how to explore the proteobacteria sequences across the samples. Taxa can also be filtered based on their relative abundance.
 
 ```{r fig.width = 4}
-input_proteobact = filter_taxa_from_data(input, taxa_to_keep = 'p__Proteobacteria')
+input_proteobact = filter_taxa_from_input(input, taxa_to_keep = 'p__Proteobacteria')
 sort(colSums(input_proteobact$data_loaded))
 input_proteobact_rar = single_rarefy(input_proteobact, 219)
 plot_nmds(calc_dm(input_proteobact_rar$data_loaded), metadata_map = input_proteobact_rar$map_loaded, 
