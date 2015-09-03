@@ -119,17 +119,19 @@ plot_taxa_bars = function(taxa_summary_df, metadata_map, group_factor, num_taxa)
     ggplot2::theme(legend.title = ggplot2::element_blank())
 }
 
-#' @title Filter taxa from an individual taxon table
+#' @title Filter taxa from an individual taxa summary table
 #' @details Can use one or more of the parameters to do filtering. Threshold 
 #'  filtering takes precidence over taxa filtering. If taxa to keep and 
 #'  taxa to remove are both included, taxa to remove will be 
 #'  removed if the parameter entries conflict.
-#' @param tax_table Input taxon table (dataframe)
+#' @param tax_table Input taxa summary table from \code{summarize_taxonomy()} 
+#'  (dataframe).
 #' @param filter_thresh Filter taxa less than this number based on mean 
 #'  table values.
 #' @param taxa_to_keep Keep only taxa that contain these names. Vector or string.
 #' @param taxa_to_remove Remove taxa that contain these names. Vector or string.
-filter_taxa_from_table = function(tax_table, filter_thresh, taxa_to_keep, taxa_to_remove){
+filter_taxa_from_table = function(tax_table, filter_thresh = 0, taxa_to_keep, 
+                                  taxa_to_remove){
   means = apply(tax_table[, 1:ncol(tax_table)], 1, 
                 function(x){mean(x,na.rm=TRUE)})
   number_retained = sum((means >= filter_thresh) *1)
@@ -137,6 +139,22 @@ filter_taxa_from_table = function(tax_table, filter_thresh, taxa_to_keep, taxa_t
   if(!missing(taxa_to_keep)) {taxa_keep = taxa_keep[taxa_keep %in% taxa_to_keep]}
   if(!missing(taxa_to_remove)) {taxa_keep = taxa_keep[!taxa_keep %in% taxa_to_remove]}
   tax_table[row.names(tax_table) %in% taxa_keep, ]
+}
+
+#' @title Filter taxa from a loaded dataset (depricated)
+#' @details This function is now depricated to keep names consistent. Use 
+#'  \code{filter_taxa_from_input()} instead.
+#' @param input Input data (a list variable) from \code{load_taxa_table()}.
+#' @param filter_thresh Filter OTUs less than this number based on mean OTU 
+#'        table values.
+#' @param taxa_to_keep Keep only taxa that contain these names. Vector or string.
+#' @param taxa_to_remove Remove taxa that contain these names. Vector or string.
+#' @param at_spec_level If included, only keep/remove matches at this specific 
+#'        taxonomy level(s) (a number/numbers referring to the taxonomy 
+#'        column(s)).
+filter_taxa_from_data = function(input, filter_thresh, taxa_to_keep, 
+                                 taxa_to_remove, at_spec_level) {
+  stop("Depricated. Please use 'filter_taxa_from_input()' instead.")
 }
 
 #' @title Filter taxa from a loaded dataset
@@ -152,7 +170,7 @@ filter_taxa_from_table = function(tax_table, filter_thresh, taxa_to_keep, taxa_t
 #' @param at_spec_level If included, only keep/remove matches at this specific 
 #'        taxonomy level(s) (a number/numbers referring to the taxonomy 
 #'        column(s)).
-filter_taxa_from_data = function(input, filter_thresh, taxa_to_keep, 
+filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep, 
                                  taxa_to_remove, at_spec_level){
   rows_keep = seq(1, nrow(input$data_loaded))
   if(!missing(filter_thresh)){
