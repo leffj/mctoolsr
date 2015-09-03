@@ -21,7 +21,7 @@ To use:
 
 ```{r eval=FALSE}
 install.packages("devtools")
-devtools::install_github("leffj/mctoolsr", ref = "package_prep")
+devtools::install_github("leffj/mctoolsr")
 ```
 
 To use in a script, load and attach the package using:
@@ -37,7 +37,7 @@ devtools::load_all(".")
 **mctoolsr** is under active devlopment. Update regularly to use the latest features and for bug fixes. You will have to load and attach as above after updating.
 
 ```{r eval=FALSE}
-devtools::install_github("leffj/mctoolsr", ref = "package_prep")
+devtools::install_github("leffj/mctoolsr")
 ```
 
 ### To report bugs or request features, go to:
