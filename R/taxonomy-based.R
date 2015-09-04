@@ -161,7 +161,10 @@ filter_taxa_from_data = function(input, filter_thresh, taxa_to_keep,
 #' @details Can use one or more of the parameters to do filtering. Threshold 
 #'          filtering takes precidence over taxa filtering. If taxa to keep and 
 #'          taxa to remove are both included, taxa to remove will be 
-#'          removed if the parameter entries conflict.
+#'          removed if the parameter entries conflict. Taxa are found using 
+#'          grep, so it is not necessary to use the entire names of taxa as long
+#'          as they are not ambiguous. Can filter using taxa IDs (i.e. row 
+#'          names in taxa table).
 #' @param input Input data (a list variable) from \code{load_taxa_table()}.
 #' @param filter_thresh Filter OTUs less than this number based on mean OTU 
 #'        table values.
@@ -171,7 +174,8 @@ filter_taxa_from_data = function(input, filter_thresh, taxa_to_keep,
 #'        taxonomy level(s) (a number/numbers referring to the taxonomy 
 #'        column(s)).
 filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep, 
-                                 taxa_to_remove, at_spec_level){
+                                 taxa_to_remove, at_spec_level, 
+                                 taxa_IDs_to_keep, taxa_IDs_to_remove){
   rows_keep = seq(1, nrow(input$data_loaded))
   if(!missing(filter_thresh)){
     means = apply(input$data_loaded[, 1:ncol(input$data_loaded)], 1, 
@@ -179,26 +183,49 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
     number_retained = sum((means >= filter_thresh) *1)
     rows_keep = rows_keep[means >= filter_thresh]
   }
+  # specify taxa levels to search
   if(missing(at_spec_level)){
     tax_levels = 1:ncol(input$taxonomy_loaded)
   } else tax_levels = at_spec_level
+  # if particular taxa specified to keep, identify those rows.
   if(!missing(taxa_to_keep)){
     rows_keep_tmp = sapply(taxa_to_keep, FUN = function(x){
       grep(x, apply(as.data.frame(input$taxonomy_loaded[, tax_levels]), 1, 
                     paste0, collapse = ''))
     })
     if(length(rows_keep_tmp[[1]]) == 0){
-      stop('Taxon not found.')
+      stop('Taxa not found.')
     }
     rows_keep = intersect(rows_keep, rows_keep_tmp)
   }
+  # if particular taxa IDs specified to keep, identify those rows.
+  if(!missing(taxa_IDs_to_keep)){
+    rows_keep_tmp = sapply(taxa_IDs_to_keep, FUN = function(x){
+      match(x, row.names(input$taxonomy_loaded))
+    })
+    if(length(rows_keep_tmp[[1]]) == 0){
+      stop('Taxa IDs not found.')
+    }
+    rows_keep = intersect(rows_keep, rows_keep_tmp)
+  }
+  # if particular taxa to remove, identify those rows
   if(!missing(taxa_to_remove)){
     rows_remove = sapply(taxa_to_remove, FUN = function(x){
       grep(x, apply(as.data.frame(input$taxonomy_loaded[, tax_levels]), 1, 
                     paste0, collapse = ''))
     })
     if(length(rows_remove[[1]]) == 0){
-      stop('Taxon not found.')
+      stop('Taxa not found.')
+    }
+    rows_keep = rows_keep[! rows_keep %in% unlist(rows_remove)]
+  }
+  # if particular taxa IDs to remove, identify those rows
+  if(!missing(taxa_IDs_to_remove)){
+    rows_remove = sapply(taxa_IDs_to_remove, FUN = function(x){
+      match(x, row.names(input$taxonomy_loaded))
+    })
+    if(length(rows_remove[[1]]) == 0){
+      stop('Taxa IDs not found.')
     }
     rows_keep = rows_keep[! rows_keep %in% unlist(rows_remove)]
   }
@@ -206,6 +233,8 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
        map_loaded = input$map_loaded, 
        taxonomy_loaded = droplevels(input$taxonomy_loaded[rows_keep, ]))
 }
+
+
 
 #' @title Plot Taxa Summary Heatmap
 #' @description A quick way to create a heatmap from a taxa summary dataframe.

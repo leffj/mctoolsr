@@ -40,6 +40,22 @@ test_that("Filtering taxonomy from input dataset works as expected.", {
                                  taxa_to_keep = 'Proteobacteria')
     row.names(summarize_taxonomy(tmp, 2, report_higher_tax = FALSE))},
     'p__Proteobacteria')
+  # filter OTU IDs
+  expect_equal({
+    tmp = filter_taxa_from_input(fruits_veggies, 
+                                 taxa_IDs_to_keep = c('OTU_3', 'OTU_64'))
+    row.names(tmp$data_loaded)},
+    c('OTU_3', 'OTU_64'))
+  expect_equal({
+    tmp = filter_taxa_from_input(fruits_veggies, 5,
+                                 taxa_IDs_to_keep = c('OTU_3', 'OTU_64'))
+    row.names(tmp$data_loaded)},
+    c('OTU_64'))
+  expect_equal({
+    tmp = filter_taxa_from_input(fruits_veggies, 10, taxa_to_keep = 'Proteoba', 
+                                 taxa_IDs_to_remove = 'OTU_64')
+    nrow(tmp$data_loaded)},
+    14)
 })
 
 
