@@ -173,6 +173,8 @@ filter_taxa_from_data = function(input, filter_thresh, taxa_to_keep,
 #' @param at_spec_level If included, only keep/remove matches at this specific 
 #'        taxonomy level(s) (a number/numbers referring to the taxonomy 
 #'        column(s)).
+#' @param taxa_IDs_to_keep Keep only taxa with these IDs (row names).
+#' @param taxa_IDs_to_remove Remove taxa with these IDs (row names).
 filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep, 
                                  taxa_to_remove, at_spec_level, 
                                  taxa_IDs_to_keep, taxa_IDs_to_remove){

@@ -20,6 +20,10 @@ table values.}
 \item{at_spec_level}{If included, only keep/remove matches at this specific
 taxonomy level(s) (a number/numbers referring to the taxonomy
 column(s)).}
+
+\item{taxa_IDs_to_keep}{Keep only taxa with these IDs (row names).}
+
+\item{taxa_IDs_to_remove}{Remove taxa with these IDs (row names).}
 }
 \description{
 Filter taxa from a loaded dataset
