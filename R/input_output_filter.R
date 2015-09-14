@@ -43,7 +43,9 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
     }
     if(names(data)[ncol(data)] == 'taxonomy'){
       data_taxonomy = .parse_taxonomy(data$taxonomy)
-      row.names(data_taxonomy) = row.names(data)
+      if(!is.null(data_taxonomy)) {
+        row.names(data_taxonomy) = row.names(data)
+      }
       data$taxonomy = NULL
     } else data_taxonomy = NULL
   }
