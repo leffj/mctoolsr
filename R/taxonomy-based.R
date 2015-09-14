@@ -47,7 +47,16 @@
 # Convert a taxonomy character vector pulled from a text OTU 
 # table to a data frame
 .parse_taxonomy = function(taxonomy_vec){
-  tmp = sapply(taxonomy_vec, function(x) strsplit(as.character(x), split = '; *')[[1]])
+  tmp = sapply(taxonomy_vec, function(x) strsplit(as.character(x), 
+                                                  split = '; *')[[1]])
+  # check for long taxonomy rows, which may indicate a problem
+  lengths = sapply(tmp, length)
+  if(max(lengths) > 15) {
+    prob_line = which(lengths == max(lengths))
+    warning(paste0('Issue with provided taxonomy. Check for quotes near line ', 
+                   prob_line, '. Proceeding without taxonomy.'))
+    NULL
+  }
   # if not all taxonomic levels present for each OTU, this is necessary to 
   # convert to data frame
   if(class(tmp) == 'list'){
