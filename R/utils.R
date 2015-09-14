@@ -38,7 +38,7 @@
   tax_table.use = tax_table.use[rowSums(tax_table.use) != 0, ]
   map.use = metadata_map[match(samplesToUse, row.names(metadata_map)),]
   map.use = droplevels(map.use)
-  if(!missing('taxonomy')) {
+  if(!missing('taxonomy') & !is.null(taxonomy)) {
     taxonomy.use = taxonomy[match(row.names(tax_table.use), 
                                   row.names(taxonomy)), ]
     taxonomy.use = droplevels(taxonomy.use)
