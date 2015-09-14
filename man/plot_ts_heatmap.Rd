@@ -7,12 +7,14 @@
 plot_ts_heatmap(tax_table, metadata_map, min_rel_abund, type_header, scale_by)
 }
 \arguments{
-\item{tax_table}{A taxa table dataframe.}
+\item{tax_table}{A taxa table dataframe. The output of
+\code{summarize_taxonomy()}.}
 
-\item{metadata_map}{A metadata mapping dataframe.}
+\item{metadata_map}{A metadata mapping dataframe. Usually,
+\code{input$map_loaded}}
 
 \item{min_rel_abund}{The minimum mean relative abundance for a taxon to not
-be grouped into 'Other'.}
+be grouped into 'Other'. Between 0 and 1.}
 
 \item{type_header}{The metadata_map header label used to group samples.}
 
