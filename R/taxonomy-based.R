@@ -28,8 +28,19 @@
     tax_comp[is.na(tax_comp)] = 'unclassified'
     tax_comp
   } else if(class(obs_md) == 'data.frame'){
-    obs_md
-  } else stop('Error compiling taxonomy.')
+    if(ncol(obs_md) < 2) { 
+      #can happen if taxonomy loaded as another type of metadata in biom
+      warning(paste0('Error compiling taxonomy. Check that taxonomy is ', 
+                    'formatted correctly in biom file. Proceeding without ', 
+                    'taxonomy.'))
+      NULL
+    } else obs_md
+  } else {
+    warning(paste0('Error compiling taxonomy. Check that taxonomy is ', 
+                   'formatted correctly in biom file. Proceeding without ', 
+                   'taxonomy.'))
+    NULL
+  }
 }
 
 #' @keywords internal
