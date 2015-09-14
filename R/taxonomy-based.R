@@ -241,10 +241,12 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
 #' @title Plot Taxa Summary Heatmap
 #' @description A quick way to create a heatmap from a taxa summary dataframe.
 #'  Samples are grouped by a category that is specified in 'type_header'.
-#' @param tax_table A taxa table dataframe.
-#' @param metadata_map A metadata mapping dataframe.
+#' @param tax_table A taxa table dataframe. The output of 
+#'  \code{summarize_taxonomy()}.
+#' @param metadata_map A metadata mapping dataframe. Usually, 
+#'  \code{input$map_loaded}
 #' @param min_rel_abund The minimum mean relative abundance for a taxon to not
-#'  be grouped into 'Other'.
+#'  be grouped into 'Other'. Between 0 and 1.
 #' @param type_header The metadata_map header label used to group samples.
 #' @param scale_by Whether to scale colors by (a) 'sample_types', (b) 'taxa', or
 #'  (c) 'all'.
