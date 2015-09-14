@@ -55,6 +55,7 @@
     prob_line = which(lengths == max(lengths))
     warning(paste0('Issue with provided taxonomy. Check for quotes near line ', 
                    prob_line, '. Proceeding without taxonomy.'))
+    NULL
   }
   # if not all taxonomic levels present for each OTU, this is necessary to 
   # convert to data frame
