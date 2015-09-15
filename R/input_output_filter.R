@@ -35,11 +35,12 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   }
   else if(tools::file_ext(tab_fp) == 'txt'){
     if(readChar(tab_fp, nchars = 4) == "#OTU"){
-      data = read.table(tab_fp, sep='\t', comment.char='', header=T, 
-                        check.names=F, row.names=1)
+      data = read.table(tab_fp, sep = '\t', comment.char = '', header = TRUE, 
+                        check.names = FALSE, row.names = 1, quote = "\"")
     } else {
-      data = read.table(tab_fp, sep='\t', skip=1, comment.char='', header=T, 
-                        check.names=F, row.names=1)
+      data = read.table(tab_fp, sep='\t', skip=1, comment.char = '', 
+                        header = TRUE, check.names = FALSE, row.names = 1, 
+                        quote = "\"")
     }
     if(names(data)[ncol(data)] == 'taxonomy'){
       data_taxonomy = .parse_taxonomy(data$taxonomy)
@@ -52,7 +53,7 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   else stop('Input file must be either biom (.biom) or tab-delimited (.txt) format.')
   # import mapping file
   map = tryCatch(read.table(map_fp, sep = '\t', comment.char = '', header = T, 
-                            check.names = F, row.names = 1),
+                            check.names = F, row.names = 1, quote = "\""),
                  error = function(c) conditionMessage(c),
                  warning = function(c) {
                    c$message = paste0("Error loading mapping file. Please ",
@@ -96,8 +97,10 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
 #'   "sample_type", filter_vals = "blank")
 #' }
 load_dm = function(dm_fp, map_fp, filter_cat, filter_vals, keep_vals){
-  dm = read.table(dm_fp,sep='\t',comment.char='',header=T,check.names=F,row.names=1)
-  map = read.table(map_fp,sep='\t',comment.char='',header=T,check.names=F,row.names=1)
+  dm = read.table(dm_fp, sep='\t', comment.char='', header=T, check.names=F, 
+                  row.names=1)
+  map = read.table(map_fp, sep='\t', comment.char='', header=T, check.names=F, 
+                   row.names=1)
   # optionally, subset data
   # cant subset if trying to filter out certain values and keep certain values
   # use one or the other
@@ -106,8 +109,9 @@ load_dm = function(dm_fp, map_fp, filter_cat, filter_vals, keep_vals){
   } else map_f = map
   # match up data from dissimilarity matrix with mapping file
   samplesToUse = intersect(names(dm), row.names(map_f))
-  dm.use = as.dist(dm[match(samplesToUse,names(dm)), match(samplesToUse,names(dm))])
-  map.use = map_f[match(samplesToUse,row.names(map_f)), ]
+  dm.use = as.dist(dm[match(samplesToUse,names(dm)), 
+                      match(samplesToUse, names(dm))])
+  map.use = map_f[match(samplesToUse, row.names(map_f)), ]
   # output
   list(dm_loaded = dm.use, map_loaded = map.use)
 }
