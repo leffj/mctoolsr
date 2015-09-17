@@ -4,16 +4,20 @@
 \alias{export_otu_table}
 \title{Export an OTU table as a text file}
 \usage{
-export_otu_table(input, out_fp)
+export_otu_table(input, out_fp, map_fp)
 }
 \arguments{
-\item{input}{The input dataset as loaded by \code{load_taxa_table()}}
+\item{input}{The input dataset as loaded by \code{load_taxa_table()} or
+an otu table of class \code{data.frame}.}
 
-\item{out_fp}{The output filepath}
+\item{out_fp}{The output filepath.}
+
+\item{map_fp}{(OPTIONAL) The metadata map output filepath if you want to
+write it to file.}
 }
 \description{
 A convenient way to export a loaded OTU table as a text file.
  Taxonomy strings will appear in the right most column. This is also a good
- way to save an OTU table to be loaded later.
+ way to save an OTU table to be loaded later. Output format is tab-delimited.
 }
 

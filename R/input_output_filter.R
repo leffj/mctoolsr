@@ -220,17 +220,33 @@ match_datasets = function(ds1, ds2){
 #' @title Export an OTU table as a text file
 #' @description A convenient way to export a loaded OTU table as a text file. 
 #'  Taxonomy strings will appear in the right most column. This is also a good
-#'  way to save an OTU table to be loaded later.
-#' @param input The input dataset as loaded by \code{load_taxa_table()}
-#' @param out_fp The output filepath
-export_otu_table = function(input, out_fp){
-  table = input$data_loaded
+#'  way to save an OTU table to be loaded later. Output format is tab-delimited.
+#' @param input The input dataset as loaded by \code{load_taxa_table()} or
+#'  an otu table of class \code{data.frame}.
+#' @param out_fp The output filepath.
+#' @param map_fp (OPTIONAL) The metadata map output filepath if you want to 
+#'  write it to file.
+export_otu_table = function(input, out_fp, map_fp){
+  if(class(input) == 'list') {
+    table = input$data_loaded
+  } else if(class(input) == 'data.frame') {
+    table = input
+    if(!missing(map_fp)){
+      stop(paste0('Cannot write a metadata map unless input is a list that 
+                  contains the metadata.'))
+    }
+  }
   taxonomy = apply(input$taxonomy_loaded, 1, paste, collapse = '; ')
   out_tab = data.frame(OTU_ID = row.names(table), table, taxonomy)
   names(out_tab)[1] = '#OTU ID'
   write('#Exported from mctoolsr', out_fp)
   suppressWarnings(write.table(out_tab, out_fp, sep = '\t', row.names = FALSE, 
                                append = TRUE))
+  if(!missing(map_fp)){
+    map_file = data.frame(row.names(input$map_loaded), input$map_loaded)
+    names(map_file)[1] = '#Sample ID'
+    write.table(map_file, map_fp, sep = '\t', row.names = FALSE)
+  }
 }
 
 

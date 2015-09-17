@@ -7,7 +7,7 @@ tab_fp_biom = system.file('extdata', 'fruits_veggies_taxa_table_wTax.biom',
                      package = 'mctoolsr')
 tab_fp_txt = system.file('extdata', 'fruits_veggies_taxa_table_wTax.txt', 
                           package = 'mctoolsr')
-dm_fp = system.file('data-raw', 'fruits_veggies_dm.txt', package = 'mctoolsr')
+dm_fp = system.file('extdata', 'fruits_veggies_dm.txt', package = 'mctoolsr')
 
 test_that("Example taxa table (biom) loads correctly.", {
   # Doesn't throw error
@@ -54,3 +54,14 @@ test_that("Example taxa table (txt) loads correctly.", {
 # test_that("Dissimilarity matrix loads without error.", {
 #   expect_that(load_dm(dm_fp = dm_fp, map_fp = map_fp), not(throws_error()))
 # })
+
+test_that("Taxa table can be exported and reloaded.", {
+  basedir = system.file('extdata', package = 'mctoolsr')
+  outfp = paste0(basedir, '/exported_taxa_table.txt')
+  mapoutfp = paste0(basedir, '/exported_map_file.txt')
+  export_otu_table(fruits_veggies, outfp, mapoutfp)
+  expect_that(load_taxa_table(tab_fp = outfp, map_fp = mapoutfp), 
+              not(throws_error()))
+  unlink(outfp)
+  unlink(mapoutfp)
+})
