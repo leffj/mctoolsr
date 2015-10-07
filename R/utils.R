@@ -66,5 +66,15 @@ convert_to_relative_abundances = function(input){
     rel_abund_table = as.data.frame(t(apply(input, 1, function(x) x / seq_cts)))
     rel_abund_table
   }
-  
+}
+
+#' @title Return the most abundant taxa in a dataset
+#' @description Return the n most abundant taxa as calculated by the mean 
+#' sequence counts across all samples.
+#' @param input The input dataset as loaded by \code{load_taxa_table()}.
+#' @param number_taxa The number of top taxa to display.
+return_top_taxa = function(input, number_taxa){
+  taxa_ordered = input$taxonomy_loaded[order(rowMeans(input$data_loaded), 
+                                             decreasing = T), ]
+  head(taxa_ordered, n = number_taxa)
 }
