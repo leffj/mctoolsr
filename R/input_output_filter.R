@@ -64,7 +64,8 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
                  )
   if(class(map) != 'data.frame') {
     warning(paste0('Problem loading mapping file. Note that the mapping file ',
-                   'should have more than one metadata column.'))}
+                   'should have more than one metadata column. Check that ', 
+                   'All rows have the same number of columns.'))}
   # optionally, subset data
     # cant subset if trying to filter out certain values and keep certain values
     # use one or the other
@@ -158,7 +159,7 @@ load_2_dms = function(dm1_fp, dm2_fp, map_fp, filter_cat, filter_vals, keep_vals
 #' @title Filter Samples from Dataset
 #' @description Filter out or keep particular samples in a dataset based on 
 #'  contextual metadata.
-#' @param input The input dataset as loaded by \code{load_taxa_table()}
+#' @param input The input dataset as loaded by \code{load_taxa_table()}.
 #' @param filter_cat The map_fp header string for the factor you would like 
 #'  to use to filter samples.
 #' @param filter_vals The values within the filter category (vector or single 
