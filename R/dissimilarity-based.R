@@ -289,8 +289,12 @@ calc_mean_dissimilarities = function(dissim_mat, metadata_map, summarize_by_fact
                                               split = '__')), 
                       mean_dist = means$mean_dist)
   if(return_map){
-    mean_map = dplyr::summarise_each(dplyr::group_by_(metadata_map, summarize_by_factor), 
+    mean_map = dplyr::summarise_each(dplyr::group_by_(metadata_map, 
+                                                      summarize_by_factor), 
                                      dplyr::funs(.sumry_fun))
-    list(dm = as.dist(.convert_one_column_to_matrix(means2)), map_loaded = mean_map)
+    mean_map = as.data.frame(as.matrix(mean_map))
+    row.names(mean_map) = mean_map[, summarize_by_factor]
+    list(dm_loaded = as.dist(.convert_one_column_to_matrix(means2)), 
+         map_loaded = mean_map)
   } else as.dist(.convert_one_column_to_matrix(means2))
 }
