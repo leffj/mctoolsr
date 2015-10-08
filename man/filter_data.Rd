@@ -7,7 +7,7 @@
 filter_data(input, filter_cat, filter_vals, keep_vals)
 }
 \arguments{
-\item{input}{The input dataset as loaded by \code{load_taxa_table()}}
+\item{input}{The input dataset as loaded by \code{load_taxa_table()}.}
 
 \item{filter_cat}{The map_fp header string for the factor you would like
 to use to filter samples.}
@@ -19,7 +19,7 @@ value) you would like to use to remove samples from the imported data.}
 values.}
 }
 \value{
-A list variable with (1) the loaded dissimilarity matrix, (2)
+A list variable with (1) the loaded taxa table, (2)
  the loaded mapping file, and optionally (3) the loaded taxonomy information
 }
 \description{
