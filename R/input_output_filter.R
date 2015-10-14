@@ -179,11 +179,12 @@ filter_data = function(input, filter_cat, filter_vals, keep_vals){
   } else map_f = input$map_loaded
   # match up data from dissimilarity matrix with mapping file
   if('taxonomy_loaded' %in% names(input)){
-    matched_data = .match_data_components(input$data_loaded, map_f, input$taxonomy_loaded)
+    matched_data = .match_data_components(input$data_loaded, map_f, 
+                                          input$taxonomy_loaded)
     message(paste0(nrow(matched_data$map_loaded), ' samples remaining'))
     matched_data
   } else {
-    matched_data = .match_data_components(input$data_loaded, map_f)
+    matched_data = .match_data_components(input$data_loaded, map_f, NULL)
     message(paste0(nrow(matched_data$map_loaded), ' samples remaining'))
     matched_data
   }
@@ -237,7 +238,7 @@ filter_dm = function(input_dm, filter_cat, filter_vals, keep_vals){
 match_datasets = function(ds1, ds2){
   common_samples = intersect(names(ds1$data_loaded), names(ds2$data_loaded))
   ds1$map_loaded$common_sample = row.names(ds1$map_loaded) %in% common_samples
-  ds1_filt = filter_data(ds1, 'common_sample', FALSE)
+  ds1_filt = filter_data(ds1, filter_cat = 'common_sample', filter_vals = FALSE)
   ds1_filt$data_loaded = ds1_filt$data_loaded[, 
                                               match(common_samples, 
                                                     names(ds1_filt$data_loaded))]
