@@ -21,6 +21,7 @@ Imports: dplyr,
     grid,
     scales
 Suggests: VennDiagram (>= 1.6.15),
+    ggdendro,
     knitr,
     testthat
 LazyData: true

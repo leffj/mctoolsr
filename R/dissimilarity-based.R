@@ -75,7 +75,7 @@ plot_ordination = function(input, ordination_axes, color_cat, shape_cat,
     p = p + ggplot2::theme_bw()
     p = p + ggplot2::xlab(colnames(to_plot)[1]) + 
       ggplot2::ylab(colnames(to_plot)[2])
-    p = p + ggplot2::scale_color_discrete('')
+    p = p + ggplot2::theme(legend.title = element_blank())
   }
   # plot without shape
   else{
@@ -84,13 +84,13 @@ plot_ordination = function(input, ordination_axes, color_cat, shape_cat,
     p = p + ggplot2::theme_bw()
     p = p + ggplot2::xlab(colnames(to_plot)[1]) + 
       ggplot2::ylab(colnames(to_plot)[2])
-    p = p + ggplot2::scale_color_discrete('')
+    p = p + ggplot2::theme(legend.title = element_blank())
   }
   if(hulls){
     p = p + ggplot2::geom_polygon(data = hull_vals, 
                                   ggplot2::aes(fill = cat, color = cat), 
                                   alpha = 0.1)
-    p = p + ggplot2::scale_fill_discrete('')
+    p = p + ggplot2::theme(legend.title = element_blank())
   }
   p
 }
@@ -129,6 +129,39 @@ plot_nmds = function(dm, metadata_map = NULL, color_cat, shape_cat){
       ggplot2::scale_color_discrete('') + 
       ggplot2::scale_shape_discrete('')
   }
+}
+
+#' @title Generate a dendrograme based on a dissimilarity matrix
+#' @param dm Dissimilarity matrix.
+#' @param metadata_map The metadata mapping dataframe. 
+#'  Typically, input$map_loaded.
+#' @param labels The metadata mapping dataframe column name representing the 
+#'  intended leaf labels.
+#' @param color_by The metadata mapping dataframe column name representing the 
+#'  intended leaf label colors.
+#' @param ... Other parameters passed on to geom_text
+plot_dendrogram = function(dm, metadata_map, labels, color_by, ...){
+  if (!requireNamespace("ggdendro", quietly = TRUE)) {
+    stop(paste0("'ggdendro' package needed for this function ", 
+                "to work. Please install it."), call. = FALSE)
+  }
+  hc = hclust(dm)
+  ddata = ggdendro::dendro_data(hc)
+  map_rows = match(ddata$labels$label, row.names(metadata_map))
+  leaf_labels = as.character(metadata_map[map_rows, labels])
+  sample_categories = metadata_map[map_rows, color_by]
+  ddata$leaf_labels = data.frame(ddata$labels[, 1:2], leaf_labels, 
+                                 sample_categories)
+  p = ggplot2::ggplot()
+  p = p + ggplot2::geom_segment(data = ddata$segments, 
+                                ggplot2::aes(x, y, xend = xend, yend = yend))
+  p = p + ggplot2::geom_text(data = ddata$leaf_labels, 
+                             ggplot2::aes(x, y, label = leaf_labels, 
+                                          color = sample_categories), 
+                             hjust = 0, angle = -90, ...)
+  p = p + ggdendro::theme_dendro()
+  p = p + ggplot2::scale_y_continuous(lim = c(-0.5, max(ddata$segments$y)*1.05))
+  p
 }
 
 # Interactive plots NOT WORKING
