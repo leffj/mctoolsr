@@ -161,22 +161,6 @@ filter_taxa_from_table = function(tax_table, filter_thresh = 0, taxa_to_keep,
   tax_table[row.names(tax_table) %in% taxa_keep, ]
 }
 
-#' @title Filter taxa from a loaded dataset (depricated)
-#' @details This function is now depricated to keep names consistent. Use 
-#'  \code{filter_taxa_from_input()} instead.
-#' @param input Input data (a list variable) from \code{load_taxa_table()}.
-#' @param filter_thresh Filter OTUs less than this number based on mean OTU 
-#'        table values.
-#' @param taxa_to_keep Keep only taxa that contain these names. Vector or string.
-#' @param taxa_to_remove Remove taxa that contain these names. Vector or string.
-#' @param at_spec_level If included, only keep/remove matches at this specific 
-#'        taxonomy level(s) (a number/numbers referring to the taxonomy 
-#'        column(s)).
-filter_taxa_from_data = function(input, filter_thresh, taxa_to_keep, 
-                                 taxa_to_remove, at_spec_level) {
-  stop("Depricated. Please use 'filter_taxa_from_input()' instead.")
-}
-
 #' @title Filter taxa from a loaded dataset
 #' @details Can use one or more of the parameters to do filtering. Threshold 
 #'          filtering takes precidence over taxa filtering. If taxa to keep and 
