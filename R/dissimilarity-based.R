@@ -139,6 +139,7 @@ plot_nmds = function(dm, metadata_map = NULL, color_cat, shape_cat){
 #'  intended leaf labels.
 #' @param color_by The metadata mapping dataframe column name representing the 
 #'  intended leaf label colors.
+#' @param method The clustering method to use when creating the dendrogram.
 #' @param ... Other parameters passed on to geom_text
 plot_dendrogram = function(dm, metadata_map, labels, color_by, 
                            method = 'complete', ...) {
