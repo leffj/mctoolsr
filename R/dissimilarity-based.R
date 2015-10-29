@@ -75,7 +75,7 @@ plot_ordination = function(input, ordination_axes, color_cat, shape_cat,
     p = p + ggplot2::theme_bw()
     p = p + ggplot2::xlab(colnames(to_plot)[1]) + 
       ggplot2::ylab(colnames(to_plot)[2])
-    p = p + ggplot2::theme(legend.title = element_blank())
+    p = p + ggplot2::theme(legend.title = ggplot2::element_blank())
   }
   # plot without shape
   else{
@@ -84,13 +84,13 @@ plot_ordination = function(input, ordination_axes, color_cat, shape_cat,
     p = p + ggplot2::theme_bw()
     p = p + ggplot2::xlab(colnames(to_plot)[1]) + 
       ggplot2::ylab(colnames(to_plot)[2])
-    p = p + ggplot2::theme(legend.title = element_blank())
+    p = p + ggplot2::theme(legend.title = ggplot2::element_blank())
   }
   if(hulls){
     p = p + ggplot2::geom_polygon(data = hull_vals, 
                                   ggplot2::aes(fill = cat, color = cat), 
                                   alpha = 0.1)
-    p = p + ggplot2::theme(legend.title = element_blank())
+    p = p + ggplot2::theme(legend.title = ggplot2::element_blank())
   }
   p
 }
@@ -140,12 +140,13 @@ plot_nmds = function(dm, metadata_map = NULL, color_cat, shape_cat){
 #' @param color_by The metadata mapping dataframe column name representing the 
 #'  intended leaf label colors.
 #' @param ... Other parameters passed on to geom_text
-plot_dendrogram = function(dm, metadata_map, labels, color_by, ...){
+plot_dendrogram = function(dm, metadata_map, labels, color_by, 
+                           method = 'complete', ...) {
   if (!requireNamespace("ggdendro", quietly = TRUE)) {
     stop(paste0("'ggdendro' package needed for this function ", 
                 "to work. Please install it."), call. = FALSE)
   }
-  hc = hclust(dm)
+  hc = hclust(dm, method)
   ddata = ggdendro::dendro_data(hc)
   map_rows = match(ddata$labels$label, row.names(metadata_map))
   leaf_labels = as.character(metadata_map[map_rows, labels])
