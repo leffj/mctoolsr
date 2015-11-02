@@ -52,8 +52,9 @@ calc_ordination = function(dm, ord_type, metadata_map, constrain_factor){
 #' @param color_cat The metadata map header used to color points.
 #' @param shape_cat The metadata map header used for points' shapes (optional).
 #' @param hulls Whether or not to include an outline around sample categories.
+#' @param ... Additional arguments passed to ggplot2's \code{geom_point()}.
 plot_ordination = function(input, ordination_axes, color_cat, shape_cat, 
-                           hulls = FALSE){
+                           hulls = FALSE, ...){
   if(missing(color_cat)){
     warning('No mapping category to color by.')
     color_vec = rep('none', length(labels(dm)))
@@ -70,8 +71,8 @@ plot_ordination = function(input, ordination_axes, color_cat, shape_cat,
   if(!missing(shape_cat)){
     to_plot = data.frame(to_plot, cat2 = input$map_loaded[, shape_cat])
     p = ggplot2::ggplot(to_plot, ggplot2::aes_string(headers[1], headers[2]))
-    p = p + ggplot2::geom_point(size = 3, alpha = 0.8, 
-                                ggplot2::aes(color = cat, shape = cat2))
+    p = p + ggplot2::geom_point(ggplot2::aes(color = cat, shape = cat2),
+                                ..., size = 3, alpha = 0.8)
     p = p + ggplot2::theme_bw()
     p = p + ggplot2::xlab(colnames(to_plot)[1]) + 
       ggplot2::ylab(colnames(to_plot)[2])
@@ -80,7 +81,8 @@ plot_ordination = function(input, ordination_axes, color_cat, shape_cat,
   # plot without shape
   else{
     p = ggplot2::ggplot(to_plot, ggplot2::aes_string(headers[1], headers[2]))
-    p = p + ggplot2::geom_point(size = 3, alpha = 0.8, ggplot2::aes(color=cat))
+    p = p + ggplot2::geom_point(ggplot2::aes(color=cat),
+                                ..., size = 3, alpha = 0.8)
     p = p + ggplot2::theme_bw()
     p = p + ggplot2::xlab(colnames(to_plot)[1]) + 
       ggplot2::ylab(colnames(to_plot)[2])
@@ -160,7 +162,8 @@ plot_dendrogram = function(dm, metadata_map, labels, color_by,
   p = p + ggplot2::geom_text(data = ddata$leaf_labels, 
                              ggplot2::aes(x, y, label = leaf_labels, 
                                           color = sample_categories), 
-                             hjust = 0, angle = -90, ...)
+                             ...,
+                             hjust = 0, angle = -90)
   p = p + ggdendro::theme_dendro()
   p = p + ggplot2::scale_y_continuous(lim = c(-0.5, max(ddata$segments$y)*1.05))
   p
