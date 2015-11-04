@@ -27,3 +27,18 @@ test_that("Calculating mean dissimilarities doesn't throw error.", {
     calc_mean_dissimilarities(dm, fruits_veggies$map_loaded, 'Sample_type')}, 
     not(throws_error()))
 })
+
+test_that("Mean dissimilarities are calculated correctly.", {
+  testthat::expect_equivalent({
+    known_dm = data.frame(Lettuce = c(NA, 0.9497335, 0.9015809, 0.7917143), 
+                          Mushrooms = c(NA, NA, 0.9702367, 0.9411904),
+                          Strawberries = c(NA, NA, NA, 0.8558376),
+                          Spinach = c(NA, NA, NA, NA))
+    row.names(known_dm) = c('Lettuce', 'Mushrooms', 'Strawberries', 'Spinach')
+    as.dist(known_dm)
+    }, {
+      dm = calc_dm(fruits_veggies$data_loaded)
+      round(calc_mean_dissimilarities(dm, fruits_veggies$map_loaded, 
+                                'Sample_type'), 7)
+    })
+})

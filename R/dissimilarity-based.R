@@ -5,22 +5,34 @@
 #######################
 
 #' @title Calculate a dissimilarity matrix from a taxa table
-#' @description Currently calculates Bray-Curtis dissimilarities after 
-#'  performing square-root transformations on the data. Soon, other metrics
-#'  will be available.
+#' @description The default is to calculate Bray-Curtis dissimilarities after 
+#'  performing square-root transformations on the data. Send requests to add
+#'  additional metrics.
 #' @param tax_table The taxa table.
+#' @param method The method to use to calculate the dissimilarity metric.
+#'  Available methods include: 'bray_sq_trans', 'bray', 'jaccard', '.
 #' @return A variable of class 'dist'.
-calc_dm = function(tax_table){
+calc_dm = function(tax_table, method = 'bray_sq_trans'){
   # check for and warn about samples with no sequences
   if(min(colSums(tax_table)) == 0){
     warning('Some samples have no sequences. Samples with low sequence counts
             should be filtered out by rarefying or another acceptable method.')
   }
-  # transform otu table (square root transformation)
-  otuTable_xform = t(sqrt(tax_table))
-  # create dissimilarity matrix from otu table
-  otuTable_dist = vegan::vegdist(otuTable_xform, method='bray')
-  otuTable_dist
+  if(method == 'bray_sq_trans') {
+    # transform otu table (square root transformation)
+    tax_table_xform = t(sqrt(tax_table))
+    # create dissimilarity matrix from otu table
+    vegan::vegdist(tax_table_xform, method = 'bray')
+  } else if(method == 'bray') {
+    vegan::vegdist(t(tax_table), method = 'bray')
+  } else if(method == 'jaccard') {
+    vegan::vegdist(t(tax_table), method = 'jaccard')
+  } else if(method == 'jaccard') {
+    vegan::vegdist(t(tax_table), method = 'morisita')
+  } else {
+    stop(paste0('Invalid dissimilarity metric specified. See documentation ', 
+                'for allowable metrics.'))
+  }
 }
 
 #' @title Calculate Point Coordinates in an Ordination

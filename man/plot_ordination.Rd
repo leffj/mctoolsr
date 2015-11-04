@@ -4,7 +4,8 @@
 \alias{plot_ordination}
 \title{Generate an Ordination Plot}
 \usage{
-plot_ordination(input, ordination_axes, color_cat, shape_cat, hulls = FALSE)
+plot_ordination(input, ordination_axes, color_cat, shape_cat, hulls = FALSE,
+  ...)
 }
 \arguments{
 \item{input}{The input dataset as loaded by \code{load_taxa_table()}.}
@@ -16,6 +17,8 @@ plot_ordination(input, ordination_axes, color_cat, shape_cat, hulls = FALSE)
 \item{shape_cat}{The metadata map header used for points' shapes (optional).}
 
 \item{hulls}{Whether or not to include an outline around sample categories.}
+
+\item{...}{Additional arguments passed to ggplot2's \code{geom_point()}.}
 }
 \description{
 Used to generate a plot from the output of \code{

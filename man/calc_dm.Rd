@@ -4,17 +4,20 @@
 \alias{calc_dm}
 \title{Calculate a dissimilarity matrix from a taxa table}
 \usage{
-calc_dm(tax_table)
+calc_dm(tax_table, method = "bray_sq_trans")
 }
 \arguments{
 \item{tax_table}{The taxa table.}
+
+\item{method}{The method to use to calculate the dissimilarity metric.
+Available methods include: 'bray_sq_trans', 'bray', 'jaccard', '.}
 }
 \value{
 A variable of class 'dist'.
 }
 \description{
-Currently calculates Bray-Curtis dissimilarities after
- performing square-root transformations on the data. Soon, other metrics
- will be available.
+The default is to calculate Bray-Curtis dissimilarities after
+ performing square-root transformations on the data. Send requests to add
+ additional metrics.
 }
 
