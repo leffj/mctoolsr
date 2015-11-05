@@ -315,13 +315,13 @@ add_metadata_to_dm_clmns = function(dm_clmns, metadata_map, cat){
 #' @title Calculate mean dissimilarities using a metadata factor
 #' @description Calculate mean dissimilarities across all levels of a given factor
 #' 
-#' @param dissim_mat Dissimilarity matrix - typically created using 'calc_dm()'.
+#' @param dm Dissimilarity matrix - typically created using 'calc_dm()'.
 #' @param metadata_map The metadata mapping dataframe.
 #' @param summarize_by_factor Category in mapping file to summarize by.
 #' @param return_map Whether or not to return summarized mapping files. If true,
 #'  will return a list (default: FALSE).
 #' @return Mean dissimilarities.
-calc_mean_dissimilarities = function(dissim_mat, metadata_map, summarize_by_factor, 
+calc_mean_dissimilarities = function(dm, metadata_map, summarize_by_factor, 
                                      return_map = FALSE){
   .sumry_fun = function(x){
     if(is.numeric(x)){
@@ -332,7 +332,11 @@ calc_mean_dissimilarities = function(dissim_mat, metadata_map, summarize_by_fact
       } else NA
     }
   }
-  dm_clmns = convert_dm_to_3_column(dissim_mat)
+  # check that dm labels match metadata sample IDs
+  if(!identical(labels(dm), row.names(metadata_map))) {
+    warning('Dissimilarity matrix labels and metadata sample IDs do not match.')
+  }
+  dm_clmns = convert_dm_to_3_column(dm)
   # list sample 1 and sample 2 factor categories in new clmns
   dm_clmns_wCat = add_metadata_to_dm_clmns(dm_clmns, metadata_map, summarize_by_factor)
   # only take samples in mapping file
@@ -356,8 +360,9 @@ calc_mean_dissimilarities = function(dissim_mat, metadata_map, summarize_by_fact
                                      dplyr::funs(.sumry_fun))
     mean_map = as.data.frame(as.matrix(mean_map))
     row.names(mean_map) = mean_map[, summarize_by_factor]
-    list(dm_loaded = as.dist(.convert_one_column_to_matrix(means2)), 
-         map_loaded = mean_map)
+    dm_loaded = as.dist(.convert_one_column_to_matrix(means2))
+    map_loaded = mean_map[match(labels(dm_loaded), row.names(mean_map)), ]
+    list(dm_loaded = dm_loaded, map_loaded = map_loaded) 
   } else as.dist(.convert_one_column_to_matrix(means2))
 }
 
