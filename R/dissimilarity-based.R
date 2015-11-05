@@ -165,17 +165,29 @@ plot_dendrogram = function(dm, metadata_map, labels, color_by,
   ddata = ggdendro::dendro_data(hc)
   map_rows = match(ddata$labels$label, row.names(metadata_map))
   leaf_labels = as.character(metadata_map[map_rows, labels])
-  sample_categories = metadata_map[map_rows, color_by]
-  ddata$leaf_labels = data.frame(ddata$labels[, 1:2], leaf_labels, 
-                                 sample_categories)
+  if(!missing(color_by)) {
+    sample_categories = metadata_map[map_rows, color_by]
+    ddata$leaf_labels = data.frame(ddata$labels[, 1:2], leaf_labels, 
+                                   sample_categories)
+  } else {
+    ddata$leaf_labels = data.frame(ddata$labels[, 1:2], leaf_labels)
+  }
+  
   p = ggplot2::ggplot()
   p = p + ggplot2::geom_segment(data = ddata$segments, 
                                 ggplot2::aes(x, y, xend = xend, yend = yend))
-  p = p + ggplot2::geom_text(data = ddata$leaf_labels, 
-                             ggplot2::aes(x, y, label = leaf_labels, 
-                                          color = sample_categories), 
-                             ...,
-                             hjust = 0, angle = -90)
+  if(!missing(color_by)) {
+    p = p + ggplot2::geom_text(data = ddata$leaf_labels, 
+                               ggplot2::aes(x, y, label = leaf_labels, 
+                                            color = sample_categories), 
+                               ...,
+                               hjust = 0, angle = -90)
+  } else {
+    p = p + ggplot2::geom_text(data = ddata$leaf_labels, 
+                               ggplot2::aes(x, y, label = leaf_labels), 
+                               ...,
+                               color = 'black', hjust = 0, angle = -90)
+  }
   p = p + ggdendro::theme_dendro()
   p = p + ggplot2::scale_y_continuous(lim = c(-0.5, max(ddata$segments$y)*1.05))
   p
@@ -224,8 +236,8 @@ convert_dm_to_3_column = function(dm){
   else{
     dmat = dm
   }
-  dmat.clmns = data.frame(t(combn(unlist(labels(dmat)),2)),as.numeric(dmat))
-  names(dmat.clmns) = c('x1','x2','dist')
+  dmat.clmns = data.frame(t(combn(unlist(labels(dmat)), 2)), as.numeric(dmat))
+  names(dmat.clmns) = c('x1', 'x2', 'dist')
   dmat.clmns
 }
 
@@ -347,4 +359,42 @@ calc_mean_dissimilarities = function(dissim_mat, metadata_map, summarize_by_fact
     list(dm_loaded = as.dist(.convert_one_column_to_matrix(means2)), 
          map_loaded = mean_map)
   } else as.dist(.convert_one_column_to_matrix(means2))
+}
+
+
+#' @title Calculate pairwise PERMANOVA results
+#' @description The \code{adonis()} function in the \code{vegan} package does
+#'  not provide a way to calculate pairwise post-hoc comparisons between
+#'  factor levels. This function calculates PERMANOVA results using the 
+#'  \code{adonis()} function for all factor level pairs. Raw p values are 
+#'  returned, but it is recommended to use the provided FDR corrected p values
+#'  since the multiple comparisons can raise your likelihood of false positive
+#'  differences.
+#' @param dm Dissimilarity matrix of class \code{dist}.
+#' @param metadata_map The metadata mapping dataframe with samples matching and
+#'  in the same order as the ones in the provided dm.
+#' @param compare_header The header in the metadata mapping dataframe with the
+#'  factor levels to use for the pairwise comparisons.
+#' @return A dataframe with R2 and P values.
+calc_pairwise_permanovas = function(dm, metadata_map, compare_header) {
+  comp_var = metadata_map[, compare_header]
+  comp_pairs = combn(levels(comp_var), 2)
+  pval = c()
+  R2 = c()
+  for(i in 1:ncol(comp_pairs)) {
+    pair = comp_pairs[, i]
+    dm_w_map = list(dm_loaded = dm, map_loaded = metadata_map)
+    dm_w_map$map_loaded$in_pair = comp_var %in% pair
+    dm_w_map_filt = filter_dm(dm_w_map, filter_cat = 'in_pair', keep_vals = TRUE)
+    m = vegan::adonis(dm_w_map_filt$dm_loaded ~ 
+                        dm_w_map_filt$map_loaded[, compare_header])
+    pval = c(pval, m$aov.tab$`Pr(>F)`[1])
+    R2 = c(R2, m$aov.tab$R2[1])
+  }
+  results = data.frame(t(comp_pairs), R2, pval)
+  results$pvalBon = pval * length(pval)
+  results$pvalFDR = round(
+    pval * (length(pval) / rank(pval, ties.method = "average")), 
+    3)
+  results
 }

@@ -235,11 +235,14 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
     }
     rows_keep = rows_keep[! rows_keep %in% unlist(rows_remove)]
   }
-  list(data_loaded = input$data_loaded[rows_keep, ],
-       map_loaded = input$map_loaded, 
-       taxonomy_loaded = droplevels(input$taxonomy_loaded[rows_keep, ]))
+  output = list(data_loaded = input$data_loaded[rows_keep, ],
+                map_loaded = input$map_loaded, 
+                taxonomy_loaded = droplevels(input$taxonomy_loaded[rows_keep, 
+                                                                   ]))
+  removed = nrow(input$data_loaded) - nrow(output$data_loaded)
+  message(paste0(removed, ' taxa removed'))
+  output
 }
-
 
 
 #' @title Plot Taxa Summary Heatmap
