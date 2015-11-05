@@ -257,8 +257,10 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
 #' @param type_header The metadata_map header label used to group samples.
 #' @param scale_by Whether to scale colors by (a) 'sample_types', (b) 'taxa', or
 #'  (c) 'all'.
+#' @param custom_sample_order An optional vector with the order of the sample
+#'  names (top to bottom).
 plot_ts_heatmap = function(tax_table, metadata_map, min_rel_abund, type_header, 
-                           scale_by) {
+                           scale_by, custom_sample_order) {
   # group all taxa lower than threshold into other
   lt_thresh = tax_table[rowMeans(tax_table) < min_rel_abund, ]
   gt_thresh = tax_table[rowMeans(tax_table) >= min_rel_abund, ]
@@ -277,7 +279,10 @@ plot_ts_heatmap = function(tax_table, metadata_map, min_rel_abund, type_header,
                             scaled = scales::rescale(value))
   } else if (scale_by == 'all') {
     to_plot = dplyr::mutate(melted, scaled = scales::rescale(value))
-  } else stop("scale_by must be 'sample_types' or 'taxa' or 'all'.")
+  } else stop("scale_by must be one of: 'sample_types', 'taxa' or 'all'.")
+  if(!missing(custom_sample_order)) {
+    to_plot$Var2 = factor(to_plot$Var2, levels = rev(custom_sample_order))
+  }
   # https://learnr.wordpress.com/2010/01/26/ggplot2-quick-heatmap-plotting/
   p = ggplot2::ggplot(to_plot, ggplot2::aes(Var1, Var2, fill = scaled)) +
     ggplot2::geom_tile(color = 'black', size = 0.25) + 
