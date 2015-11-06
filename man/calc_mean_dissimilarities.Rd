@@ -4,11 +4,11 @@
 \alias{calc_mean_dissimilarities}
 \title{Calculate mean dissimilarities using a metadata factor}
 \usage{
-calc_mean_dissimilarities(dissim_mat, metadata_map, summarize_by_factor,
+calc_mean_dissimilarities(dm, metadata_map, summarize_by_factor,
   return_map = FALSE)
 }
 \arguments{
-\item{dissim_mat}{Dissimilarity matrix - typically created using 'calc_dm()'.}
+\item{dm}{Dissimilarity matrix - typically created using 'calc_dm()'.}
 
 \item{metadata_map}{The metadata mapping dataframe.}
 
