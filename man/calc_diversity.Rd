@@ -17,7 +17,7 @@ Calculate diversity values from a taxa table.
 }
 \details{
 Richness is the number of uniaue species per sample. Simpson's
- diversity metric quantifies evenness, and Shannon diversity is a combination
- of richness and evenness.
+ diversity metric (1 - D) quantifies evenness, and Shannon diversity is a
+ combination of richness and evenness.
 }
 

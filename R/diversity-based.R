@@ -10,8 +10,8 @@
 #' @param metric The diversity metric to calculate. Acceptable values are: 
 #'  'richness', 'shannon', and 'simpson'.
 #' @details Richness is the number of uniaue species per sample. Simpson's 
-#'  diversity metric quantifies evenness, and Shannon diversity is a combination
-#'  of richness and evenness.
+#'  diversity metric (1 - D) quantifies evenness, and Shannon diversity is a 
+#'  combination of richness and evenness.
 calc_diversity = function(tax_table, metric){
   metrics = c('richness', 'shannon', 'simpson')
   if(metric == 'richness'){
