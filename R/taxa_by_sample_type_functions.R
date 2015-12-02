@@ -121,7 +121,7 @@
 #'  communities using Mann-Whitney (2 factor levels), Kruskal-Wallis (more 
 #'  than 2) tests, or more complex models.
 #' @param taxa_smry_df Taxa summary data frame.
-#' @param metadata_map Mapping file.
+#' @param metadata_map The metadata mapping data frame.
 #' @param out_fp (Optional) Test results output filepath. Written as a csv file.
 #' @param type_header Mapping file header (in quotation marks) of factor for 
 #'  which you are testing for differences.
@@ -172,4 +172,38 @@ taxa_summary_by_sample_type = function(taxa_smry_df, metadata_map, type_header,
     write.table(results, file = out_fp, sep = ",", row.names = TRUE, 
                 col.names = NA)  
   } else results
+}
+
+#' @title Calculate mean taxa values across a specified factor
+#' @param taxa_table The taxa table.
+#' @param metadata_map The metadata mapping data frame.
+#' @param summarize_by_factor Category in mapping file to summarize by.
+#' @param return_map Whether or not to return summarized mapping files. If true,
+#'  will return a list (default: TRUE).
+#' @return If \code{return_map == TRUE}, returns a list with a taxon table 
+#'  (data_loaded) and a mapping data frame (map_loaded). Otherwise, returns a 
+#'  taxon table of class data frame.
+calc_taxa_means = function(taxa_table, metadata_map, summarize_by_factor, 
+                           return_map = TRUE) {
+  .sumry_fun = function(x){
+    if(is.numeric(x)){
+      mean(x)
+    } else {
+      if(length(unique(x)) == 1){
+        unique(x)
+      } else NA
+    }
+  }
+  tt_means = t(apply(taxa_table, 1, function(x) {
+    tapply(x, metadata_map[, summarize_by_factor], mean)
+  }))
+  if(return_map){
+    mean_map = dplyr::summarise_each(dplyr::group_by_(metadata_map, 
+                                                      summarize_by_factor), 
+                                     dplyr::funs(.sumry_fun))
+    mean_map = as.data.frame(as.matrix(mean_map))
+    row.names(mean_map) = mean_map[, summarize_by_factor]
+    map_loaded = mean_map[match(colnames(tt_means), row.names(mean_map)), ]
+    list(data_loaded = tt_means, map_loaded = map_loaded) 
+  } else as.dist(tt_means)
 }
