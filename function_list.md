@@ -57,6 +57,8 @@
 
 `taxa_summary_by_sample_type()`: Further summarize output from summarize_taxonomy by sample type
 
+`filter_taxa_from_table()`: Filter taxa from an individual taxa summary table
+
 
 ## Misc. Analyses
 
