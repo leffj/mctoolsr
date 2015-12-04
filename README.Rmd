@@ -1,15 +1,17 @@
 ---
 title: "Getting Started with mctoolsr"
-author: "Jonathan Leff"
-date: "2015-09-03"
+author: "Jonathan W. Leff"
+date: "2015-12-03"
 output: 
   html_document: 
     keep_md: yes
 ---
 
-**mctoolsr** is an **R** package developed to facilitate microbial community analyses. The current functions are meant to handle an input taxa (OTU) table in either biom or tab-delimited format and help streamline common (and more specialized) downstream analyses. It is under active development, so please submit bug reports and feature requests as indicated below.
+**mctoolsr** (prononounced, M-C-tools-R) is an **R** package developed to facilitate microbial community analyses. The current functions are meant to handle an input taxa (OTU) table in either biom or tab-delimited format and help streamline common (and more specialized) downstream analyses. It is under active development, so please submit bug reports and feature requests as indicated below.
 
 This document serves as a brief introduction to using **mctoolsr**. This document will go through getting the package working and a few examples using the most popular functions.
+
+**See here for a list of current functions**: https://github.com/leffj/mctoolsr/blob/master/function_list.md
 
 ### Getting and using **mctoolsr**
 
