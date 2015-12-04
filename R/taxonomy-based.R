@@ -139,7 +139,7 @@ plot_taxa_bars = function(taxa_summary_df, metadata_map, group_factor, num_taxa)
     ggplot2::theme(legend.title = ggplot2::element_blank())
 }
 
-#' @title Filter taxa from an individual taxa summary table
+#' @title Filter Taxa from an Individual Taxa Summary Table
 #' @details Can use one or more of the parameters to do filtering. Threshold 
 #'  filtering takes precidence over taxa filtering. If taxa to keep and 
 #'  taxa to remove are both included, taxa to remove will be 
@@ -161,7 +161,7 @@ filter_taxa_from_table = function(tax_table, filter_thresh = 0, taxa_to_keep,
   tax_table[row.names(tax_table) %in% taxa_keep, ]
 }
 
-#' @title Filter taxa from a loaded dataset
+#' @title Filter Taxa from a Loaded Dataset
 #' @details Can use one or more of the parameters to do filtering. Threshold 
 #'          filtering takes precidence over taxa filtering. If taxa to keep and 
 #'          taxa to remove are both included, taxa to remove will be 
