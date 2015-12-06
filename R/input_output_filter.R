@@ -65,7 +65,8 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   if(class(map) != 'data.frame') {
     warning(paste0('Problem loading mapping file. Note that the mapping file ',
                    'should have more than one metadata column. Check that ', 
-                   'All rows have the same number of columns.'))}
+                   'All rows have the same number of columns and that there ', 
+                   'are no duplicate sample IDs.'))}
   # optionally, subset data
     # cant subset if trying to filter out certain values and keep certain values
     # use one or the other
