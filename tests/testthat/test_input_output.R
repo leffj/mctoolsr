@@ -65,3 +65,18 @@ test_that("Taxa table can be exported and reloaded.", {
   unlink(outfp)
   unlink(mapoutfp)
 })
+
+test_that("Taxa table can be exported and reloaded when sample IDs start with 
+          number.", {
+  basedir = system.file('extdata', package = 'mctoolsr')
+  outfp = paste0(basedir, '/exported_taxa_table.txt')
+  mapoutfp = paste0(basedir, '/exported_map_file.txt')
+  # add number to beginning of sample IDs
+  names(fruits_veggies$data_loaded) = 
+    sapply(names(fruits_veggies$data_loaded), function(x) paste0('18', x))
+  export_otu_table(fruits_veggies, outfp, mapoutfp)
+  expect_that(load_taxa_table(tab_fp = outfp, map_fp = mapoutfp), 
+              not(throws_error()))
+  unlink(outfp)
+  unlink(mapoutfp)
+})

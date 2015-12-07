@@ -276,13 +276,15 @@ export_otu_table = function(input, out_fp, map_fp){
     }
   }
   taxonomy = apply(input$taxonomy_loaded, 1, paste, collapse = '; ')
-  out_tab = data.frame(OTU_ID = row.names(table), table, taxonomy)
+  out_tab = data.frame(OTU_ID = row.names(table), table, taxonomy, 
+                       check.names = FALSE)
   names(out_tab)[1] = '#OTU ID'
   write('#Exported from mctoolsr', out_fp)
   suppressWarnings(write.table(out_tab, out_fp, sep = '\t', row.names = FALSE, 
                                append = TRUE))
   if(!missing(map_fp)){
-    map_file = data.frame(row.names(input$map_loaded), input$map_loaded)
+    map_file = data.frame(row.names(input$map_loaded), input$map_loaded, 
+                          check.names = FALSE)
     names(map_file)[1] = '#Sample ID'
     write.table(map_file, map_fp, sep = '\t', row.names = FALSE)
   }
