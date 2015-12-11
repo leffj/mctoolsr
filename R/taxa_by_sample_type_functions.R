@@ -194,9 +194,9 @@ calc_taxa_means = function(taxa_table, metadata_map, summarize_by_factor,
       } else NA
     }
   }
-  tt_means = t(apply(taxa_table, 1, function(x) {
+  tt_means = as.data.frame(t(apply(taxa_table, 1, function(x) {
     tapply(x, metadata_map[, summarize_by_factor], mean)
-  }))
+  })))
   if(return_map){
     mean_map = dplyr::summarise_each(dplyr::group_by_(metadata_map, 
                                                       summarize_by_factor), 
