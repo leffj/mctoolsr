@@ -107,21 +107,21 @@ summarize_taxonomy = function(input, level, relative = TRUE,
 #'   indicated by \code{group_factor} to display their taxonomic compositions. 
 #'   Only the top few taxa will be displayed as indicated by \code{num_taxa}. 
 #'   Mean values are calculated within the factor levels.
-#' @param taxa_summary_df The taxon summary dataframe (the output of \code{
+#' @param taxa_smry_df The taxon summary dataframe (the output of \code{
 #'   summarize_taxonomy()})
 #' @param metadata_map The mapping file dataframe
 #' @param group_factor The factor (metadata header label) used to create the 
 #'   bars. Means will be taken for each factor level.
 #' @param num_taxa The number of top most abundant taxa to display. Additional 
 #'   will be grouped into "Other".  
-plot_taxa_bars = function(taxa_summary_df, metadata_map, group_factor, num_taxa){
-  taxa_summary_df$taxon = row.names(taxa_summary_df)
-  taxa_summary_df_melted = reshape2::melt(taxa_summary_df, variable.name = 'Sample_ID', 
+plot_taxa_bars = function(taxa_smry_df, metadata_map, group_factor, num_taxa){
+  taxa_smry_df$taxon = row.names(taxa_smry_df)
+  taxa_smry_df_melted = reshape2::melt(taxa_smry_df, variable.name = 'Sample_ID', 
                                           id.vars = 'taxon')
-  group_by_levels = metadata_map[match(taxa_summary_df_melted$Sample_ID, 
+  group_by_levels = metadata_map[match(taxa_smry_df_melted$Sample_ID, 
                                        row.names(metadata_map)), group_factor]
-  taxa_summary_df_melted$group_by = group_by_levels
-  mean_tax_vals = dplyr::summarise(dplyr::group_by(taxa_summary_df_melted, 
+  taxa_smry_df_melted$group_by = group_by_levels
+  mean_tax_vals = dplyr::summarise(dplyr::group_by(taxa_smry_df_melted, 
                                                    group_by, taxon), 
                                    mean_value = mean(value))
   # get top taxa and convert other to 'other'

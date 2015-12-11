@@ -2,7 +2,7 @@
 % Please edit documentation in R/taxonomy-based.R
 \name{filter_taxa_from_table}
 \alias{filter_taxa_from_table}
-\title{Filter taxa from an individual taxa summary table}
+\title{Filter Taxa from an Individual Taxa Summary Table}
 \usage{
 filter_taxa_from_table(tax_table, filter_thresh = 0, taxa_to_keep,
   taxa_to_remove)
@@ -19,7 +19,7 @@ table values.}
 \item{taxa_to_remove}{Remove taxa that contain these names. Vector or string.}
 }
 \description{
-Filter taxa from an individual taxa summary table
+Filter Taxa from an Individual Taxa Summary Table
 }
 \details{
 Can use one or more of the parameters to do filtering. Threshold

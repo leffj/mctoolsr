@@ -2,7 +2,7 @@
 % Please edit documentation in R/taxonomy-based.R
 \name{filter_taxa_from_input}
 \alias{filter_taxa_from_input}
-\title{Filter taxa from a loaded dataset}
+\title{Filter Taxa from a Loaded Dataset}
 \usage{
 filter_taxa_from_input(input, filter_thresh, taxa_to_keep, taxa_to_remove,
   at_spec_level, taxa_IDs_to_keep, taxa_IDs_to_remove)
@@ -26,7 +26,7 @@ column(s)).}
 \item{taxa_IDs_to_remove}{Remove taxa with these IDs (row names).}
 }
 \description{
-Filter taxa from a loaded dataset
+Filter Taxa from a Loaded Dataset
 }
 \details{
 Can use one or more of the parameters to do filtering. Threshold
