@@ -40,6 +40,10 @@ devtools::install_github("leffj/mctoolsr")
 https://github.com/leffj/mctoolsr/issues
 
 
+### Citing
+The package is in initial development, so for now, please simply cite the Github URL: `https://github.com/leffj/mctoolsr/`
+
+
 ### Examples
 
 Note that the following examples use an example dataset taken from a study examining the bacterial communities associated with fruits and vegetables ([Leff et al. 2013][ref1]). You can find this dataset in the mctoolsr/examples directory.    
@@ -137,11 +141,11 @@ tax_sum_phyla[1:5, 1:8]
 
 ```
 ##                    ProA12 ProA13 ProA14 ProA15 ProA16 ProA33 ProA34 ProA35
-## p__                 0.001  0.000  0.000  0.000  0.000  0.000  0.000  0.000
-## p__[Thermi]         0.001  0.000  0.000  0.000  0.000  0.000  0.002  0.000
-## p__Acidobacteria    0.002  0.000  0.000  0.000  0.000  0.000  0.000  0.000
-## p__Actinobacteria   0.385  0.006  0.001  0.018  0.002  0.041  0.075  0.098
-## p__Armatimonadetes  0.000  0.000  0.000  0.004  0.000  0.000  0.000  0.000
+## p__                 0.001  0.000  0.000  0.000  0.000   0.00  0.000  0.000
+## p__[Thermi]         0.001  0.000  0.000  0.000  0.000   0.00  0.007  0.000
+## p__Acidobacteria    0.001  0.000  0.000  0.000  0.000   0.00  0.000  0.000
+## p__Actinobacteria   0.392  0.006  0.002  0.018  0.002   0.05  0.068  0.087
+## p__Armatimonadetes  0.000  0.001  0.000  0.002  0.000   0.00  0.000  0.000
 ```
 
 
@@ -165,12 +169,9 @@ ord = calc_ordination(dm, 'nmds')
 ```
 
 ```
-## Run 0 stress 0.1148452 
-## Run 1 stress 0.1382739 
-## Run 2 stress 0.142514 
-## Run 3 stress 0.114843 
-## ... New best solution
-## ... procrustes: rmse 0.0009356943  max resid 0.003105812 
+## Run 0 stress 0.112383 
+## Run 1 stress 0.1123835 
+## ... procrustes: rmse 0.0008635581  max resid 0.00344912 
 ## *** Solution reached
 ```
 
@@ -200,22 +201,10 @@ ord = calc_ordination(dm, 'nmds')
 ```
 
 ```
-## Run 0 stress 0.1250157 
-## Run 1 stress 0.1330354 
-## Run 2 stress 0.1247536 
+## Run 0 stress 0.101338 
+## Run 1 stress 0.1013378 
 ## ... New best solution
-## ... procrustes: rmse 0.02680137  max resid 0.1308175 
-## Run 3 stress 0.114703 
-## ... New best solution
-## ... procrustes: rmse 0.06249328  max resid 0.2692661 
-## Run 4 stress 0.1077941 
-## ... New best solution
-## ... procrustes: rmse 0.09723366  max resid 0.2713569 
-## Run 5 stress 0.1168204 
-## Run 6 stress 0.1313636 
-## Run 7 stress 0.1077934 
-## ... New best solution
-## ... procrustes: rmse 0.002350055  max resid 0.008109741 
+## ... procrustes: rmse 0.0003283851  max resid 0.001170659 
 ## *** Solution reached
 ```
 
@@ -268,18 +257,14 @@ plot_nmds(calc_dm(input_proteobact_rar$data_loaded), metadata_map = input_proteo
 ```
 
 ```
-## Run 0 stress 0.1350697 
-## Run 1 stress 0.1183997 
+## Run 0 stress 0.1400091 
+## Run 1 stress 0.1363107 
 ## ... New best solution
-## ... procrustes: rmse 0.08097421  max resid 0.2210387 
-## Run 2 stress 0.1341444 
-## Run 3 stress 0.1342794 
-## Run 4 stress 0.1160778 
+## ... procrustes: rmse 0.02851887  max resid 0.1416946 
+## Run 2 stress 0.1400091 
+## Run 3 stress 0.1363107 
 ## ... New best solution
-## ... procrustes: rmse 0.03286473  max resid 0.1297833 
-## Run 5 stress 0.1342784 
-## Run 6 stress 0.1160782 
-## ... procrustes: rmse 0.0001005973  max resid 0.0002844232 
+## ... procrustes: rmse 2.690236e-05  max resid 8.827398e-05 
 ## *** Solution reached
 ```
 
@@ -299,21 +284,21 @@ taxa_summary_by_sample_type(tax_sum_families, input_rar_filt$map_loaded,
 
 ```
 ##                               pvals     pvalsBon     pvalsFDR Mushrooms
-## f__Pseudomonadaceae    1.583397e-05 0.0001108378 0.0001108378  0.144500
-## f__Sphingobacteriaceae 4.886021e-05 0.0003420215 0.0001710107  0.286125
-## f__[Weeksellaceae]     2.427738e-04 0.0016994169 0.0005664723  0.108000
-## f__Enterobacteriaceae  3.126910e-04 0.0021888368 0.0005472092  0.031250
-## unclassified           2.013900e-03 0.0140973001 0.0028194600  0.075500
-## f__Sphingomonadaceae   2.563584e-02 0.1794509043 0.0299084840  0.007500
-## f__Bacillaceae         3.526677e-02 0.2468673863 0.0352667695  0.002500
+## f__Pseudomonadaceae    1.573687e-05 0.0001101581 0.0001101581  0.146000
+## f__Sphingobacteriaceae 7.765991e-05 0.0005436194 0.0002718097  0.288000
+## f__Enterobacteriaceae  3.830648e-04 0.0026814537 0.0008938179  0.033125
+## f__[Weeksellaceae]     3.962317e-04 0.0027736221 0.0006934055  0.106375
+## unclassified           4.702537e-03 0.0329177617 0.0065835523  0.072750
+## f__Bacillaceae         1.312857e-02 0.0918999590 0.0153166598  0.002750
+## f__Sphingomonadaceae   4.606166e-02 0.3224316222 0.0460616603  0.007125
 ##                             Spinach Strawberries
-## f__Pseudomonadaceae    0.0658571429 0.0014615385
-## f__Sphingobacteriaceae 0.0031428571 0.0003846154
-## f__[Weeksellaceae]     0.0020000000 0.0014615385
-## f__Enterobacteriaceae  0.7310000000 0.6166923077
-## unclassified           0.0302857143 0.0223846154
-## f__Sphingomonadaceae   0.0008571429 0.0586153846
-## f__Bacillaceae         0.0055714286 0.1608461538
+## f__Pseudomonadaceae    0.0618571429 0.0012307692
+## f__Sphingobacteriaceae 0.0028571429 0.0007692308
+## f__Enterobacteriaceae  0.7380000000 0.6155384615
+## f__[Weeksellaceae]     0.0025714286 0.0016923077
+## unclassified           0.0282857143 0.0231538462
+## f__Bacillaceae         0.0037142857 0.1624615385
+## f__Sphingomonadaceae   0.0007142857 0.0595384615
 ```
 
 This analysis demonstrates that Pseudomonadaceae and Sphingobacteriaceae tend to have higher relative abundances on mushrooms than spinach and strawberries. The p values are based on Kruskal-Wallis tests and two different corrections are reported to deal with the multiple comparisons (Bonferroni and FDR). Rare taxa are filtered out using the `filter_level` peramter. The values indicated under the sample types are mean relative abundances.    
@@ -333,43 +318,40 @@ ord = calc_ordination(dm_aggregated$dm, ord_type = 'nmds')
 
 ```
 ## Run 0 stress 0 
-## Run 1 stress 8.377088e-05 
-## ... procrustes: rmse 0.2577252  max resid 0.4121622 
-## Run 2 stress 7.686954e-05 
-## ... procrustes: rmse 0.02135061  max resid 0.03733641 
-## Run 3 stress 0 
-## ... procrustes: rmse 0.1082672  max resid 0.1760627 
+## Run 1 stress 0 
+## ... procrustes: rmse 0.2034204  max resid 0.355068 
+## Run 2 stress 0.1842128 
+## Run 3 stress 0.2465821 
 ## Run 4 stress 0 
-## ... procrustes: rmse 0.2192199  max resid 0.3774036 
-## Run 5 stress 8.330496e-05 
-## ... procrustes: rmse 0.02634883  max resid 0.03353377 
+## ... procrustes: rmse 0.04681936  max resid 0.09369443 
+## Run 5 stress 0.1842127 
 ## Run 6 stress 0 
-## ... procrustes: rmse 0.03466273  max resid 0.05628527 
-## Run 7 stress 0.2181459 
-## Run 8 stress 0 
-## ... procrustes: rmse 0.1799705  max resid 0.3437926 
-## Run 9 stress 0 
-## ... procrustes: rmse 0.1204399  max resid 0.1830786 
-## Run 10 stress 0 
-## ... procrustes: rmse 0.2318444  max resid 0.3972777 
-## Run 11 stress 0 
-## ... procrustes: rmse 0.2358815  max resid 0.3551892 
+## ... procrustes: rmse 0.2405042  max resid 0.3483202 
+## Run 7 stress 0 
+## ... procrustes: rmse 0.1811332  max resid 0.3081502 
+## Run 8 stress 0.1842126 
+## Run 9 stress 9.82482e-05 
+## ... procrustes: rmse 0.2235992  max resid 0.303423 
+## Run 10 stress 9.812367e-05 
+## ... procrustes: rmse 0.2092321  max resid 0.3300858 
+## Run 11 stress 9.939148e-05 
+## ... procrustes: rmse 0.1922165  max resid 0.3217053 
 ## Run 12 stress 0 
-## ... procrustes: rmse 0.07345798  max resid 0.1321408 
-## Run 13 stress 0 
-## ... procrustes: rmse 0.2465502  max resid 0.4243663 
-## Run 14 stress 0.0001581403 
-## ... procrustes: rmse 0.1369861  max resid 0.1714684 
+## ... procrustes: rmse 0.04003455  max resid 0.07309192 
+## Run 13 stress 0.2465469 
+## Run 14 stress 0 
+## ... procrustes: rmse 0.02953637  max resid 0.05566956 
 ## Run 15 stress 0 
-## ... procrustes: rmse 0.03424878  max resid 0.05060526 
+## ... procrustes: rmse 0.2624305  max resid 0.3667243 
 ## Run 16 stress 0 
-## ... procrustes: rmse 0.04805005  max resid 0.06765713 
-## Run 17 stress 0 
-## ... procrustes: rmse 0.2115803  max resid 0.3755661 
-## Run 18 stress 0.1620205 
-## Run 19 stress 9.430715e-05 
-## ... procrustes: rmse 0.2312491  max resid 0.3221312 
-## Run 20 stress 0.1842127
+## ... procrustes: rmse 0.2237332  max resid 0.3510673 
+## Run 17 stress 7.875637e-05 
+## ... procrustes: rmse 0.1522022  max resid 0.2695034 
+## Run 18 stress 0.1842126 
+## Run 19 stress 9.203126e-05 
+## ... procrustes: rmse 0.2406716  max resid 0.3134842 
+## Run 20 stress 0 
+## ... procrustes: rmse 0.2012379  max resid 0.2997708
 ```
 
 ```
