@@ -331,7 +331,6 @@ calc_taxa_changes = function(ts, metadata_map, block_header,
   control_means = dplyr::summarise(dplyr::group_by(ts_melt_filt, Taxon, block), 
                                    mean_RA = mean(Relative_abundance))
   # calc percent change
-  head(ts_melt)
   ts_melt$block_control_mean = 
     control_means$mean_RA[
       match(paste0(ts_melt$block, ts_melt$Taxon), 
@@ -341,4 +340,5 @@ calc_taxa_changes = function(ts, metadata_map, block_header,
                             (Relative_abundance - block_control_mean) / 
                             block_control_mean * 100
   )
+  ts_melt
 }
