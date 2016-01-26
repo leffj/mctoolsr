@@ -70,17 +70,17 @@ calc_prop_shared_taxa = function(input, type_header, sample_types, within_cat) {
     pairs = as.data.frame(t(combn(colnames(input$data_loaded), 2)))
     # pairs of certain types
     if(!missing(type_header) & !missing(sample_types)) {
-      head(pairs)
       pairs$S1_type = 
         input$map_loaded[match(pairs[, 1], row.names(input$map_loaded)), 
                          type_header]
       pairs$S2_type = 
         input$map_loaded[match(pairs[, 2], row.names(input$map_loaded)), 
                          type_header]
-      pairs = filter(pairs, S1_type != S2_type, S1_type %in% sample_types, 
+      pairs = dplyr::filter(pairs, S1_type != S2_type, S1_type %in% sample_types, 
                      S2_type %in% sample_types)
       # check if missing sample type(s)
-      mis_sts = sample_types[! sample_types %in% c(levels(pairs$S1_type), levels(pairs$S2_type))]
+      mis_sts = sample_types[! sample_types %in% c(levels(pairs$S1_type), 
+                                                   levels(pairs$S2_type))]
       if(length(mis_sts) > 0) {
         stop(paste("Missing sample type: ", mis_sts, " "))
       }
