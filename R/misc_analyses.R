@@ -64,6 +64,7 @@ core_taxa = function(input, type_header, prop_types = 1, prop_reps = 0.5) {
 #'  vector of length 2.
 #' @param within_cat (Optional) Specify a header label from the metadata map 
 #'  that tells the function to restrict pairs to within levels of this factor.
+#'  If included, will return a data frame instead of a vector.
 calc_prop_shared_taxa = function(input, type_header, sample_types, within_cat) {
   calc_prop_shared_main = function(input, type_header, sample_types) {
     # get all pairs of samples
@@ -105,13 +106,14 @@ calc_prop_shared_taxa = function(input, type_header, sample_types, within_cat) {
     calc_prop_shared_main(input, type_header, sample_types)
   } else {
     props = c()
-    for(cat_lev in unique(input$map_loaded[, within_cat])) {
+    cat_levs = unique(input$map_loaded[, within_cat])
+    for(cat_lev in cat_levs) {
       tmp_filt = suppressMessages(filter_data(input, within_cat, 
                                               keep_vals = cat_lev))
       tmp_prop = calc_prop_shared_main(tmp_filt, type_header, sample_types)
       props = c(props, tmp_prop)
     }
-    mean(props)
+    data.frame(cat = cat_levs, prop = props)
   }
 }
 
@@ -124,7 +126,8 @@ calc_prop_shared_taxa = function(input, type_header, sample_types, within_cat) {
 #'  the proportion of taxa that are also observed in the source_type.
 #' @param source_type The sample type to use as the source type.
 #' @param within_cat (Optional) Specify a header label from the metadata map 
-#'  that tells the function to restrict pairs to within levels of this factor.
+#'  that tells the function to restrict pairs to within levels of this factor. 
+#'  If included, will return a data frame instead of a vector.
 calc_prop_taxa_from_sample_type = function(input, type_header, primary_type, 
                                            source_type, within_cat) {
   .calc_prop_main = function(input, type_header, primary_type, 
@@ -160,14 +163,15 @@ calc_prop_taxa_from_sample_type = function(input, type_header, primary_type,
     .calc_prop_main(input, type_header, primary_type, source_type)
   } else {
     props = c()
-    for(cat_lev in unique(input$map_loaded[, within_cat])) {
+    cat_levs = unique(input$map_loaded[, within_cat])
+    for(cat_lev in cat_levs) {
       tmp_filt = suppressMessages(filter_data(input, within_cat, 
                                               keep_vals = cat_lev))
       tmp_prop = .calc_prop_main(tmp_filt, type_header, primary_type, 
                                  source_type)
       props = c(props, tmp_prop)
     }
-    mean(props)
+    data.frame(cat = cat_levs, prop = props)
   }
 }
   

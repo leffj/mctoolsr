@@ -20,7 +20,8 @@ the proportion of taxa that are also observed in the source_type.}
 \item{source_type}{The sample type to use as the source type.}
 
 \item{within_cat}{(Optional) Specify a header label from the metadata map
-that tells the function to restrict pairs to within levels of this factor.}
+that tells the function to restrict pairs to within levels of this factor.
+If included, will return a data frame instead of a vector.}
 }
 \description{
 Calculate the proportion of taxa in a set of samples that are
