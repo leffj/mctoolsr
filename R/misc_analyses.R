@@ -114,3 +114,60 @@ calc_prop_shared_taxa = function(input, type_header, sample_types, within_cat) {
     mean(props)
   }
 }
+
+#' @title Calculate the proportion of taxa in a set of samples that are 
+#'  also observed in another sample type
+#' @param input Data from load_taxa_table()
+#' @param type_header The header label from the metadata map that has the 
+#'  labels which indicate the types of samples you want to use. 
+#' @param primary_type The sample type for which you would like to calculate 
+#'  the proportion of taxa that are also observed in the source_type.
+#' @param source_type The sample type to use as the source type.
+#' @param within_cat (Optional) Specify a header label from the metadata map 
+#'  that tells the function to restrict pairs to within levels of this factor.
+calc_prop_taxa_from_sample_type = function(input, type_header, primary_type, 
+                                           source_type, within_cat) {
+  .calc_prop_main = function(input, type_header, primary_type, 
+                             source_type) {
+    pairs = as.data.frame(t(combn(colnames(input$data_loaded), 2)))
+    # pairs of a certain type
+    pairs$S1_type = 
+      input$map_loaded[match(pairs[, 1], row.names(input$map_loaded)), 
+                       type_header]
+    pairs$S2_type = 
+      input$map_loaded[match(pairs[, 2], row.names(input$map_loaded)), 
+                       type_header]
+    types = c(primary_type, source_type)
+    pairs = dplyr::filter(pairs, S1_type != S2_type, 
+                          S1_type %in% types, 
+                          S2_type %in% types)
+    # check if missing sample type(s)
+    mis_sts = types[! types %in% c(levels(pairs$S1_type), levels(pairs$S2_type))]
+    if(length(mis_sts) > 0) stop(paste("Missing sample type: ", mis_sts, " "))
+    # function to calc proportion shared for each pair
+    .prop_source_in_primary = function(pair, tax_table, primary_type) {
+      pair_data = tax_table[, c(pair[1], pair[2])]
+      primary_idx = which(c(pair[3], pair[4]) == primary_type)
+      no_primary = sum(pair_data[, primary_idx] > 0)
+      no_shared = sum(pair_data[, 1] * pair_data[, 2] > 0)
+      prop_overlap = no_shared / no_primary
+      prop_overlap
+    }
+    pairs$prop_overlap = apply(pairs, 1, .prop_source_in_primary, input$data_loaded, primary_type)
+    mean(pairs$prop_overlap)
+  }
+  if(missing(within_cat)) {
+    .calc_prop_main(input, type_header, primary_type, source_type)
+  } else {
+    props = c()
+    for(cat_lev in unique(input$map_loaded[, within_cat])) {
+      tmp_filt = suppressMessages(filter_data(input, within_cat, 
+                                              keep_vals = cat_lev))
+      tmp_prop = .calc_prop_main(tmp_filt, type_header, primary_type, 
+                                 source_type)
+      props = c(props, tmp_prop)
+    }
+    mean(props)
+  }
+}
+  
