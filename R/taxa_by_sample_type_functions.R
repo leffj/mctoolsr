@@ -205,5 +205,5 @@ calc_taxa_means = function(taxa_table, metadata_map, summarize_by_factor,
     row.names(mean_map) = mean_map[, summarize_by_factor]
     map_loaded = mean_map[match(colnames(tt_means), row.names(mean_map)), ]
     list(data_loaded = tt_means, map_loaded = map_loaded) 
-  } else as.dist(tt_means)
+  } else tt_means
 }

@@ -167,6 +167,8 @@ calc_prop_taxa_from_sample_type = function(input, type_header, primary_type,
     for(cat_lev in cat_levs) {
       tmp_filt = suppressMessages(filter_data(input, within_cat, 
                                               keep_vals = cat_lev))
+      n_samples = nrow(tmp_filt$map_loaded)
+      if(n_samples < 2) stop(paste(cat_lev, 'has less than 2 samples.'))
       tmp_prop = .calc_prop_main(tmp_filt, type_header, primary_type, 
                                  source_type)
       props = c(props, tmp_prop)
