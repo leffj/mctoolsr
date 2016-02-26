@@ -270,21 +270,29 @@ match_datasets = function(ds1, ds2){
 export_otu_table = function(input, out_fp, map_fp){
   if(class(input) == 'list') {
     table = input$data_loaded
+    if(!is.null(input$taxonomy_loaded)) {
+      taxonomy = apply(input$taxonomy_loaded, 1, paste, collapse = '; ')
+      out_tab = data.frame(OTU_ID = row.names(table), table, taxonomy, 
+                           check.names = FALSE)
+    } else {
+      out_tab = data.frame(OTU_ID = row.names(table), table, 
+                           check.names = FALSE)
+    }
   } else if(class(input) == 'data.frame') {
     table = input
     if(!missing(map_fp)){
       stop(paste0('Cannot write a metadata map unless input is a list that 
                   contains the metadata.'))
     }
+    out_tab = data.frame(OTU_ID = row.names(table), table, 
+                         check.names = FALSE)
   }
-  taxonomy = apply(input$taxonomy_loaded, 1, paste, collapse = '; ')
-  out_tab = data.frame(OTU_ID = row.names(table), table, taxonomy, 
-                       check.names = FALSE)
   names(out_tab)[1] = '#OTU ID'
   write('#Exported from mctoolsr', out_fp)
   suppressWarnings(write.table(out_tab, out_fp, sep = '\t', row.names = FALSE, 
                                append = TRUE))
   if(!missing(map_fp)){
+    if(class(map_fp) != 'character') stop('map_fp must be a valid filepath.')
     map_file = data.frame(row.names(input$map_loaded), input$map_loaded, 
                           check.names = FALSE)
     names(map_file)[1] = '#Sample ID'
