@@ -18,7 +18,8 @@ sample types for which you want to calculate proportions. Supply a character
 vector of length 2.}
 
 \item{within_cat}{(Optional) Specify a header label from the metadata map
-that tells the function to restrict pairs to within levels of this factor.}
+that tells the function to restrict pairs to within levels of this factor.
+If included, will return a data frame instead of a vector.}
 }
 \description{
 This function will calculate the mean proportion of taxa

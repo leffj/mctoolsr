@@ -257,15 +257,20 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
 #' @param type_header The metadata_map header label used to group samples.
 #' @param scale_by Whether to scale colors by (a) 'sample_types', (b) 'taxa', or
 #'  (c) 'all'.
-#' @param custom_sample_order An optional vector with the order of the sample
+#' @param custom_sample_order [OPTIONAL] A vector with the order of the sample
 #'  names (top to bottom).
+#' @param other_label [OPTIONAL] A string to relabel the 'Other' taxa category 
+#'  which contain all taxa less than \code{min_rel_abund}.
 plot_ts_heatmap = function(tax_table, metadata_map, min_rel_abund, type_header, 
-                           scale_by, custom_sample_order) {
+                           scale_by, custom_sample_order, other_label) {
   # group all taxa lower than threshold into other
   lt_thresh = tax_table[rowMeans(tax_table) < min_rel_abund, ]
   gt_thresh = tax_table[rowMeans(tax_table) >= min_rel_abund, ]
   Other = colSums(lt_thresh)
   sumtax_mod = rbind(gt_thresh, Other = Other)
+  if(!missing(other_label)) {
+    row.names(sumtax_mod)[row.names(sumtax_mod) == 'Other'] = other_label
+  }
   # get means
   sumtax_smry = taxa_summary_by_sample_type(sumtax_mod, metadata_map, 
                                             type_header, smry_fun = mean)

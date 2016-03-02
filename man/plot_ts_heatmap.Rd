@@ -5,7 +5,7 @@
 \title{Plot Taxa Summary Heatmap}
 \usage{
 plot_ts_heatmap(tax_table, metadata_map, min_rel_abund, type_header, scale_by,
-  custom_sample_order)
+  custom_sample_order, other_label)
 }
 \arguments{
 \item{tax_table}{A taxa table dataframe. The output of
@@ -22,8 +22,11 @@ be grouped into 'Other'. Between 0 and 1.}
 \item{scale_by}{Whether to scale colors by (a) 'sample_types', (b) 'taxa', or
 (c) 'all'.}
 
-\item{custom_sample_order}{An optional vector with the order of the sample
+\item{custom_sample_order}{[OPTIONAL] A vector with the order of the sample
 names (top to bottom).}
+
+\item{other_label}{[OPTIONAL] A string to relabel the 'Other' taxa category
+which contain all taxa less than \code{min_rel_abund}.}
 }
 \description{
 A quick way to create a heatmap from a taxa summary dataframe.
