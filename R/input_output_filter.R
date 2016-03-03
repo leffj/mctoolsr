@@ -169,7 +169,7 @@ load_2_dms = function(dm1_fp, dm2_fp, map_fp, filter_cat, filter_vals, keep_vals
 #' @param keep_vals Alternatively, keep only samples represented by these 
 #'  values.
 #' @return A list variable with (1) the loaded taxa table, (2) 
-#'  the loaded mapping file, and optionally (3) the loaded taxonomy information
+#'  the loaded mapping file, and optionally (3) the loaded taxonomy information.
 #' @examples 
 #' \dontrun{
 #' ex_in_filt = filter_data(input = "example_input", filter_cat = "Sample_type", 
@@ -187,6 +187,27 @@ filter_data = function(input, filter_cat, filter_vals, keep_vals){
     matched_data
   } else {
     matched_data = .match_data_components(input$data_loaded, map_f, NULL)
+    message(paste0(nrow(matched_data$map_loaded), ' samples remaining'))
+    matched_data
+  }
+}
+
+#' @title Filter Samples from a Dataset based on number of sequences
+#' @param input The input dataset as loaded by \code{load_taxa_table()}.
+#' @param min_seqs A sample must have at minimum this number of sequences 
+#'  in order to be retained.
+#' @return A list variable with (1) the loaded taxa table, (2) 
+#'  the loaded mapping file, and optionally (3) the loaded taxonomy information.
+filter_samples_by_counts = function(input, min_seqs) {
+  data_filt = input$data_loaded[, colSums(input$data_loaded) >= min_seqs]
+  # match up data from dissimilarity matrix with mapping file
+  if('taxonomy_loaded' %in% names(input)){
+    matched_data = .match_data_components(data_filt, input$map_loaded, 
+                                          input$taxonomy_loaded)
+    message(paste0(nrow(matched_data$map_loaded), ' samples remaining'))
+    matched_data
+  } else {
+    matched_data = .match_data_components(data_filt, input$map_loaded, NULL)
     message(paste0(nrow(matched_data$map_loaded), ' samples remaining'))
     matched_data
   }
