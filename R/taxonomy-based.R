@@ -191,7 +191,9 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
   }
   # specify taxa levels to search
   if(missing(at_spec_level)){
-    tax_levels = 1:ncol(input$taxonomy_loaded)
+    if(!is.null(input$taxonomy_loaded)) {
+      tax_levels = 1:ncol(input$taxonomy_loaded)
+    } else tax_levels = NULL    #if no taxonomy in input
   } else tax_levels = at_spec_level
   # if particular taxa specified to keep, identify those rows.
   if(!missing(taxa_to_keep)){
@@ -207,7 +209,7 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
   # if particular taxa IDs specified to keep, identify those rows.
   if(!missing(taxa_IDs_to_keep)){
     rows_keep_tmp = sapply(taxa_IDs_to_keep, FUN = function(x){
-      match(x, row.names(input$taxonomy_loaded))
+      match(x, row.names(input$data_loaded))
     })
     if(length(rows_keep_tmp[[1]]) == 0){
       stop('Taxa IDs not found.')
@@ -228,17 +230,22 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
   # if particular taxa IDs to remove, identify those rows
   if(!missing(taxa_IDs_to_remove)){
     rows_remove = sapply(taxa_IDs_to_remove, FUN = function(x){
-      match(x, row.names(input$taxonomy_loaded))
+      match(x, row.names(input$data_loaded))
     })
     if(length(rows_remove[[1]]) == 0){
       stop('Taxa IDs not found.')
     }
     rows_keep = rows_keep[! rows_keep %in% unlist(rows_remove)]
   }
-  output = list(data_loaded = input$data_loaded[rows_keep, ],
-                map_loaded = input$map_loaded, 
-                taxonomy_loaded = droplevels(input$taxonomy_loaded[rows_keep, 
-                                                                   ]))
+  if(!is.null(input$taxonomy_loaded)) {
+    output = list(data_loaded = input$data_loaded[rows_keep, ],
+                  map_loaded = input$map_loaded, 
+                  taxonomy_loaded = droplevels(input$taxonomy_loaded[rows_keep, 
+                                                                     ]))
+  } else {
+    output = list(data_loaded = input$data_loaded[rows_keep, ],
+                  map_loaded = input$map_loaded)
+  }
   removed = nrow(input$data_loaded) - nrow(output$data_loaded)
   message(paste0(removed, ' taxa removed'))
   output
