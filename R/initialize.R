@@ -11,7 +11,8 @@
 
 .onAttach = function(libname, pkgname) {
   packageStartupMessage(paste0("You're using mctoolsr (v.", 
-                        packageVersion('mctoolsr'), "). Direct inquiries to:",
+                        utils::packageVersion('mctoolsr'), 
+                        "). Direct inquiries to:",
                         "\n'https://github.com/leffj/mctoolsr'"))
 }
 
