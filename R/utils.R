@@ -42,6 +42,15 @@
       } else NA
     }
   }
+  # change row names for NA values in summarize_by_factor with warning
+  na_idxs = is.na(metadata_map[, summarize_by_factor])
+  if(sum(na_idxs) > 0) {
+    warning(paste0('NA values present in "summarize_by_factor". NAs will be ', 
+                   'referred to as "NO_VALUE".'))
+    vec = as.character(metadata_map[, summarize_by_factor])
+    vec[na_idxs] = 'NO_VALUE'
+    metadata_map[, summarize_by_factor] = factor(vec)
+  }
   mean_map = dplyr::summarise_each(dplyr::group_by_(metadata_map, 
                                                     summarize_by_factor), 
                                    dplyr::funs(.smry_fun))
