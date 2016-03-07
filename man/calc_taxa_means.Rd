@@ -12,16 +12,13 @@ an otu table of class \code{data.frame}.}
 
 \item{summarize_by_factor}{Category in mapping file to summarize by.}
 
-\item{metadata_map}{The metadata mapping data frame.}
-
-\item{return_map}{Whether or not to return summarized mapping files. If true,
-will return a list (default: TRUE).}
+\item{metadata_map}{[Optional]. The metadata mapping data frame. Required if
+input is a \code{data.frame}.}
 }
 \value{
 If input is a list, returns a list with a taxon table (data_loaded)
  and a mapping data frame (map_loaded). It will automatically return
- taxonomy in the list if provided in the input. Otherwise, returns a taxon
- table of class data frame.
+ taxonomy in the list if provided in the input.
 }
 \description{
 Calculate mean taxa values across a specified factor

@@ -32,6 +32,25 @@
 }
 
 #' @keywords internal
+.summarize_map = function(metadata_map, summarize_by_factor) {
+  .smry_fun = function(x){
+    if(is.numeric(x)){
+      mean(x)
+    } else {
+      if(length(unique(x)) == 1){
+        unique(x)
+      } else NA
+    }
+  }
+  mean_map = dplyr::summarise_each(dplyr::group_by_(metadata_map, 
+                                                    summarize_by_factor), 
+                                   dplyr::funs(.smry_fun))
+  mean_map = as.data.frame(as.matrix(mean_map))
+  row.names(mean_map) = mean_map[, summarize_by_factor]
+  mean_map
+}
+
+#' @keywords internal
 .match_data_components = function(tax_table, metadata_map, taxonomy){
   samplesToUse = intersect(names(tax_table), row.names(metadata_map))
   tax_table.use = tax_table[, match(samplesToUse, 

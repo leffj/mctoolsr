@@ -26,24 +26,13 @@ single_rarefy = function(input, depth) {
 #' @title Calculate mean taxa values across a specified factor
 #' @param input The input dataset as loaded by \code{load_taxa_table()} or
 #'  an otu table of class \code{data.frame}.
-#' @param metadata_map The metadata mapping data frame.
+#' @param metadata_map [Optional]. The metadata mapping data frame. Required if
+#'  input is a \code{data.frame}.
 #' @param summarize_by_factor Category in mapping file to summarize by.
-#' @param return_map Whether or not to return summarized mapping files. If true,
-#'  will return a list (default: TRUE).
 #' @return If input is a list, returns a list with a taxon table (data_loaded) 
 #'  and a mapping data frame (map_loaded). It will automatically return 
-#'  taxonomy in the list if provided in the input. Otherwise, returns a taxon 
-#'  table of class data frame.
+#'  taxonomy in the list if provided in the input.
 calc_taxa_means = function(input, summarize_by_factor, metadata_map) {
-  .sumry_fun = function(x){
-    if(is.numeric(x)){
-      mean(x)
-    } else {
-      if(length(unique(x)) == 1){
-        unique(x)
-      } else NA
-    }
-  }
   .calc_tt_means = function(table, metadata_map, summarize_by_factor){
     as.data.frame(t(apply(table, 1, function(x) {
       tapply(x, metadata_map[, summarize_by_factor], mean)
@@ -52,17 +41,15 @@ calc_taxa_means = function(input, summarize_by_factor, metadata_map) {
   if(class(input) == 'list') {
     tt_means = .calc_tt_means(input$data_loaded, input$map_loaded, 
                               summarize_by_factor)
-    mean_map = dplyr::summarise_each(dplyr::group_by_(input$map_loaded, 
-                                                      summarize_by_factor), 
-                                     dplyr::funs(.sumry_fun))
-    mean_map = as.data.frame(as.matrix(mean_map))
-    row.names(mean_map) = mean_map[, summarize_by_factor]
+    mean_map = .summarize_map(input$map_loaded, summarize_by_factor)
     map_loaded = mean_map[match(colnames(tt_means), row.names(mean_map)), ]
     output = list(data_loaded = tt_means, map_loaded = map_loaded)
     if(!is.null(input$taxonomy_loaded)) {
       c(output, list(taxonomy_loaded = input$taxonomy_loaded))
     } else output
   } else if(class(input) == 'data.frame') {
-    .calc_tt_means(input, metadata_map, summarize_by_factor)
+    taxa_table_means = .calc_tt_means(input, metadata_map, summarize_by_factor)
+    mean_map = .summarize_map(metadata_map, summarize_by_factor)
+    .match_data_components(taxa_table_means, mean_map, NULL)
   } else stop('input is of an incorrect variable type.')
 }
