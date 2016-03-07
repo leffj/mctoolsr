@@ -3,11 +3,14 @@ context("Input/output")
 
 map_fp = system.file('extdata', 'fruits_veggies_metadata.txt', 
                      package = 'mctoolsr')
+map_fp_2col = system.file('extdata', 'fruits_veggies_metadata_2col.txt', 
+                          package = 'mctoolsr')
 tab_fp_biom = system.file('extdata', 'fruits_veggies_taxa_table_wTax.biom', 
                      package = 'mctoolsr')
 tab_fp_txt = system.file('extdata', 'fruits_veggies_taxa_table_wTax.txt', 
                           package = 'mctoolsr')
 dm_fp = system.file('extdata', 'fruits_veggies_dm.txt', package = 'mctoolsr')
+
 
 test_that("Example taxa table (biom) loads correctly.", {
   # Doesn't throw error
@@ -28,6 +31,10 @@ test_that("Example taxa table (biom) loads correctly.", {
   # Loading the correct number of sequences per sample
   expect_equal(as.numeric(colSums(tmp$data_loaded)[1:5]), 
                c(1199, 2819, 3390, 3291, 2312))
+  # Loads a 2 column mapping file
+  tmp = load_taxa_table(tab_fp = tab_fp_biom, map_fp = map_fp_2col, 
+                        filter_cat = 'Sample_type', filter_vals = 'Mushrooms')
+  expect_identical(class(tmp$map_loaded), 'data.frame')
 })
 
 test_that("Example taxa table (txt) loads correctly.", {

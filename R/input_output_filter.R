@@ -77,7 +77,8 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
     map_f = map
   }
   # match up data from dissimilarity matrix with mapping file
-  matched_data = .match_data_components(data, map_f, data_taxonomy)
+  matched_data = .match_data_components(tax_table = data, metadata_map = map_f, 
+                                        taxonomy = data_taxonomy)
   message(paste0(nrow(matched_data$map_loaded), ' samples loaded'))
   matched_data
 }
