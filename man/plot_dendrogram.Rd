@@ -2,7 +2,7 @@
 % Please edit documentation in R/dissimilarity-based.R
 \name{plot_dendrogram}
 \alias{plot_dendrogram}
-\title{Generate a dendrograme based on a dissimilarity matrix}
+\title{Generate a dendrogram based on a dissimilarity matrix}
 \usage{
 plot_dendrogram(dm, metadata_map, labels, color_by, method = "complete", ...)
 }
@@ -23,6 +23,6 @@ intended leaf label colors.}
 \item{...}{Other parameters passed on to geom_text}
 }
 \description{
-Generate a dendrograme based on a dissimilarity matrix
+Generate a dendrogram based on a dissimilarity matrix
 }
 

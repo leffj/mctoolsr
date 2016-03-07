@@ -107,21 +107,21 @@ summarize_taxonomy = function(input, level, relative = TRUE,
 #'   indicated by \code{group_factor} to display their taxonomic compositions. 
 #'   Only the top few taxa will be displayed as indicated by \code{num_taxa}. 
 #'   Mean values are calculated within the factor levels.
-#' @param taxa_summary_df The taxon summary dataframe (the output of \code{
+#' @param taxa_smry_df The taxon summary dataframe (the output of \code{
 #'   summarize_taxonomy()})
 #' @param metadata_map The mapping file dataframe
 #' @param group_factor The factor (metadata header label) used to create the 
 #'   bars. Means will be taken for each factor level.
 #' @param num_taxa The number of top most abundant taxa to display. Additional 
 #'   will be grouped into "Other".  
-plot_taxa_bars = function(taxa_summary_df, metadata_map, group_factor, num_taxa){
-  taxa_summary_df$taxon = row.names(taxa_summary_df)
-  taxa_summary_df_melted = reshape2::melt(taxa_summary_df, variable.name = 'Sample_ID', 
+plot_taxa_bars = function(taxa_smry_df, metadata_map, group_factor, num_taxa){
+  taxa_smry_df$taxon = row.names(taxa_smry_df)
+  taxa_smry_df_melted = reshape2::melt(taxa_smry_df, variable.name = 'Sample_ID', 
                                           id.vars = 'taxon')
-  group_by_levels = metadata_map[match(taxa_summary_df_melted$Sample_ID, 
+  group_by_levels = metadata_map[match(taxa_smry_df_melted$Sample_ID, 
                                        row.names(metadata_map)), group_factor]
-  taxa_summary_df_melted$group_by = group_by_levels
-  mean_tax_vals = dplyr::summarise(dplyr::group_by(taxa_summary_df_melted, 
+  taxa_smry_df_melted$group_by = group_by_levels
+  mean_tax_vals = dplyr::summarise(dplyr::group_by(taxa_smry_df_melted, 
                                                    group_by, taxon), 
                                    mean_value = mean(value))
   # get top taxa and convert other to 'other'
@@ -139,7 +139,7 @@ plot_taxa_bars = function(taxa_summary_df, metadata_map, group_factor, num_taxa)
     ggplot2::theme(legend.title = ggplot2::element_blank())
 }
 
-#' @title Filter taxa from an individual taxa summary table
+#' @title Filter Taxa from an Individual Taxa Summary Table
 #' @details Can use one or more of the parameters to do filtering. Threshold 
 #'  filtering takes precidence over taxa filtering. If taxa to keep and 
 #'  taxa to remove are both included, taxa to remove will be 
@@ -161,7 +161,7 @@ filter_taxa_from_table = function(tax_table, filter_thresh = 0, taxa_to_keep,
   tax_table[row.names(tax_table) %in% taxa_keep, ]
 }
 
-#' @title Filter taxa from a loaded dataset
+#' @title Filter Taxa from a Loaded Dataset
 #' @details Can use one or more of the parameters to do filtering. Threshold 
 #'          filtering takes precidence over taxa filtering. If taxa to keep and 
 #'          taxa to remove are both included, taxa to remove will be 
@@ -191,7 +191,9 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
   }
   # specify taxa levels to search
   if(missing(at_spec_level)){
-    tax_levels = 1:ncol(input$taxonomy_loaded)
+    if(!is.null(input$taxonomy_loaded)) {
+      tax_levels = 1:ncol(input$taxonomy_loaded)
+    } else tax_levels = NULL    #if no taxonomy in input
   } else tax_levels = at_spec_level
   # if particular taxa specified to keep, identify those rows.
   if(!missing(taxa_to_keep)){
@@ -207,7 +209,7 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
   # if particular taxa IDs specified to keep, identify those rows.
   if(!missing(taxa_IDs_to_keep)){
     rows_keep_tmp = sapply(taxa_IDs_to_keep, FUN = function(x){
-      match(x, row.names(input$taxonomy_loaded))
+      match(x, row.names(input$data_loaded))
     })
     if(length(rows_keep_tmp[[1]]) == 0){
       stop('Taxa IDs not found.')
@@ -228,17 +230,22 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
   # if particular taxa IDs to remove, identify those rows
   if(!missing(taxa_IDs_to_remove)){
     rows_remove = sapply(taxa_IDs_to_remove, FUN = function(x){
-      match(x, row.names(input$taxonomy_loaded))
+      match(x, row.names(input$data_loaded))
     })
     if(length(rows_remove[[1]]) == 0){
       stop('Taxa IDs not found.')
     }
     rows_keep = rows_keep[! rows_keep %in% unlist(rows_remove)]
   }
-  output = list(data_loaded = input$data_loaded[rows_keep, ],
-                map_loaded = input$map_loaded, 
-                taxonomy_loaded = droplevels(input$taxonomy_loaded[rows_keep, 
-                                                                   ]))
+  if(!is.null(input$taxonomy_loaded)) {
+    output = list(data_loaded = input$data_loaded[rows_keep, ],
+                  map_loaded = input$map_loaded, 
+                  taxonomy_loaded = droplevels(input$taxonomy_loaded[rows_keep, 
+                                                                     ]))
+  } else {
+    output = list(data_loaded = input$data_loaded[rows_keep, ],
+                  map_loaded = input$map_loaded)
+  }
   removed = nrow(input$data_loaded) - nrow(output$data_loaded)
   message(paste0(removed, ' taxa removed'))
   output
@@ -257,15 +264,20 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
 #' @param type_header The metadata_map header label used to group samples.
 #' @param scale_by Whether to scale colors by (a) 'sample_types', (b) 'taxa', or
 #'  (c) 'all'.
-#' @param custom_sample_order An optional vector with the order of the sample
+#' @param custom_sample_order [OPTIONAL] A vector with the order of the sample
 #'  names (top to bottom).
+#' @param other_label [OPTIONAL] A string to relabel the 'Other' taxa category 
+#'  which contain all taxa less than \code{min_rel_abund}.
 plot_ts_heatmap = function(tax_table, metadata_map, min_rel_abund, type_header, 
-                           scale_by, custom_sample_order) {
+                           scale_by, custom_sample_order, other_label) {
   # group all taxa lower than threshold into other
   lt_thresh = tax_table[rowMeans(tax_table) < min_rel_abund, ]
   gt_thresh = tax_table[rowMeans(tax_table) >= min_rel_abund, ]
   Other = colSums(lt_thresh)
   sumtax_mod = rbind(gt_thresh, Other = Other)
+  if(!missing(other_label)) {
+    row.names(sumtax_mod)[row.names(sumtax_mod) == 'Other'] = other_label
+  }
   # get means
   sumtax_smry = taxa_summary_by_sample_type(sumtax_mod, metadata_map, 
                                             type_header, smry_fun = mean)

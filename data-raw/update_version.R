@@ -1,6 +1,6 @@
 # modified from:
 #  http://stackoverflow.com/questions/13028093/is-it-possible-to-parameterize-a-r-package-version/13029847#13029847
-upVers <- function(path,update="snapshot",date=TRUE,simplify=TRUE) {
+upVers <- function(path, update = "snapshot", date = TRUE, simplify = TRUE) {
   # This function updates the description file from package
   # in path (assumed work directory by default, as typical
   # with projects in RStudio using GitHub).

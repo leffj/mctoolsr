@@ -10,8 +10,9 @@
 # devtools::use_package('VennDiagram', 'Suggests')
 
 .onAttach = function(libname, pkgname) {
-  packageStartupMessage("You're using mctoolsr. Direct inquiries to:
-    'https://github.com/leffj/mctoolsr'")
+  packageStartupMessage(paste0("You're using mctoolsr (v.", 
+                        packageVersion('mctoolsr'), "). Direct inquiries to:",
+                        "\n'https://github.com/leffj/mctoolsr'"))
 }
 
 .onLoad = function(libname, pkgname) {

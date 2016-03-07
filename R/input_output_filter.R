@@ -65,7 +65,9 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
   if(class(map) != 'data.frame') {
     warning(paste0('Problem loading mapping file. Note that the mapping file ',
                    'should have more than one metadata column. Check that ', 
-                   'All rows have the same number of columns.'))}
+                   'All rows have the same number of columns and that there ', 
+                   'are no duplicate sample IDs. It could also be that the ', 
+                   'specified filepath is not correct.'))}
   # optionally, subset data
     # cant subset if trying to filter out certain values and keep certain values
     # use one or the other
@@ -75,7 +77,8 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
     map_f = map
   }
   # match up data from dissimilarity matrix with mapping file
-  matched_data = .match_data_components(data, map_f, data_taxonomy)
+  matched_data = .match_data_components(tax_table = data, metadata_map = map_f, 
+                                        taxonomy = data_taxonomy)
   message(paste0(nrow(matched_data$map_loaded), ' samples loaded'))
   matched_data
 }
@@ -167,7 +170,7 @@ load_2_dms = function(dm1_fp, dm2_fp, map_fp, filter_cat, filter_vals, keep_vals
 #' @param keep_vals Alternatively, keep only samples represented by these 
 #'  values.
 #' @return A list variable with (1) the loaded taxa table, (2) 
-#'  the loaded mapping file, and optionally (3) the loaded taxonomy information
+#'  the loaded mapping file, and optionally (3) the loaded taxonomy information.
 #' @examples 
 #' \dontrun{
 #' ex_in_filt = filter_data(input = "example_input", filter_cat = "Sample_type", 
@@ -185,6 +188,27 @@ filter_data = function(input, filter_cat, filter_vals, keep_vals){
     matched_data
   } else {
     matched_data = .match_data_components(input$data_loaded, map_f, NULL)
+    message(paste0(nrow(matched_data$map_loaded), ' samples remaining'))
+    matched_data
+  }
+}
+
+#' @title Filter Samples from a Dataset based on number of sequences
+#' @param input The input dataset as loaded by \code{load_taxa_table()}.
+#' @param min_seqs A sample must have at minimum this number of sequences 
+#'  in order to be retained.
+#' @return A list variable with (1) the loaded taxa table, (2) 
+#'  the loaded mapping file, and optionally (3) the loaded taxonomy information.
+filter_samples_by_counts = function(input, min_seqs) {
+  data_filt = input$data_loaded[, colSums(input$data_loaded) >= min_seqs]
+  # match up data from dissimilarity matrix with mapping file
+  if('taxonomy_loaded' %in% names(input)){
+    matched_data = .match_data_components(data_filt, input$map_loaded, 
+                                          input$taxonomy_loaded)
+    message(paste0(nrow(matched_data$map_loaded), ' samples remaining'))
+    matched_data
+  } else {
+    matched_data = .match_data_components(data_filt, input$map_loaded, NULL)
     message(paste0(nrow(matched_data$map_loaded), ' samples remaining'))
     matched_data
   }
@@ -268,21 +292,29 @@ match_datasets = function(ds1, ds2){
 export_otu_table = function(input, out_fp, map_fp){
   if(class(input) == 'list') {
     table = input$data_loaded
+    if(!is.null(input$taxonomy_loaded)) {
+      taxonomy = apply(input$taxonomy_loaded, 1, paste, collapse = '; ')
+      out_tab = data.frame(OTU_ID = row.names(table), table, taxonomy, 
+                           check.names = FALSE)
+    } else {
+      out_tab = data.frame(OTU_ID = row.names(table), table, 
+                           check.names = FALSE)
+    }
   } else if(class(input) == 'data.frame') {
     table = input
     if(!missing(map_fp)){
       stop(paste0('Cannot write a metadata map unless input is a list that 
                   contains the metadata.'))
     }
+    out_tab = data.frame(OTU_ID = row.names(table), table, 
+                         check.names = FALSE)
   }
-  taxonomy = apply(input$taxonomy_loaded, 1, paste, collapse = '; ')
-  out_tab = data.frame(OTU_ID = row.names(table), table, taxonomy, 
-                       check.names = FALSE)
   names(out_tab)[1] = '#OTU ID'
   write('#Exported from mctoolsr', out_fp)
   suppressWarnings(write.table(out_tab, out_fp, sep = '\t', row.names = FALSE, 
                                append = TRUE))
   if(!missing(map_fp)){
+    if(class(map_fp) != 'character') stop('map_fp must be a valid filepath.')
     map_file = data.frame(row.names(input$map_loaded), input$map_loaded, 
                           check.names = FALSE)
     names(map_file)[1] = '#Sample ID'

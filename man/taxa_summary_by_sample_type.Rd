@@ -11,7 +11,7 @@ taxa_summary_by_sample_type(taxa_smry_df, metadata_map, type_header,
 \arguments{
 \item{taxa_smry_df}{Taxa summary data frame.}
 
-\item{metadata_map}{Mapping file.}
+\item{metadata_map}{The metadata mapping data frame.}
 
 \item{type_header}{Mapping file header (in quotation marks) of factor for
 which you are testing for differences.}

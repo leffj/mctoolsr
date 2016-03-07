@@ -44,6 +44,10 @@ devtools::install_github("leffj/mctoolsr")
 https://github.com/leffj/mctoolsr/issues
 
 
+### Citing
+The package is in initial development, so for now, please simply cite the Github URL: `https://github.com/leffj/mctoolsr/`
+
+
 ### Examples
 
 Note that the following examples use an example dataset taken from a study examining the bacterial communities associated with fruits and vegetables ([Leff et al. 2013][ref1]). You can find this dataset in the mctoolsr/examples directory.    

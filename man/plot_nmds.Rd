@@ -9,7 +9,7 @@ plot_nmds(dm, metadata_map = NULL, color_cat, shape_cat)
 \arguments{
 \item{dm}{Dissimilarity matrix.}
 
-\item{metadata_map}{The metadata mapping dataframe.}
+\item{metadata_map}{The metadata mapping data frame.}
 
 \item{color_cat}{The metadata map header used to color points.}
 

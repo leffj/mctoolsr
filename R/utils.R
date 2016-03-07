@@ -14,7 +14,7 @@
   }
   # filter out values within mapping category
   else if(!missing(filter_cat) & !missing(filter_vals)){
-    map_f = map[!map[, filter_cat] %in% filter_vals, ]
+    map_f = map[!map[, filter_cat] %in% filter_vals, , drop = FALSE]
     map_f = droplevels(map_f)
     if(nrow(map_f) == 0){
       stop('All rows filtered out. Check spelling of filter parameters.')
@@ -22,7 +22,7 @@
   }
   # keep certain values with mapping category
   else if(!missing(filter_cat) & !missing(keep_vals)){
-    map_f = map[map[,filter_cat] %in% keep_vals, ]
+    map_f = map[map[,filter_cat] %in% keep_vals, , drop = FALSE]
     map_f = droplevels(map_f)
     if(nrow(map_f) == 0){
       stop('All rows filtered out. Check spelling of filter parameters.')
@@ -32,11 +32,32 @@
 }
 
 #' @keywords internal
+.summarize_map = function(metadata_map, summarize_by_factor) {
+  .smry_fun = function(x){
+    if(is.numeric(x)){
+      mean(x)
+    } else {
+      if(length(unique(x)) == 1){
+        unique(x)
+      } else NA
+    }
+  }
+  mean_map = dplyr::summarise_each(dplyr::group_by_(metadata_map, 
+                                                    summarize_by_factor), 
+                                   dplyr::funs(.smry_fun))
+  mean_map = as.data.frame(as.matrix(mean_map))
+  row.names(mean_map) = mean_map[, summarize_by_factor]
+  mean_map
+}
+
+#' @keywords internal
 .match_data_components = function(tax_table, metadata_map, taxonomy){
   samplesToUse = intersect(names(tax_table), row.names(metadata_map))
-  tax_table.use = tax_table[, match(samplesToUse, names(tax_table))]
-  tax_table.use = tax_table.use[rowSums(tax_table.use) != 0, ]
-  map.use = metadata_map[match(samplesToUse, row.names(metadata_map)),]
+  tax_table.use = tax_table[, match(samplesToUse, names(tax_table)), 
+                            drop = FALSE]
+  tax_table.use = tax_table.use[rowSums(tax_table.use) != 0, , drop = FALSE]
+  map.use = metadata_map[match(samplesToUse, row.names(metadata_map)), , 
+                         drop = FALSE]
   map.use = droplevels(map.use)
   if(!missing('taxonomy') & !is.null(taxonomy)) {
     taxonomy.use = taxonomy[match(row.names(tax_table.use), 

@@ -112,7 +112,7 @@ plot_ordination = function(input, ordination_axes, color_cat, shape_cat,
 #' @title Generate an NMDS Plot Quickly
 #' @description Used to generate a quick ordination.
 #' @param dm Dissimilarity matrix.
-#' @param metadata_map The metadata mapping dataframe.
+#' @param metadata_map The metadata mapping data frame.
 #' @param color_cat The metadata map header used to color points.
 #' @param shape_cat The metadata map header used for points' shapes (optional).
 plot_nmds = function(dm, metadata_map = NULL, color_cat, shape_cat){
@@ -145,7 +145,7 @@ plot_nmds = function(dm, metadata_map = NULL, color_cat, shape_cat){
   }
 }
 
-#' @title Generate a dendrograme based on a dissimilarity matrix
+#' @title Generate a dendrogram based on a dissimilarity matrix
 #' @param dm Dissimilarity matrix.
 #' @param metadata_map The metadata mapping dataframe. 
 #'  Typically, input$map_loaded.

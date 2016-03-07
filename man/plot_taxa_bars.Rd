@@ -4,10 +4,10 @@
 \alias{plot_taxa_bars}
 \title{Plot stacked bar plots to represent taxa compompositions}
 \usage{
-plot_taxa_bars(taxa_summary_df, metadata_map, group_factor, num_taxa)
+plot_taxa_bars(taxa_smry_df, metadata_map, group_factor, num_taxa)
 }
 \arguments{
-\item{taxa_summary_df}{The taxon summary dataframe (the output of \code{
+\item{taxa_smry_df}{The taxon summary dataframe (the output of \code{
 summarize_taxonomy()})}
 
 \item{metadata_map}{The mapping file dataframe}

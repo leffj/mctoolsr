@@ -21,3 +21,35 @@ single_rarefy = function(input, depth) {
   message(paste0(nrow(matched_data$map_loaded), ' samples remaining'))
   matched_data
 }
+
+
+#' @title Calculate mean taxa values across a specified factor
+#' @param input The input dataset as loaded by \code{load_taxa_table()} or
+#'  an otu table of class \code{data.frame}.
+#' @param metadata_map [Optional]. The metadata mapping data frame. Required if
+#'  input is a \code{data.frame}.
+#' @param summarize_by_factor Category in mapping file to summarize by.
+#' @return If input is a list, returns a list with a taxon table (data_loaded) 
+#'  and a mapping data frame (map_loaded). It will automatically return 
+#'  taxonomy in the list if provided in the input.
+calc_taxa_means = function(input, summarize_by_factor, metadata_map) {
+  .calc_tt_means = function(table, metadata_map, summarize_by_factor){
+    as.data.frame(t(apply(table, 1, function(x) {
+      tapply(x, metadata_map[, summarize_by_factor], mean)
+    })))
+  }
+  if(class(input) == 'list') {
+    tt_means = .calc_tt_means(input$data_loaded, input$map_loaded, 
+                              summarize_by_factor)
+    mean_map = .summarize_map(input$map_loaded, summarize_by_factor)
+    map_loaded = mean_map[match(colnames(tt_means), row.names(mean_map)), ]
+    output = list(data_loaded = tt_means, map_loaded = map_loaded)
+    if(!is.null(input$taxonomy_loaded)) {
+      c(output, list(taxonomy_loaded = input$taxonomy_loaded))
+    } else output
+  } else if(class(input) == 'data.frame') {
+    taxa_table_means = .calc_tt_means(input, metadata_map, summarize_by_factor)
+    mean_map = .summarize_map(metadata_map, summarize_by_factor)
+    .match_data_components(taxa_table_means, mean_map, NULL)
+  } else stop('input is of an incorrect variable type.')
+}
