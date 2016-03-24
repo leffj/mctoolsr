@@ -268,8 +268,12 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
 #'  names (top to bottom).
 #' @param other_label [OPTIONAL] A string to relabel the 'Other' taxa category 
 #'  which contain all taxa less than \code{min_rel_abund}.
+#' @param rev_taxa [OPTIONAL] Set to \code{TRUE} if you want to reverse the 
+#'  order of the taxon strings. Useful if using with \code{coord_flip()} in 
+#'  ggplot2 to rotate the plot 90 degrees.
 plot_ts_heatmap = function(tax_table, metadata_map, min_rel_abund, type_header, 
-                           scale_by, custom_sample_order, other_label) {
+                           scale_by, custom_sample_order, other_label, 
+                           rev_taxa = FALSE) {
   # group all taxa lower than threshold into other
   lt_thresh = tax_table[rowMeans(tax_table) < min_rel_abund, ]
   gt_thresh = tax_table[rowMeans(tax_table) >= min_rel_abund, ]
@@ -295,6 +299,11 @@ plot_ts_heatmap = function(tax_table, metadata_map, min_rel_abund, type_header,
   if(!missing(custom_sample_order)) {
     to_plot$Var2 = factor(to_plot$Var2, levels = rev(custom_sample_order))
   }
+  # reverse order of taxa
+  if(rev_taxa) {
+    to_plot$Var1 = factor(to_plot$Var1, levels = rev(unique(to_plot$Var1)))
+  }
+  # plot
   # https://learnr.wordpress.com/2010/01/26/ggplot2-quick-heatmap-plotting/
   p = ggplot2::ggplot(to_plot, ggplot2::aes(Var1, Var2, fill = scaled)) +
     ggplot2::geom_tile(color = 'black', size = 0.25) + 

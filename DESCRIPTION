@@ -1,8 +1,8 @@
 Package: mctoolsr
 Type: Package
 Title: Microbial Community Data Analysis Tools
-Version: 0.0.1.95
-Date: 2016-03-07
+Version: 0.0.1.96
+Date: 2016-03-24
 Authors@R: person("Jonathan", "Leff", email = "jonathan.leff@colorado.edu",
                   role = c("aut", "cre"))
 Maintainer: Jonathan Leff <jonathan.leff@colorado.edu>

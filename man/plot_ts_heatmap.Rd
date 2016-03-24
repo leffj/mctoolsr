@@ -5,7 +5,7 @@
 \title{Plot Taxa Summary Heatmap}
 \usage{
 plot_ts_heatmap(tax_table, metadata_map, min_rel_abund, type_header, scale_by,
-  custom_sample_order, other_label)
+  custom_sample_order, other_label, rev_taxa = FALSE)
 }
 \arguments{
 \item{tax_table}{A taxa table dataframe. The output of
@@ -27,6 +27,10 @@ names (top to bottom).}
 
 \item{other_label}{[OPTIONAL] A string to relabel the 'Other' taxa category
 which contain all taxa less than \code{min_rel_abund}.}
+
+\item{rev_taxa}{[OPTIONAL] Set to \code{TRUE} if you want to reverse the
+order of the taxon strings. Useful if using with \code{coord_flip()} in
+ggplot2 to rotate the plot 90 degrees.}
 }
 \description{
 A quick way to create a heatmap from a taxa summary dataframe.
