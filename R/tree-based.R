@@ -17,6 +17,6 @@ load_tree = function(tree_fp) {
 #' @param tree The phylogenetic tree from \code{load_tree()}.
 #' @param tip_labels The tip labels to retain.
 filter_tree = function(tree, tip_labels) {
-  tree_f = drop.tip(tree, tree$tip.label[!tree$tip.label %in% tip_labels])
+  tree_f = ape::drop.tip(tree, tree$tip.label[!tree$tip.label %in% tip_labels])
   tree_f
 }
