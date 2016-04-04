@@ -371,3 +371,10 @@ calc_taxa_changes = function(ts, metadata_map, block_header,
   )
   ts_melt
 }
+
+#' @title Collapse taxonomy dataframe to character vector
+#' @param taxonomy_df The dataframe containing taxonomy as loaded by \code{
+#'  load_taxa_table()}.
+collapse_taxonomy = function(taxonomy_df) {
+  apply(taxonomy_df, 1, function(x) paste0(x, collapse = '; '))
+}
