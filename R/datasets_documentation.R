@@ -20,3 +20,12 @@
 #'  http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0059310}
 "sumtax_example_data"
 
+#' Fruits and Vegetables Bacterial Phylotype Tree
+#' 
+#' Phylogenetic tree created using pynast and Fasttree
+#' 
+#' @format phylo
+#' @source Adapted from \url{
+#'  http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0059310}
+#'  
+"fruits_veggies_OTUs_tree"

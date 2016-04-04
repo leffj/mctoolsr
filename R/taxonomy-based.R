@@ -51,7 +51,7 @@
                                                   split = '; *')[[1]])
   # check for long taxonomy rows, which may indicate a problem
   lengths = sapply(tmp, length)
-  if(max(lengths) > 15) {
+  if(max(lengths) > 25) {
     prob_line = which(lengths == max(lengths))
     warning(paste0('Issue with provided taxonomy. Check for quotes near line ', 
                    prob_line, '. Proceeding without taxonomy.'))

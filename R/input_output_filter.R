@@ -48,7 +48,11 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals){
         row.names(data_taxonomy) = row.names(data)
       }
       data$taxonomy = NULL
-    } else data_taxonomy = NULL
+    } else {
+      data_taxonomy = NULL
+      warning(paste0('No taxonomy loaded. If taxonomy should have been loaded, 
+                     check that "taxonomy" header exists.'))
+    }
   }
   else stop('Input file must be either biom (.biom) or tab-delimited (.txt) format.')
   # import mapping file
