@@ -8,10 +8,14 @@
 #' @description The default is to calculate Bray-Curtis dissimilarities after 
 #'  performing square-root transformations on the data. Send requests to add
 #'  additional metrics.
-#' @param tax_table The taxa table.
+#' @param tax_table$data_loaded The observations loaded into the taxa table.
 #' @param method The method to use to calculate the dissimilarity metric.
 #'  Available methods include: 'bray_sq_trans', 'bray', 'jaccard', '.
 #' @return A variable of class 'dist'.
+#' @examples 
+#' \dontrun{
+#' DM = calc_dm(input$data_loaded)
+#' }
 calc_dm = function(tax_table, method = 'bray_sq_trans'){
   # check for and warn about samples with no sequences
   if(min(colSums(tax_table)) == 0){
@@ -42,6 +46,11 @@ calc_dm = function(tax_table, method = 'bray_sq_trans'){
 #'  current accepted values.
 #' @param metadata_map Required if 'constrained' ord_type.
 #' @param constrain_factor Required if 'constrained' ord_type.
+#' @return A data frame consisting of the coordinates.
+#' @examples 
+#' \dontrun{
+#' ORD = calc_ordination(DM, 'nmds')
+#' }
 calc_ordination = function(dm, ord_type, metadata_map, constrain_factor){
   dm = as.dist(dm)
   if(ord_type == 'NMDS' | ord_type == 'nmds'){
@@ -65,6 +74,10 @@ calc_ordination = function(dm, ord_type, metadata_map, constrain_factor){
 #' @param shape_cat The metadata map header used for points' shapes (optional).
 #' @param hulls Whether or not to include an outline around sample categories.
 #' @param ... Additional arguments passed to ggplot2's \code{geom_point()}.
+#' @examples 
+#' \dontrun{
+#' plot_ordination(input, ORD, "Sample_type", "Farm_type", hull=TRUE)
+#' }
 plot_ordination = function(input, ordination_axes, color_cat, shape_cat, 
                            hulls = FALSE, ...){
   if(missing(color_cat)){
@@ -115,6 +128,10 @@ plot_ordination = function(input, ordination_axes, color_cat, shape_cat,
 #' @param metadata_map The metadata mapping data frame.
 #' @param color_cat The metadata map header used to color points.
 #' @param shape_cat The metadata map header used for points' shapes (optional).
+#' @examples 
+#' \dontrun{
+#' plot_nmds(DM, metadata_map = input$map_loaded, 'Sample_type', 'Farm_type')
+#' }
 plot_nmds = function(dm, metadata_map = NULL, color_cat, shape_cat){
   if(missing(color_cat)){
     warning('No mapping category to color by.')
@@ -155,6 +172,11 @@ plot_nmds = function(dm, metadata_map = NULL, color_cat, shape_cat){
 #'  intended leaf label colors.
 #' @param method The clustering method to use when creating the dendrogram.
 #' @param ... Other parameters passed on to geom_text
+#' @examples 
+#' \dontrun{
+#' plot_dendrogram(DM, input$map_loaded, 'Farm_type', 
+#'                 'Sample_type')
+#' }
 plot_dendrogram = function(dm, metadata_map, labels, color_by, 
                            method = 'complete', ...) {
   if (!requireNamespace("ggdendro", quietly = TRUE)) {
@@ -229,6 +251,12 @@ plot_dendrogram = function(dm, metadata_map, labels, color_by,
 #' @title Convert dissimilarity matrix to 3 column format
 #' @description This is useful for performing analyses on dissimilarity values
 #' @param dm Dissimilarity matrix of either class 'dist' or class 'data.frame'
+#' @return The dissimilarity matrix as a 3 column data frame with columns:
+#' c('x1', 'x2', 'dist')
+#' @examples 
+#' \dontrun{
+#' DM_cols = convert_dm_to_3_column(DM)
+#' }
 convert_dm_to_3_column = function(dm){
   if(class(dm) == 'data.frame'){
     dmat = as.dist(dm)
@@ -252,6 +280,12 @@ convert_dm_to_3_column = function(dm){
 #' @param metadata_map The metadata dataframe.
 #' @param cat The header string from the metadata map corresponding to the data
 #'  you would like to add to the dissimilarities dataframe.
+#' @return A 5 column data frame with the metadata added, the two additional 
+#' columnds corresponds to x1 and x2's metadata column equivalent
+#' @examples 
+#' \dontrun{
+#' add_metadata_to_dm_clmns(DM_cols, input$map_loaded, "Sample_type")
+#' }
 add_metadata_to_dm_clmns = function(dm_clmns, metadata_map, cat){
   cat1 = metadata_map[match(dm_clmns$x1, row.names(metadata_map)), cat]
   cat2 = metadata_map[match(dm_clmns$x2, row.names(metadata_map)), cat]
@@ -321,6 +355,10 @@ add_metadata_to_dm_clmns = function(dm_clmns, metadata_map, cat){
 #' @param return_map Whether or not to return summarized mapping files. If true,
 #'  will return a list (default: FALSE).
 #' @return Mean dissimilarities.
+#' @examples 
+#' \dontrun{
+#' calc_mean_dissimilarities(DM, input$map_loaded, 'Sample_Farming')
+#' }
 calc_mean_dissimilarities = function(dm, metadata_map, summarize_by_factor, 
                                      return_map = FALSE){
   .sumry_fun = function(x){
@@ -381,6 +419,10 @@ calc_mean_dissimilarities = function(dm, metadata_map, summarize_by_factor,
 #' @param compare_header The header in the metadata mapping dataframe with the
 #'  factor levels to use for the pairwise comparisons.
 #' @return A dataframe with R2 and P values.
+#' @examples 
+#' \dontrun{
+#' calc_pairwise_permanovas(DM, input$map_loaded, 'Sample_Farming')
+#' }
 calc_pairwise_permanovas = function(dm, metadata_map, compare_header) {
   comp_var = metadata_map[, compare_header]
   comp_pairs = combn(levels(comp_var), 2)
