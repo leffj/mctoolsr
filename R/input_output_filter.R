@@ -233,6 +233,20 @@ filter_samples_by_counts = function(input, min_seqs) {
 #'  values.
 #' @return A list variable with (1) the loaded dissimilarity matrix and (2) 
 #'  the loaded mapping file.
+#' @examples
+#'  # rarefy
+#'  fruits_veggies_rar = single_rarefy(fruits_veggies, 1000)
+#'  # calculate dissimilarities
+#'  dm = calc_dm(fruits_veggies_rar$data_loaded)
+#'  # calculated mean dissimilarities by sample type
+#'  dm_means = calc_mean_dissimilarities(dm = dm, 
+#'                                       metadata_map = fruits_veggies$map_loaded, 
+#'                                       summarize_by_factor = 'Sample_type', 
+#'                                       return_map = TRUE)
+#'  # filter sample types to include only lettuce and spinach
+#'  filter_dm(input_dm = dm_means, filter_cat = 'Sample_type', 
+#'            keep_vals = c('Lettuce', 'Spinach'))
+
 filter_dm = function(input_dm, filter_cat, filter_vals, keep_vals){
 #   if(!missing(filter_vals)) {
 #     if(!missing(keep_vals)) {
