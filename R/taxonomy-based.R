@@ -266,24 +266,30 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
 #'  (c) 'all'.
 #' @param custom_sample_order [OPTIONAL] A vector with the order of the sample
 #'  names (top to bottom).
+#' @param rev_taxa [OPTIONAL] Set to \code{TRUE} if you want to reverse the 
+#'  order of the taxon strings. Useful if using with \code{coord_flip()} in 
+#'  ggplot2 to rotate the plot 90 degrees.
 #' @param custom_taxa_order [OPTIONAL] A vector with the order of the taxa
 #'  names (top to bottom). Note that these are the names after grouping low 
 #'  abundance taxa into either 'Other' or your custom \code{other_label}.
 #' @param other_label [OPTIONAL] A string to relabel the 'Other' taxa category 
 #'  which contain all taxa less than \code{min_rel_abund}.
-#' @param rev_taxa [OPTIONAL] Set to \code{TRUE} if you want to reverse the 
-#'  order of the taxon strings. Useful if using with \code{coord_flip()} in 
-#'  ggplot2 to rotate the plot 90 degrees.
+#' @param remove_other [OPTIONAL] Set to \code{TRUE} if you want to remove
+#'  the line representing the 'Other' taxa category.
 #' @param colors [OPTIONAL] A vector with custom fill colors (low, mid, high).
 plot_ts_heatmap = function(tax_table, metadata_map, min_rel_abund, type_header, 
-                           scale_by, custom_sample_order, custom_taxa_order, 
-                           other_label, rev_taxa = FALSE, 
+                           scale_by, custom_sample_order, rev_taxa = FALSE, 
+                           custom_taxa_order, other_label, remove_other = FALSE, 
                            colors = c('blue', 'white', 'red')) {
   # group all taxa lower than threshold into other
   lt_thresh = tax_table[rowMeans(tax_table) < min_rel_abund, ]
   gt_thresh = tax_table[rowMeans(tax_table) >= min_rel_abund, ]
   Other = colSums(lt_thresh)
   sumtax_mod = rbind(gt_thresh, Other = Other)
+  # remove other
+  if(remove_other) {
+    sumtax_mod = sumtax_mod[row.names(sumtax_mod) != 'Other', ]
+  }
   if(!missing(other_label)) {
     row.names(sumtax_mod)[row.names(sumtax_mod) == 'Other'] = other_label
   }
