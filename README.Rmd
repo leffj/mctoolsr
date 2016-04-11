@@ -1,7 +1,7 @@
 ---
 title: "Getting Started with mctoolsr"
 author: "Jonathan W. Leff"
-date: "2015-12-03"
+date: "2016-04-11"
 output: 
   html_document: 
     keep_md: yes
@@ -12,6 +12,9 @@ output:
 This document serves as a brief introduction to using **mctoolsr**. This document will go through getting the package working and a few examples using the most popular functions.
 
 **See here for a list of current functions**: https://github.com/leffj/mctoolsr/blob/master/function_list.md
+
+### Other tutorials
+* [Modifying plot appearance](https://github.com/leffj/mctoolsr/blob/master/tutorials/modifying_plots.md)
 
 ### Getting and using **mctoolsr**
 
