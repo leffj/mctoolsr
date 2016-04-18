@@ -208,9 +208,7 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
   }
   # if particular taxa IDs specified to keep, identify those rows.
   if(!missing(taxa_IDs_to_keep)){
-    rows_keep_tmp = sapply(taxa_IDs_to_keep, FUN = function(x){
-      match(x, row.names(input$data_loaded))
-    })
+    rows_keep_tmp = match(taxa_IDs_to_keep, row.names(input$data_loaded))
     if(length(rows_keep_tmp[[1]]) == 0){
       stop('Taxa IDs not found.')
     }
@@ -229,9 +227,7 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
   }
   # if particular taxa IDs to remove, identify those rows
   if(!missing(taxa_IDs_to_remove)){
-    rows_remove = sapply(taxa_IDs_to_remove, FUN = function(x){
-      match(x, row.names(input$data_loaded))
-    })
+    rows_remove = match(taxa_IDs_to_remove, row.names(input$data_loaded))
     if(length(rows_remove[[1]]) == 0){
       stop('Taxa IDs not found.')
     }
