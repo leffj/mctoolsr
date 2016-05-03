@@ -143,22 +143,43 @@ plot_taxa_bars = function(taxa_smry_df, metadata_map, group_factor, num_taxa){
 #' @details Can use one or more of the parameters to do filtering. Threshold 
 #'  filtering takes precidence over taxa filtering. If taxa to keep and 
 #'  taxa to remove are both included, taxa to remove will be 
-#'  removed if the parameter entries conflict.
+#'  removed if the parameter entries conflict. Note that taxa string matching
+#'  uses grep, so you can provide partial taxa strings. However, if there are 
+#'  multiple matches, all matching taxa will be removed.
 #' @param tax_table Input taxa summary table from \code{summarize_taxonomy()} 
 #'  (dataframe).
 #' @param filter_thresh Filter taxa less than this number based on mean 
 #'  table values.
 #' @param taxa_to_keep Keep only taxa that contain these names. Vector or string.
 #' @param taxa_to_remove Remove taxa that contain these names. Vector or string.
-filter_taxa_from_table = function(tax_table, filter_thresh = 0, taxa_to_keep, 
+filter_taxa_from_table = function(tax_table, filter_thresh, taxa_to_keep, 
                                   taxa_to_remove){
-  means = apply(tax_table[, 1:ncol(tax_table)], 1, 
-                function(x){mean(x,na.rm=TRUE)})
-  number_retained = sum((means >= filter_thresh) *1)
-  taxa_keep = names(means[means >= filter_thresh])
-  if(!missing(taxa_to_keep)) {taxa_keep = taxa_keep[taxa_keep %in% taxa_to_keep]}
-  if(!missing(taxa_to_remove)) {taxa_keep = taxa_keep[!taxa_keep %in% taxa_to_remove]}
-  tax_table[row.names(tax_table) %in% taxa_keep, ]
+  rows_keep = seq(1, nrow(tax_table))
+  if(!missing(filter_thresh)){
+    means = apply(tax_table[, 1:ncol(tax_table)], 1, 
+                  function(x){mean(x, na.rm = TRUE)})
+    number_retained = sum((means >= filter_thresh) * 1)
+    rows_keep = rows_keep[means >= filter_thresh]
+  }
+  # if particular taxa specified to keep, identify those rows.
+  if(!missing(taxa_to_keep)){
+    rows_keep_tmp = sapply(taxa_to_keep, FUN = function(x){
+      grep(x, row.names(tax_table))
+    })
+    if(length(rows_keep_tmp) == 0) stop('Taxa not found.')
+    rows_keep = intersect(rows_keep, rows_keep_tmp)
+  }
+  # if particular taxa to remove, identify those rows
+  if(!missing(taxa_to_remove)){
+    rows_remove = sapply(taxa_to_remove, FUN = function(x){
+      grep(x, row.names(tax_table))
+    })
+    if(length(rows_remove) == 0){
+      stop('Taxa not found.')
+    }
+    rows_keep = rows_keep[! rows_keep %in% rows_remove]
+  }
+  tax_table[rows_keep, ]
 }
 
 #' @title Filter Taxa from a Loaded Dataset
@@ -185,8 +206,8 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
   rows_keep = seq(1, nrow(input$data_loaded))
   if(!missing(filter_thresh)){
     means = apply(input$data_loaded[, 1:ncol(input$data_loaded)], 1, 
-                  function(x){mean(x, na.rm=TRUE)})
-    number_retained = sum((means >= filter_thresh) *1)
+                  function(x){mean(x, na.rm = TRUE)})
+    number_retained = sum((means >= filter_thresh) * 1)
     rows_keep = rows_keep[means >= filter_thresh]
   }
   # specify taxa levels to search

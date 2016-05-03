@@ -58,5 +58,17 @@ test_that("Filtering taxonomy from input dataset works as expected.", {
     14)
 })
 
-
+test_that("Filtering taxonomy from taxa summary works as expected.", {
+  ts = summarize_taxonomy(fruits_veggies, 2)
+  only_proteos = filter_taxa_from_table(ts, filter_thresh = 0.5)
+  expect_equal(row.names(only_proteos), 'k__Bacteria; p__Proteobacteria')
+  firm_act = filter_taxa_from_table(ts, taxa_to_keep = 
+                                      c('Firmicutes', 'Actinobacteria'))
+  expect_equal(row.names(firm_act), c("k__Bacteria; p__Actinobacteria", 
+                                      "k__Bacteria; p__Firmicutes"))
+  no_firm_act = filter_taxa_from_table(ts, taxa_to_remove = 
+                                         c('Firmicutes', 'Actinobacteria'))
+  expect_true(all(c('Firmicutes', 'Actinobacteria') %in% 
+                    row.names(no_firm_act) == FALSE))
+})
 
