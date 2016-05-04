@@ -279,6 +279,7 @@ filter_dm = function(input_dm, filter_cat, filter_vals, keep_vals){
 #'  as the second element
 match_datasets = function(ds1, ds2){
   common_samples = intersect(names(ds1$data_loaded), names(ds2$data_loaded))
+  if(length(common_samples) == 0) stop('No shared samples were found.')
   ds1$map_loaded$common_sample = row.names(ds1$map_loaded) %in% common_samples
   ds1_filt = filter_data(ds1, filter_cat = 'common_sample', filter_vals = FALSE)
   ds1_filt$data_loaded = ds1_filt$data_loaded[, 
