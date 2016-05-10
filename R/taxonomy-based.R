@@ -111,27 +111,27 @@ summarize_taxonomy = function(input, level, relative = TRUE,
 
 #' @title Plot stacked bar plots to represent taxa compompositions
 #' @description Stacked bar plots will be generated for each factor level 
-#'   indicated by \code{group_factor} to display their taxonomic compositions. 
+#'   indicated by \code{type_header} to display their taxonomic compositions. 
 #'   Only the top few taxa will be displayed as indicated by \code{num_taxa}. 
 #'   Mean values are calculated within the factor levels.
-#' @param taxa_smry_df The taxon summary dataframe (the output of \code{
-#'   summarize_taxonomy()})
+#' @param tax_table A taxa table dataframe. The output of 
+#'   \code{summarize_taxonomy()}.
 #' @param metadata_map The mapping file dataframe
-#' @param group_factor The factor (metadata header label) used to create the 
+#' @param type_header The factor (metadata header label) used to create the 
 #'   bars. Means will be taken for each factor level.
 #' @param num_taxa The number of top most abundant taxa to display. Additional 
 #'   will be grouped into "Other".
 #' @param data_only [OPTIONAL] Set to \code{TRUE} if you want the plotting data
 #'   returned instead of the plot.
-plot_taxa_bars = function(taxa_smry_df, metadata_map, group_factor, num_taxa, 
+plot_taxa_bars = function(tax_table, metadata_map, type_header, num_taxa, 
                           data_only = FALSE){
-  taxa_smry_df$taxon = row.names(taxa_smry_df)
-  taxa_smry_df_melted = reshape2::melt(taxa_smry_df, variable.name = 'Sample_ID', 
+  tax_table$taxon = row.names(tax_table)
+  tax_table_melted = reshape2::melt(tax_table, variable.name = 'Sample_ID', 
                                           id.vars = 'taxon')
-  group_by_levels = metadata_map[match(taxa_smry_df_melted$Sample_ID, 
-                                       row.names(metadata_map)), group_factor]
-  taxa_smry_df_melted$group_by = group_by_levels
-  mean_tax_vals = dplyr::summarise(dplyr::group_by(taxa_smry_df_melted, 
+  group_by_levels = metadata_map[match(tax_table_melted$Sample_ID, 
+                                       row.names(metadata_map)), type_header]
+  tax_table_melted$group_by = group_by_levels
+  mean_tax_vals = dplyr::summarise(dplyr::group_by(tax_table_melted, 
                                                    group_by, taxon), 
                                    mean_value = mean(value))
   # get top taxa and convert other to 'other'
@@ -292,8 +292,8 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
 #' @param min_rel_abund The minimum mean relative abundance for a taxon to not
 #'  be grouped into 'Other'. Between 0 and 1.
 #' @param type_header The metadata_map header label used to group samples.
-#' @param scale_by Whether to scale colors by (a) 'sample_types', (b) 'taxa', or
-#'  (c) 'all'.
+#' @param scale_by [OPTIONAL] Whether to scale colors by (a) 'sample_types', (b) 'taxa', or
+#'  (c) 'all'. Default = 'all'.
 #' @param custom_sample_order [OPTIONAL] A vector with the order of the sample
 #'  names (top to bottom).
 #' @param rev_taxa [OPTIONAL] Set to \code{TRUE} if you want to reverse the 
@@ -308,8 +308,9 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
 #'  the line representing the 'Other' taxa category.
 #' @param colors [OPTIONAL] A vector with custom fill colors (low, mid, high).
 plot_ts_heatmap = function(tax_table, metadata_map, min_rel_abund, type_header, 
-                           scale_by, custom_sample_order, rev_taxa = FALSE, 
-                           custom_taxa_order, other_label, remove_other = FALSE, 
+                           scale_by = 'all', custom_sample_order, 
+                           rev_taxa = FALSE, custom_taxa_order, other_label, 
+                           remove_other = FALSE, 
                            colors = c('blue', 'white', 'red')) {
   # group all taxa lower than threshold into other
   lt_thresh = tax_table[rowMeans(tax_table) < min_rel_abund, ]
