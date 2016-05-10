@@ -98,6 +98,20 @@ convert_to_relative_abundances = function(input){
   }
 }
 
+#' @title Rename samples in an mctoolsr dataset
+#' @description Rename the samples by substituting column names in the taxa 
+#'  table and row names in the metadata map with values from a metadata map
+#'  column that you specify. Note that all values in the metadata map column 
+#'  must be unique.
+#' @param input The input dataset as loaded by \code{load_taxa_table()}.
+#' @param name_header The header value in the metadata map that will be used
+#'  to rename the samples.
+rename_samples = function(input, name_header) {
+  colnames(input$data_loaded) = input$map_loaded[, name_header]
+  row.names(input$map_loaded) = input$map_loaded[, name_header]
+  input
+}
+
 #' @title Return the most abundant taxa in a dataset
 #' @description Return the n most abundant taxa as calculated by the mean 
 #' sequence counts across all samples.
