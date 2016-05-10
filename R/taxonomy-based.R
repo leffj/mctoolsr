@@ -231,7 +231,7 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
     if(length(rows_keep_tmp[[1]]) == 0){
       stop('Taxa not found.')
     }
-    rows_keep = intersect(rows_keep, rows_keep_tmp)
+    rows_keep = intersect(rows_keep, unlist(rows_keep_tmp))
   }
   # if particular taxa IDs specified to keep, identify those rows.
   if(!missing(taxa_IDs_to_keep)){
