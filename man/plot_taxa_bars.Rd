@@ -4,7 +4,8 @@
 \alias{plot_taxa_bars}
 \title{Plot stacked bar plots to represent taxa compompositions}
 \usage{
-plot_taxa_bars(taxa_smry_df, metadata_map, group_factor, num_taxa)
+plot_taxa_bars(taxa_smry_df, metadata_map, group_factor, num_taxa,
+  data_only = FALSE)
 }
 \arguments{
 \item{taxa_smry_df}{The taxon summary dataframe (the output of \code{
@@ -17,6 +18,9 @@ bars. Means will be taken for each factor level.}
 
 \item{num_taxa}{The number of top most abundant taxa to display. Additional
 will be grouped into "Other".}
+
+\item{data_only}{[OPTIONAL] Set to \code{TRUE} if you want the plotting data
+returned instead of the plot.}
 }
 \description{
 Stacked bar plots will be generated for each factor level

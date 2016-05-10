@@ -113,8 +113,11 @@ summarize_taxonomy = function(input, level, relative = TRUE,
 #' @param group_factor The factor (metadata header label) used to create the 
 #'   bars. Means will be taken for each factor level.
 #' @param num_taxa The number of top most abundant taxa to display. Additional 
-#'   will be grouped into "Other".  
-plot_taxa_bars = function(taxa_smry_df, metadata_map, group_factor, num_taxa){
+#'   will be grouped into "Other".
+#' @param data_only [OPTIONAL] Set to \code{TRUE} if you want the plotting data
+#'   returned instead of the plot.
+plot_taxa_bars = function(taxa_smry_df, metadata_map, group_factor, num_taxa, 
+                          data_only = FALSE){
   taxa_smry_df$taxon = row.names(taxa_smry_df)
   taxa_smry_df_melted = reshape2::melt(taxa_smry_df, variable.name = 'Sample_ID', 
                                           id.vars = 'taxon')
@@ -132,11 +135,14 @@ plot_taxa_bars = function(taxa_smry_df, metadata_map, group_factor, num_taxa){
   to_plot = dplyr::summarise(dplyr::group_by(mean_tax_vals_sorted, group_by, 
                                              taxon), 
                              mean_value = sum(mean_value))
+  if(data_only) to_plot
+  else {
+    ggplot2::ggplot(to_plot, ggplot2::aes(group_by, mean_value, fill = taxon)) +
+      ggplot2::geom_bar(stat = 'identity') + 
+      ggplot2::ylab('') + ggplot2::xlab('') +
+      ggplot2::theme(legend.title = ggplot2::element_blank())
+  }
   # plot
-  ggplot2::ggplot(to_plot, ggplot2::aes(group_by, mean_value, fill = taxon)) +
-    ggplot2::geom_bar(stat = 'identity') + 
-    ggplot2::ylab('') + ggplot2::xlab('') +
-    ggplot2::theme(legend.title = ggplot2::element_blank())
 }
 
 #' @title Filter Taxa from an Individual Taxa Summary Table

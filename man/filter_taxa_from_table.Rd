@@ -4,8 +4,7 @@
 \alias{filter_taxa_from_table}
 \title{Filter Taxa from an Individual Taxa Summary Table}
 \usage{
-filter_taxa_from_table(tax_table, filter_thresh = 0, taxa_to_keep,
-  taxa_to_remove)
+filter_taxa_from_table(tax_table, filter_thresh, taxa_to_keep, taxa_to_remove)
 }
 \arguments{
 \item{tax_table}{Input taxa summary table from \code{summarize_taxonomy()}
@@ -25,6 +24,8 @@ Filter Taxa from an Individual Taxa Summary Table
 Can use one or more of the parameters to do filtering. Threshold
  filtering takes precidence over taxa filtering. If taxa to keep and
  taxa to remove are both included, taxa to remove will be
- removed if the parameter entries conflict.
+ removed if the parameter entries conflict. Note that taxa string matching
+ uses grep, so you can provide partial taxa strings. However, if there are
+ multiple matches, all matching taxa will be removed.
 }
 
