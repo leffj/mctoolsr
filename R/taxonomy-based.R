@@ -98,7 +98,14 @@ summarize_taxonomy = function(input, level, relative = TRUE,
                                         row.names = unique(taxa_strings))
   else tax_sum = as.data.frame(tax_sum)
   if(relative){
-    convert_to_relative_abundances(tax_sum)
+    output = convert_to_relative_abundances(tax_sum)
+    # warn if NAs produced from trying to divide by 0
+    na_samples = names(output)[colSums(is.na(output)) > 0]
+    if(length(na_samples) > 0) {
+      warning(paste('The following samples produced NAs:', 
+                    paste(na_samples, collapse = ', '), 
+                    '\nThis might be because they had no observation data.'))}
+    output
   } else tax_sum
 }
 
