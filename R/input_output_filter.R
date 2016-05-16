@@ -269,33 +269,45 @@ filter_dm = function(input_dm, filter_cat, filter_vals, keep_vals){
 }
 
 #' @title Match up samples from two datasets
-#' @description Function to match up sample order from two datasets that contain
-#'  some overlapping sample IDs. Sample IDs that are not present in both
-#'  datasets will be dropped. The output is a list containing the two filtered
-#'  datasets in the same order as they were input.
+#' @description Function to match up sample order and optionally,  taxa order 
+#'   from two datasets that contain some overlapping sample IDs. Sample IDs that
+#'   are not present in both datasets will be dropped. The output is a list 
+#'   containing the two filtered datasets in the same order as they were input.
 #' @param ds1 The first dataset as loaded by \code{load_taxa_table()}
 #' @param ds2 The second dataset.
-#' @return A list variable with the matched ds1 as the first element and ds2
-#'  as the second element
-match_datasets = function(ds1, ds2){
+#' @param match_taxa [OPTIONAL] Do you want to match taxa in addition to sample
+#'   IDs? If \code{TRUE}, taxa will be removed if they are not in common between
+#'   datasets.
+#' @return A list variable with the matched ds1 as the first element and ds2 as
+#'   the second element
+match_datasets = function(ds1, ds2, match_taxa = FALSE){
   common_samples = intersect(names(ds1$data_loaded), names(ds2$data_loaded))
   if(length(common_samples) == 0) stop('No shared samples were found.')
   ds1$map_loaded$common_sample = row.names(ds1$map_loaded) %in% common_samples
   ds1_filt = filter_data(ds1, filter_cat = 'common_sample', filter_vals = FALSE)
   ds1_filt$data_loaded = ds1_filt$data_loaded[, 
                                               match(common_samples, 
-                                                    names(ds1_filt$data_loaded))]
+                                                    names(ds1_filt$data_loaded)), 
+                                              drop = FALSE]
   ds1_filt$map_loaded = ds1_filt$map_loaded[match(common_samples, 
                                                   row.names(ds1_filt$map_loaded)), 
-                                            ]
+                                            , drop = FALSE]
   ds2$map_loaded$common_sample = row.names(ds2$map_loaded) %in% common_samples
   ds2_filt = filter_data(ds2, 'common_sample', FALSE)
   ds2_filt$data_loaded = ds2_filt$data_loaded[, 
                                               match(common_samples, 
-                                                    names(ds2_filt$data_loaded))]
+                                                    names(ds2_filt$data_loaded)), 
+                                              drop = FALSE]
   ds2_filt$map_loaded = ds2_filt$map_loaded[match(common_samples, 
                                                   row.names(ds2_filt$map_loaded)), 
-                                            ]
+                                            , drop = FALSE]
+  if(match_taxa) {
+    common_taxa = intersect(row.names(ds1_filt$data_loaded), 
+                            row.names(ds2_filt$data_loaded))
+    if(length(common_taxa) == 0) stop('No shared taxa were found.')
+    ds1_filt = filter_taxa_from_input(ds1_filt, taxa_IDs_to_keep = common_taxa)
+    ds2_filt = filter_taxa_from_input(ds2_filt, taxa_IDs_to_keep = common_taxa)
+  }
   list(ds1 = ds1_filt, ds2 = ds2_filt)
 }
 

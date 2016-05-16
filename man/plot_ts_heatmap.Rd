@@ -4,9 +4,10 @@
 \alias{plot_ts_heatmap}
 \title{Plot Taxa Summary Heatmap}
 \usage{
-plot_ts_heatmap(tax_table, metadata_map, min_rel_abund, type_header, scale_by,
-  custom_sample_order, rev_taxa = FALSE, custom_taxa_order, other_label,
-  remove_other = FALSE, colors = c("blue", "white", "red"))
+plot_ts_heatmap(tax_table, metadata_map, min_rel_abund, type_header,
+  scale_by = "all", custom_sample_order, rev_taxa = FALSE,
+  custom_taxa_order, other_label, remove_other = FALSE, colors = c("blue",
+  "white", "red"))
 }
 \arguments{
 \item{tax_table}{A taxa table dataframe. The output of
@@ -20,8 +21,8 @@ be grouped into 'Other'. Between 0 and 1.}
 
 \item{type_header}{The metadata_map header label used to group samples.}
 
-\item{scale_by}{Whether to scale colors by (a) 'sample_types', (b) 'taxa', or
-(c) 'all'.}
+\item{scale_by}{[OPTIONAL] Whether to scale colors by (a) 'sample_types', (b) 'taxa', or
+(c) 'all'. Default = 'all'.}
 
 \item{custom_sample_order}{[OPTIONAL] A vector with the order of the sample
 names (top to bottom).}

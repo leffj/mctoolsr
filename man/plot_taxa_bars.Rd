@@ -4,16 +4,16 @@
 \alias{plot_taxa_bars}
 \title{Plot stacked bar plots to represent taxa compompositions}
 \usage{
-plot_taxa_bars(taxa_smry_df, metadata_map, group_factor, num_taxa,
+plot_taxa_bars(tax_table, metadata_map, type_header, num_taxa,
   data_only = FALSE)
 }
 \arguments{
-\item{taxa_smry_df}{The taxon summary dataframe (the output of \code{
-summarize_taxonomy()})}
+\item{tax_table}{A taxa table dataframe. The output of
+\code{summarize_taxonomy()}.}
 
 \item{metadata_map}{The mapping file dataframe}
 
-\item{group_factor}{The factor (metadata header label) used to create the
+\item{type_header}{The factor (metadata header label) used to create the
 bars. Means will be taken for each factor level.}
 
 \item{num_taxa}{The number of top most abundant taxa to display. Additional
@@ -24,7 +24,7 @@ returned instead of the plot.}
 }
 \description{
 Stacked bar plots will be generated for each factor level
-  indicated by \code{group_factor} to display their taxonomic compositions.
+  indicated by \code{type_header} to display their taxonomic compositions.
   Only the top few taxa will be displayed as indicated by \code{num_taxa}.
   Mean values are calculated within the factor levels.
 }

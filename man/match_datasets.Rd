@@ -4,21 +4,25 @@
 \alias{match_datasets}
 \title{Match up samples from two datasets}
 \usage{
-match_datasets(ds1, ds2)
+match_datasets(ds1, ds2, match_taxa = FALSE)
 }
 \arguments{
 \item{ds1}{The first dataset as loaded by \code{load_taxa_table()}}
 
 \item{ds2}{The second dataset.}
+
+\item{match_taxa}{[OPTIONAL] Do you want to match taxa in addition to sample
+IDs? If \code{TRUE}, taxa will be removed if they are not in common between
+datasets.}
 }
 \value{
-A list variable with the matched ds1 as the first element and ds2
- as the second element
+A list variable with the matched ds1 as the first element and ds2 as
+  the second element
 }
 \description{
-Function to match up sample order from two datasets that contain
- some overlapping sample IDs. Sample IDs that are not present in both
- datasets will be dropped. The output is a list containing the two filtered
- datasets in the same order as they were input.
+Function to match up sample order and optionally,  taxa order
+  from two datasets that contain some overlapping sample IDs. Sample IDs that
+  are not present in both datasets will be dropped. The output is a list
+  containing the two filtered datasets in the same order as they were input.
 }
 
