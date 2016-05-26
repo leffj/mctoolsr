@@ -22,25 +22,25 @@ matrix and metadata map.}
 values.}
 }
 \value{
-A list variable with (1) the loaded dissimilarity matrix and (2)
- the loaded mapping file.
+A list variable with (1) the loaded dissimilarity matrix and (2) the
+  loaded mapping file.
 }
 \description{
 Filter out or keep particular samples in a dissimilarity matrix
- based on contextual metadata.
+  based on contextual metadata.
 }
 \examples{
 # rarefy
- fruits_veggies_rar = single_rarefy(fruits_veggies, 1000)
- # calculate dissimilarities
- dm = calc_dm(fruits_veggies_rar$data_loaded)
- # calculated mean dissimilarities by sample type
- dm_means = calc_mean_dissimilarities(dm = dm,
-                                      metadata_map = fruits_veggies$map_loaded,
-                                      summarize_by_factor = 'Sample_type',
-                                      return_map = TRUE)
- # filter sample types to include only lettuce and spinach
- filter_dm(input_dm = dm_means, filter_cat = 'Sample_type',
-           keep_vals = c('Lettuce', 'Spinach'))
+fruits_veggies_rar = single_rarefy(fruits_veggies, 1000)
+# calculate dissimilarities
+dm = calc_dm(fruits_veggies_rar$data_loaded)
+# calculated mean dissimilarities by sample type
+dm_means = calc_mean_dissimilarities(dm = dm,
+                                     metadata_map = fruits_veggies$map_loaded,
+                                     summarize_by_factor = 'Sample_type',
+                                     return_map = TRUE)
+# filter sample types to include only lettuce and spinach
+filter_dm(input_dm = dm_means, filter_cat = 'Sample_type',
+          keep_vals = c('Lettuce', 'Spinach'))
 }
 

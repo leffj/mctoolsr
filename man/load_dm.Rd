@@ -11,22 +11,22 @@ load_dm(dm_fp, map_fp, filter_cat, filter_vals, keep_vals)
 
 \item{map_fp}{Metadata mapping filepath.}
 
-\item{filter_cat}{The map_fp header string for the factor you would like
-to use to filter samples.}
+\item{filter_cat}{[OPTIONAL] The map_fp header string for the factor you would like to
+use to filter samples.}
 
-\item{filter_vals}{The values within the filter category (vector or single
+\item{filter_vals}{[OPTIONAL] The values within the filter category (vector or single
 value) you would like to use to remove samples from the imported data.}
 
-\item{keep_vals}{Alternatively, keep only samples represented by these
+\item{keep_vals}{[OPTIONAL] Alternatively, keep only samples represented by these
 values.}
 }
 \value{
-A list variable with (1) the loaded dissimilarity matrix, and (2)
- the loaded mapping file.
+A list variable with (1) the loaded dissimilarity matrix, and (2) the
+  loaded mapping file.
 }
 \description{
 Load in a dissimilarity matrix and a corresponding metadata
- mapping file
+  mapping file
 }
 \examples{
 \dontrun{

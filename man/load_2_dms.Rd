@@ -13,22 +13,22 @@ load_2_dms(dm1_fp, dm2_fp, map_fp, filter_cat, filter_vals, keep_vals)
 
 \item{map_fp}{Metadata mapping filepath.}
 
-\item{filter_cat}{The map_fp header string for the factor you would like
-to use to filter samples.}
+\item{filter_cat}{[OPTIONAL] The map_fp header string for the factor you would like to
+use to filter samples.}
 
-\item{filter_vals}{The values within the filter category (vector or single
+\item{filter_vals}{[OPTIONAL] The values within the filter category (vector or single
 value) you would like to use to remove samples from the imported data.}
 
-\item{keep_vals}{Alternatively, keep only samples represented by these
+\item{keep_vals}{[OPTIONAL] Alternatively, keep only samples represented by these
 values.}
 }
 \value{
 A list variable with (1) the loaded dissimilarity matrix 1, (2) the
- loaded dissimilarity matrix 2, and (3) the loaded mapping file.
+  loaded dissimilarity matrix 2, and (3) the loaded mapping file.
 }
 \description{
 Load in two dissimilarity matrices and a corresponding metadata
- mapping file. Useful for Mantel tests when dms are already generated.
+  mapping file. Useful for Mantel tests when dms are already generated.
 }
 \examples{
 \dontrun{

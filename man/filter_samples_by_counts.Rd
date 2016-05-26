@@ -9,14 +9,21 @@ filter_samples_by_counts(input, min_seqs)
 \arguments{
 \item{input}{The input dataset as loaded by \code{load_taxa_table()}.}
 
-\item{min_seqs}{A sample must have at minimum this number of sequences
-in order to be retained.}
+\item{min_seqs}{A sample must have at minimum this number of sequences in
+order to be retained.}
 }
 \value{
-A list variable with (1) the loaded taxa table, (2)
- the loaded mapping file, and optionally (3) the loaded taxonomy information.
+A list variable with (1) the loaded taxa table, (2) the loaded
+  mapping file, and optionally (3) the loaded taxonomy information.
 }
 \description{
-Filter Samples from a Dataset based on number of sequences
+This function is useful for removing samples that have a low
+  number of sequences.
+}
+\examples{
+# see number of sequences per sample
+sort(colSums(fruits_veggies$data_loaded))
+# remove samples with less than 1100 sequences
+filter_samples_by_counts(fruits_veggies, min_seqs = 1100)
 }
 

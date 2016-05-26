@@ -13,16 +13,22 @@ match_datasets(ds1, ds2, match_taxa = FALSE)
 
 \item{match_taxa}{[OPTIONAL] Do you want to match taxa in addition to sample
 IDs? If \code{TRUE}, taxa will be removed if they are not in common between
-datasets.}
+datasets. Default = \code{FALSE}}
 }
 \value{
 A list variable with the matched ds1 as the first element and ds2 as
-  the second element
+  the second element.
 }
 \description{
 Function to match up sample order and optionally,  taxa order
   from two datasets that contain some overlapping sample IDs. Sample IDs that
   are not present in both datasets will be dropped. The output is a list
   containing the two filtered datasets in the same order as they were input.
+}
+\examples{
+# This function would normally be run with two different datasets not the
+# same one as in this example. For example if you had bacterial and fungal
+# data for the same samples and wanted to compare the two.
+match_datasets(fruits_veggies, fruits_veggies)
 }
 

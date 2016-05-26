@@ -11,30 +11,31 @@ load_taxa_table(tab_fp, map_fp, filter_cat, filter_vals, keep_vals)
 
 \item{map_fp}{Metadata mapping filepath.}
 
-\item{filter_cat}{The map_fp header string for the factor you would like
-to use to filter samples.}
+\item{filter_cat}{[OPTIONAL] The map_fp header string for the factor you
+would like to use to filter samples.}
 
-\item{filter_vals}{The values within the filter category (vector or single
-value) you would like to use to remove samples from the imported data.}
+\item{filter_vals}{[OPTIONAL] The values within the filter category (vector
+or single value) you would like to use to remove samples from the imported
+data.}
 
-\item{keep_vals}{Alternatively, keep only samples represented by these
-values.}
+\item{keep_vals}{[OPTIONAL] Alternatively, keep only samples represented by
+these values.}
 }
 \value{
-A list variable with (1) the loaded taxa table, and (2) the loaded
- mapping file.
+A list variable with (1) the loaded taxa table, (2) the loaded
+  mapping file, and optionally (3) the loaded taxonomy.
 }
 \description{
-Load in a taxa table (aka. an OTU table) and a corresponding
- mapping file with metadata values. The samples in the loaded taxa table
- and mapping file will be in the same order and only samples in both will
- be loaded. The function can optionally filter samples of a specific type
- based on the mapping file. This can also be done later via the filter_data()
- function.
+Load in a taxa table (also known as an OTU table) and a
+  corresponding mapping file with metadata values. The samples in the loaded
+  taxa table and mapping file will be in the same order and only samples in
+  both will be loaded. The function can optionally filter samples of a
+  specific type based on the mapping file. This can also be done later via
+  the filter_data() function.
 }
 \examples{
 \dontrun{
-load_taxa_table("filepath_to_OTU_table.txt", "filepath_to_mapping_file.txt",
+load_taxa_table("filepath_to_taxa_table.txt", "filepath_to_mapping_file.txt",
   "sample_type", filter_vals = "blank")
 }
 }
