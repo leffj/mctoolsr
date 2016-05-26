@@ -3,10 +3,14 @@
 ## tree-based functions
 
 #' @title Load in a phylogenetic tree
-#' @description A wrapper for \code{read.tree()} in \code{ape}. Reads in a 
+#' @description A wrapper for \code{read.tree()} in \code{ape}. Reads in a
 #'  phylogenetic tree in Newic or New Hampshire format.
 #' @param tree_fp The phylogenetic tree file path.
 load_tree = function(tree_fp) {
+  if (!requireNamespace("ape", quietly = TRUE)) {
+    stop("'ape' package needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
   tree = ape::read.tree(file = tree_fp)
   tree$tip.label = gsub("'", "", tree$tip.label)
   tree
@@ -17,6 +21,10 @@ load_tree = function(tree_fp) {
 #' @param tree The phylogenetic tree from \code{load_tree()}.
 #' @param tip_labels The tip labels to retain.
 filter_tree = function(tree, tip_labels) {
+  if (!requireNamespace("ape", quietly = TRUE)) {
+    stop("'ape' package needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
   tree_f = ape::drop.tip(tree, tree$tip.label[!tree$tip.label %in% tip_labels])
   tree_f
 }
