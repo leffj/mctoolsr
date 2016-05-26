@@ -8,10 +8,15 @@
 #' @description Calculate diversity values from a taxa table.
 #' @param tax_table The taxa table.
 #' @param metric The diversity metric to calculate. Acceptable values are: 
-#'  'richness', 'shannon', and 'simpson'.
-#' @details Richness is the number of uniaue species per sample. Simpson's 
-#'  diversity metric (1 - D) quantifies evenness, and Shannon diversity is a 
-#'  combination of richness and evenness.
+#'   'richness', 'shannon', and 'simpson'.
+#' @return A numeric vector providing the specificed diversity metric for each 
+#'   sample.
+#' @details Richness is the number of unique species per sample. Simpson's 
+#'   diversity metric (1 - D) quantifies evenness, and Shannon diversity is a 
+#'   combination of richness and evenness.
+#' @examples 
+#' calc_diversity(fruits_veggies$data_loaded, "shannon")
+#'  
 calc_diversity = function(tax_table, metric){
   metrics = c('richness', 'shannon', 'simpson')
   if(metric == 'richness'){
@@ -32,9 +37,11 @@ calc_diversity = function(tax_table, metric){
 #' @param variable Variable in mapping file to plot by.
 #' @param metric Diversity metric to use. Acceptable values are: 
 #'  'richness', 'shannon', and 'simpson'.
-#' @details Richness is the number of uniaue species per sample. Simpson's 
+#' @details Richness is the number of unique species per sample. Simpson's 
 #'  diversity metric quantifies evenness, and Shannon diversity is a combination
 #'  of richness and evenness.
+#' @examples
+#' plot_diversity(fruits_veggies, "Sample_type", "shannon")
 plot_diversity = function(input, variable, metric){
   diversity = calc_diversity(input$data_loaded, metric)
   to_plot = data.frame(diversity, input$map_loaded[, variable])
