@@ -8,7 +8,7 @@ convert_to_relative_abundances(input)
 }
 \arguments{
 \item{input}{Either a dataset as generated using
-\code{\link{load_taxon_table}} which includes a mapping file or an
+\code{\link{load_taxa_table}} which includes a mapping file or an
 individual taxon table}
 }
 \description{

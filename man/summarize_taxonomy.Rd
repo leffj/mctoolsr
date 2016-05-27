@@ -17,7 +17,7 @@ summarize_taxonomy(input, level, relative = TRUE, report_higher_tax = TRUE)
 than the indecated level (default = TRUE).}
 }
 \description{
-Given input as generated from \code{\link{load_taxon_table}},
+Given input as generated from \code{\link{load_taxa_table}},
   calculate relative abundances (or absolute abundances) of taxa at a coarser
   taxonomic threshold. Taxonomy must have been loaded for this function to
   work.

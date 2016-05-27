@@ -65,7 +65,7 @@ calc_taxa_means = function(input, summarize_by_factor, metadata_map) {
 #' @description Convert taxa table or taxon table in data input to relative 
 #'   abundances
 #' @param input Either a dataset as generated using
-#'   \code{\link{load_taxon_table}} which includes a mapping file or an
+#'   \code{\link{load_taxa_table}} which includes a mapping file or an
 #'   individual taxon table
 #' @concept Taxa table normalization
 #' @examples 
