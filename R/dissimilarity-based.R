@@ -68,45 +68,56 @@ calc_ordination = function(dm, ord_type, metadata_map, constrain_factor){
 #' @param hulls Whether or not to include an outline around sample categories.
 #' @param ... Additional arguments passed to ggplot2's \code{geom_point()}.
 #' @concept Plots
-plot_ordination = function(input, ordination_axes, color_cat, shape_cat, 
-                           hulls = FALSE, ...){
-  if(missing(color_cat)){
+#' @examples 
+#' fvrar = single_rarefy(fruits_veggies, 100)
+#' ord = calc_ordination(calc_dm(fvrar$data_loaded), 'nmds')
+#' plot_ordination(fvrar, ord, 'Sample_type', 'Farm_type', hulls = TRUE)
+plot_ordination = function(input, ordination_axes, color_cat, shape_cat,
+                           hulls = FALSE, ...) {
+  if (missing(color_cat)) {
     warning('No mapping category to color by.')
-    color_vec = rep('none', length(labels(dm)))
-  } else color_vec = input$map_loaded[, color_cat]
+    color_vec = rep('none', nrow(input$map_loaded))
+  } else
+    color_vec = input$map_loaded[, color_cat]
   to_plot = data.frame(ordination_axes, cat = color_vec)
   names(to_plot)[3] = 'cat'
   headers = colnames(to_plot)
   # hulls prep
-  if(hulls){
-    .find_hulls = function(df) {df[chull(df), ]}
-    hull_vals = dplyr::do(dplyr::group_by(to_plot, cat), .find_hulls(.))
+  if (hulls) {
+    .find_hulls = function(df) {
+      df[chull(df),]
+    }
+    hull_vals = dplyr::do_(dplyr::group_by_(to_plot, "cat"), ~ .find_hulls(.))
   }
   # plot w/ shape
-  if(!missing(shape_cat)){
+  if (!missing(shape_cat)) {
     to_plot = data.frame(to_plot, cat2 = input$map_loaded[, shape_cat])
     p = ggplot2::ggplot(to_plot, ggplot2::aes_string(headers[1], headers[2]))
-    p = p + ggplot2::geom_point(ggplot2::aes(color = cat, shape = cat2),
-                                ..., size = 3, alpha = 0.8)
+    p = p + ggplot2::geom_point(
+      ggplot2::aes_string(color = "cat", shape = "cat2"),
+      ..., size = 3, alpha = 0.8
+    )
     p = p + ggplot2::theme_bw()
-    p = p + ggplot2::xlab(colnames(to_plot)[1]) + 
+    p = p + ggplot2::xlab(colnames(to_plot)[1]) +
       ggplot2::ylab(colnames(to_plot)[2])
     p = p + ggplot2::theme(legend.title = ggplot2::element_blank())
   }
   # plot without shape
   else{
     p = ggplot2::ggplot(to_plot, ggplot2::aes_string(headers[1], headers[2]))
-    p = p + ggplot2::geom_point(ggplot2::aes(color=cat),
+    p = p + ggplot2::geom_point(ggplot2::aes_string(color = "cat"),
                                 ..., size = 3, alpha = 0.8)
     p = p + ggplot2::theme_bw()
-    p = p + ggplot2::xlab(colnames(to_plot)[1]) + 
+    p = p + ggplot2::xlab(colnames(to_plot)[1]) +
       ggplot2::ylab(colnames(to_plot)[2])
     p = p + ggplot2::theme(legend.title = ggplot2::element_blank())
   }
-  if(hulls){
-    p = p + ggplot2::geom_polygon(data = hull_vals, 
-                                  ggplot2::aes(fill = cat, color = cat), 
-                                  alpha = 0.1)
+  if (hulls) {
+    p = p + ggplot2::geom_polygon(
+      data = hull_vals,
+      ggplot2::aes_string(fill = "cat", color = "cat"),
+      alpha = 0.1
+    )
     p = p + ggplot2::theme(legend.title = ggplot2::element_blank())
   }
   p
@@ -132,7 +143,8 @@ plot_nmds = function(dm, metadata_map = NULL, color_cat, shape_cat){
     points = data.frame(dm.mds$points, cat = color_vec, 
                         cat2 = metadata_map[, shape_cat])
     ggplot2::ggplot(points, 
-                    ggplot2::aes(MDS1, MDS2, color = cat, shape = cat2)) +
+                    ggplot2::aes_string("MDS1", "MDS2", color = "cat", 
+                                        shape = "cat2")) +
       ggplot2::geom_point(size = 3, alpha = 0.8) + 
       ggplot2::theme_bw() +
       ggplot2::scale_color_discrete('') + 
@@ -141,7 +153,8 @@ plot_nmds = function(dm, metadata_map = NULL, color_cat, shape_cat){
   # plot without shape
   else{
     points = data.frame(dm.mds$points, cat = color_vec)
-    ggplot2::ggplot(points, ggplot2::aes(MDS1, MDS2, color = cat)) +
+    ggplot2::ggplot(points, 
+                    ggplot2::aes_string("MDS1", "MDS2", color = "cat")) +
       ggplot2::geom_point(size = 3, alpha = 0.8) + 
       ggplot2::theme_bw() +
       ggplot2::scale_color_discrete('') + 
@@ -155,11 +168,18 @@ plot_nmds = function(dm, metadata_map = NULL, color_cat, shape_cat){
 #'  Typically, input$map_loaded.
 #' @param labels The metadata mapping dataframe column name representing the 
 #'  intended leaf labels.
-#' @param color_by The metadata mapping dataframe column name representing the 
+#' @param color_by [OPTIONAL] The metadata mapping dataframe column name representing the 
 #'  intended leaf label colors.
 #' @param method The clustering method to use when creating the dendrogram.
 #' @param ... Other parameters passed on to geom_text
 #' @concept Plots
+#' @examples 
+#' fvrar = single_rarefy(fruits_veggies, 100)
+#' dm = calc_dm(fvrar$data_loaded)
+#' plot_dendrogram(
+#'   dm, metadata_map = fvrar$map_loaded, labels = 'Sample_type',
+#'   color_by = 'Farm_type'
+#' )
 plot_dendrogram = function(dm, metadata_map, labels, color_by, 
                            method = 'complete', ...) {
   if (!requireNamespace("ggdendro", quietly = TRUE)) {
@@ -177,19 +197,20 @@ plot_dendrogram = function(dm, metadata_map, labels, color_by,
   } else {
     ddata$leaf_labels = data.frame(ddata$labels[, 1:2], leaf_labels)
   }
-  
   p = ggplot2::ggplot()
   p = p + ggplot2::geom_segment(data = ddata$segments, 
-                                ggplot2::aes(x, y, xend = xend, yend = yend))
+                                ggplot2::aes_string("x", "y", xend = "xend", 
+                                                    yend = "yend"))
   if(!missing(color_by)) {
     p = p + ggplot2::geom_text(data = ddata$leaf_labels, 
-                               ggplot2::aes(x, y, label = leaf_labels, 
-                                            color = sample_categories), 
+                               ggplot2::aes_string("x", "y", label = "leaf_labels", 
+                                            color = "sample_categories"), 
                                ...,
                                hjust = 0, angle = -90)
   } else {
     p = p + ggplot2::geom_text(data = ddata$leaf_labels, 
-                               ggplot2::aes(x, y, label = leaf_labels), 
+                               ggplot2::aes_string("x", "y", 
+                                                   label = "leaf_labels"), 
                                ...,
                                color = 'black', hjust = 0, angle = -90)
   }

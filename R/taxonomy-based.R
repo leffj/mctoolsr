@@ -159,21 +159,24 @@ plot_taxa_bars = function(tax_table, metadata_map, type_header, num_taxa,
   group_by_levels = metadata_map[match(tax_table_melted$Sample_ID,
                                        row.names(metadata_map)), type_header]
   tax_table_melted$group_by = group_by_levels
-  mean_tax_vals = dplyr::summarise(dplyr::group_by(tax_table_melted,
-                                                   group_by, taxon),
-                                   mean_value = mean(value))
+  mean_tax_vals = dplyr::summarise_(dplyr::group_by_(tax_table_melted,
+                                                     "group_by", "taxon"),
+                                    mean_value = ~ mean(value))
   # get top taxa and convert other to 'other'
   mean_tax_vals_sorted = mean_tax_vals[order(mean_tax_vals$mean_value,
                                              decreasing = TRUE),]
   top_taxa = unique(mean_tax_vals_sorted$taxon)[1:num_taxa]
   mean_tax_vals_sorted$taxon[!mean_tax_vals_sorted$taxon %in% top_taxa] = 'Other'
-  to_plot = dplyr::summarise(dplyr::group_by(mean_tax_vals_sorted, group_by,
-                                             taxon),
-                             mean_value = sum(mean_value))
+  to_plot = dplyr::summarise_(
+    dplyr::group_by_(mean_tax_vals_sorted, "group_by",
+                     "taxon"),
+    mean_value = ~ sum(mean_value)
+  )
   if (data_only)
     to_plot
   else {
-    ggplot2::ggplot(to_plot, ggplot2::aes(group_by, mean_value, fill = taxon)) +
+    ggplot2::ggplot(to_plot, ggplot2::aes_string("group_by", "mean_value",
+                                                 fill = "taxon")) +
       ggplot2::geom_bar(stat = 'identity') +
       ggplot2::ylab('') + ggplot2::xlab('') +
       ggplot2::theme(legend.title = ggplot2::element_blank())
@@ -360,6 +363,9 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
 #'   line representing the 'Other' taxa category.
 #' @param colors [OPTIONAL] A vector with custom fill colors (low, mid, high).
 #' @concept Plots
+#' @examples 
+#' ts = summarize_taxonomy(fruits_veggies, 2)
+#' plot_ts_heatmap(ts, fruits_veggies$map_loaded, 0.03, 'Sample_type')
 plot_ts_heatmap = function(tax_table, metadata_map, min_rel_abund, type_header,
                            scale_by = 'all', custom_sample_order,
                            rev_taxa = FALSE, custom_taxa_order, other_label,
@@ -383,13 +389,13 @@ plot_ts_heatmap = function(tax_table, metadata_map, min_rel_abund, type_header,
   sumtax_smry = round(sumtax_smry * 100, 1)
   melted = reshape2::melt(sumtax_smry)
   if (scale_by == 'sample_types') {
-    to_plot = dplyr::mutate(dplyr::group_by(melted, Var2),
-                            scaled = scales::rescale(value))
+    to_plot = dplyr::mutate_(dplyr::group_by_(melted, "Var2"),
+                            scaled = ~ scales::rescale(value))
   } else if (scale_by == 'taxa') {
-    to_plot = dplyr::mutate(dplyr::group_by(melted, Var1),
-                            scaled = scales::rescale(value))
+    to_plot = dplyr::mutate_(dplyr::group_by_(melted, "Var1"),
+                            scaled = ~ scales::rescale(value))
   } else if (scale_by == 'all') {
-    to_plot = dplyr::mutate(melted, scaled = scales::rescale(value))
+    to_plot = dplyr::mutate_(melted, scaled = ~ scales::rescale(value))
   } else
     stop("scale_by must be one of: 'sample_types', 'taxa' or 'all'.")
   if (!missing(custom_sample_order)) {
@@ -404,7 +410,8 @@ plot_ts_heatmap = function(tax_table, metadata_map, min_rel_abund, type_header,
   }
   # plot
   # https://learnr.wordpress.com/2010/01/26/ggplot2-quick-heatmap-plotting/
-  p = ggplot2::ggplot(to_plot, ggplot2::aes(Var1, Var2, fill = scaled)) +
+  p = ggplot2::ggplot(to_plot, ggplot2::aes_string("Var1", "Var2", 
+                                                   fill = "scaled")) +
     ggplot2::geom_tile(color = 'black', size = 0.25) +
     ggplot2::scale_fill_gradientn(colours = colors,
                                   values = c(
@@ -422,7 +429,8 @@ plot_ts_heatmap = function(tax_table, metadata_map, min_rel_abund, type_header,
       ),
       axis.text = ggplot2::element_text(color = 'gray20')
     ) +
-    ggplot2::geom_text(data = to_plot, ggplot2::aes(label = value), size = 3) +
+    ggplot2::geom_text(data = to_plot, ggplot2::aes_string(label = "value"), 
+                       size = 3) +
     ggplot2::scale_x_discrete(expand = c(0, 0)) +
     ggplot2::scale_y_discrete(expand = c(0, 0))
   p

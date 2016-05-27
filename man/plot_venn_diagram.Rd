@@ -18,6 +18,11 @@ considered present for a given sample category.}
 Plot venn diagram showing OTU overlap between multiple sample
  categories.
 }
+\examples{
+fv_filt = filter_data(fruits_veggies, filter_cat = 'Sample_type',
+                      keep_vals = c('Spinach', 'Lettuce', 'Mushrooms'))
+plot_venn_diagram(fv_filt, category = 'Sample_type', pres_thresh = 0.005)
+}
 \concept{
 Plots
 }

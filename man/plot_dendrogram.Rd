@@ -15,7 +15,7 @@ Typically, input$map_loaded.}
 \item{labels}{The metadata mapping dataframe column name representing the
 intended leaf labels.}
 
-\item{color_by}{The metadata mapping dataframe column name representing the
+\item{color_by}{[OPTIONAL] The metadata mapping dataframe column name representing the
 intended leaf label colors.}
 
 \item{method}{The clustering method to use when creating the dendrogram.}
@@ -24,6 +24,14 @@ intended leaf label colors.}
 }
 \description{
 Generate a dendrogram based on a dissimilarity matrix
+}
+\examples{
+fvrar = single_rarefy(fruits_veggies, 100)
+dm = calc_dm(fvrar$data_loaded)
+plot_dendrogram(
+  dm, metadata_map = fvrar$map_loaded, labels = 'Sample_type',
+  color_by = 'Farm_type'
+)
 }
 \concept{
 Plots

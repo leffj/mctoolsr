@@ -47,6 +47,10 @@ line representing the 'Other' taxa category.}
 A quick way to create a heatmap from a taxa summary dataframe.
   Samples are grouped by a category that is specified in \code{type_header}.
 }
+\examples{
+ts = summarize_taxonomy(fruits_veggies, 2)
+plot_ts_heatmap(ts, fruits_veggies$map_loaded, 0.03, 'Sample_type')
+}
 \concept{
 Plots
 }

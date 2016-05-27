@@ -1,3 +1,9 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^data-raw$
+^private_code$
+^tutorials$
+^.*\.Rmd$
+^README.html$
+^README_files$
+^function_list.md$

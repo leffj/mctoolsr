@@ -12,6 +12,10 @@
 #' @param pres_thresh The threshold relative abundance for an OTU to be 
 #'  considered present for a given sample category.
 #' @concept Plots
+#' @examples 
+#' fv_filt = filter_data(fruits_veggies, filter_cat = 'Sample_type', 
+#'                       keep_vals = c('Spinach', 'Lettuce', 'Mushrooms'))
+#' plot_venn_diagram(fv_filt, category = 'Sample_type', pres_thresh = 0.005)
 plot_venn_diagram = function(input, category, pres_thresh){
   if (!requireNamespace("VennDiagram", quietly = TRUE)) {
     stop(paste0("'VennDiagram' package (>= 1.6.15) needed for this function ", 
@@ -66,9 +70,9 @@ plot_venn_diagram = function(input, category, pres_thresh){
   otu_RAs_t = as.data.frame(t(otu_RAs))
   otu_RAs_t$cat = input$map_loaded[, category]
   otu_RAs_melted = reshape2::melt(otu_RAs_t, id.vars = 'cat')
-  otu_RAs_means = dplyr::summarize(dplyr::group_by(otu_RAs_melted, variable, 
-                                                   cat), 
-                                   mean_RA = mean(value))
+  otu_RAs_means = dplyr::summarize_(dplyr::group_by_(otu_RAs_melted, "variable", 
+                                                   "cat"), 
+                                   mean_RA = ~ mean(value))
   # plot diagram, discount OTUs with relative abundances lower than threshold
   otu_RAs_means_cast = reshape2::dcast(otu_RAs_means, variable ~ cat, 
                                        value.var = 'mean_RA')

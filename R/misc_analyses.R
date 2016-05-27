@@ -29,26 +29,25 @@ core_taxa = function(input, type_header, prop_types = 1, prop_reps = 0.5) {
   df = as.data.frame(t(input$data_loaded))
   df$type = input$map_loaded[, type_header]
   df_m = reshape2::melt(df, id.vars = 'type', variable.name = 'OTU_ID')
-  gt_0 = function(x)
-    sum(x > 0)
-  by_type = dplyr::summarise(
+  gt_0 = function(x) sum(x > 0)
+  by_type = dplyr::summarise_(
     dplyr::group_by_(df_m, "type", "OTU_ID"),
-    reps = length(value), reps_obs = gt_0(value),
-    mean_val = mean(value)
+    reps = ~ length(value), reps_obs = ~ gt_0(value),
+    mean_val = ~ mean(value)
   )
-  by_type = dplyr::mutate(by_type, prop_reps_obs = reps_obs / reps,
-                          obs = prop_reps_obs >= prop_reps)
+  by_type = dplyr::mutate_(by_type, prop_reps_obs = ~ reps_obs / reps,
+                          obs = ~ prop_reps_obs >= prop_reps)
   # indicate taxa that are core across sample types
   # calc proportion of sample types that observed each OTU
-  by_OTU = dplyr::summarise(dplyr::group_by(by_type, OTU_ID),
-                            prop_sample_types = sum(obs) / length(obs))
+  by_OTU = dplyr::summarise_(dplyr::group_by_(by_type, "OTU_ID"),
+                            prop_sample_types = ~ sum(obs) / length(obs))
   # add on mean values
   means = reshape2::dcast(by_type, OTU_ID ~ type, value.var = 'mean_val')
   if (!identical(by_OTU$OTU_ID, means$OTU_ID))
     stop('Unknown error.')
   by_OTU = cbind(by_OTU, means[, 2:ncol(means)])
   # return core with taxonomy (if provided)
-  core = as.data.frame(dplyr::filter(by_OTU, prop_sample_types >= prop_types))
+  core = as.data.frame(dplyr::filter_(by_OTU, ~ prop_sample_types >= prop_types))
   if (is.null(input$taxonomy_loaded))
     core
   else {
