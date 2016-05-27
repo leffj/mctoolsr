@@ -21,4 +21,5 @@
 #' 
 #' @docType package
 #' @name mctoolsr
+#' @concept dont include
 NULL

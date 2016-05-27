@@ -9,9 +9,9 @@ plot_taxa_bars(tax_table, metadata_map, type_header, num_taxa,
 }
 \arguments{
 \item{tax_table}{A taxa table dataframe. The output of
-\code{summarize_taxonomy()}.}
+\code{\link{summarize_taxonomy}}.}
 
-\item{metadata_map}{The mapping file dataframe}
+\item{metadata_map}{The mapping file dataframe.}
 
 \item{type_header}{The factor (metadata header label) used to create the
 bars. Means will be taken for each factor level.}
@@ -27,5 +27,8 @@ Stacked bar plots will be generated for each factor level
   indicated by \code{type_header} to display their taxonomic compositions.
   Only the top few taxa will be displayed as indicated by \code{num_taxa}.
   Mean values are calculated within the factor levels.
+}
+\concept{
+Plots
 }
 

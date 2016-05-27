@@ -8,7 +8,7 @@ calc_mean_dissimilarities(dm, metadata_map, summarize_by_factor,
   return_map = FALSE)
 }
 \arguments{
-\item{dm}{Dissimilarity matrix - typically created using 'calc_dm()'.}
+\item{dm}{Dissimilarity matrix - typically created using \code{\link{calc_dm}}.}
 
 \item{metadata_map}{The metadata mapping dataframe.}
 
@@ -22,5 +22,8 @@ Mean dissimilarities.
 }
 \description{
 Calculate mean dissimilarities across all levels of a given factor
+}
+\concept{
+Dissimilarity calculation and manipulation
 }
 

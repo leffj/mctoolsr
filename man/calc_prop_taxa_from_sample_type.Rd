@@ -9,22 +9,40 @@ calc_prop_taxa_from_sample_type(input, type_header, primary_type, source_type,
   within_cat)
 }
 \arguments{
-\item{input}{Data from load_taxa_table()}
+\item{input}{The input dataset as loaded by \code{\link{load_taxa_table}}.}
 
 \item{type_header}{The header label from the metadata map that has the
 labels which indicate the types of samples you want to use.}
 
 \item{primary_type}{The sample type for which you would like to calculate
-the proportion of taxa that are also observed in the source_type.}
+the proportion of taxa that are also observed in the \code{source_type}.}
 
 \item{source_type}{The sample type to use as the source type.}
 
-\item{within_cat}{(Optional) Specify a header label from the metadata map
+\item{within_cat}{[OPTIONAL] Specify a header label from the metadata map
 that tells the function to restrict pairs to within levels of this factor.
 If included, will return a data frame instead of a vector.}
 }
 \description{
-Calculate the proportion of taxa in a set of samples that are
- also observed in another sample type
+Calculate the mean proportion of taxa (i.e. OTUs) in a set of
+  samples that are also observed in another sample type. One use of this
+  function is to get a rough sense of how likely a potential source is
+  contributing to the compostion of another sample type.
+}
+\examples{
+# proportion of taxa on strawberries that were also found on spinach
+calc_prop_taxa_from_sample_type(
+  fruits_veggies, type_header = 'Sample_type', primary_type = 'Strawberries',
+  source_type = 'Spinach'
+)
+# proportion of taxa on strawberries that were also found on spinach within
+# each farming type
+calc_prop_taxa_from_sample_type(
+  fruits_veggies, type_header = 'Sample_type', primary_type = 'Strawberries',
+  source_type = 'Spinach', within_cat = 'Farm_type'
+)
+}
+\seealso{
+\link[mctoolsr]{calc_prop_shared_taxa}
 }
 

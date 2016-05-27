@@ -7,7 +7,7 @@
 rename_samples(input, name_header)
 }
 \arguments{
-\item{input}{The input dataset as loaded by \code{load_taxa_table()}.}
+\item{input}{The input dataset as loaded by \code{\link{load_taxa_table}}.}
 
 \item{name_header}{The header value in the metadata map that will be used
 to rename the samples.}
@@ -17,5 +17,13 @@ Rename the samples by substituting column names in the taxa
  table and row names in the metadata map with values from a metadata map
  column that you specify. Note that all values in the metadata map column
  must be unique.
+}
+\examples{
+fruits_veggies$map_loaded$alt_id =
+paste0('alt', 1:nrow(fruits_veggies$map_loaded))
+rename_samples(fruits_veggies, 'alt_id')
+}
+\concept{
+Taxa table manipulation
 }
 

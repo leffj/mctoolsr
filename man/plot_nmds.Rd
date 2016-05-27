@@ -13,9 +13,12 @@ plot_nmds(dm, metadata_map = NULL, color_cat, shape_cat)
 
 \item{color_cat}{The metadata map header used to color points.}
 
-\item{shape_cat}{The metadata map header used for points' shapes (optional).}
+\item{shape_cat}{[OPTIONAL] The metadata map header used for points' shapes.}
 }
 \description{
 Used to generate a quick ordination.
+}
+\concept{
+Plots
 }
 

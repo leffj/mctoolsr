@@ -19,12 +19,15 @@ factor levels to use for the pairwise comparisons.}
 A dataframe with R2 and P values.
 }
 \description{
-The \code{adonis()} function in the \code{vegan} package does
- not provide a way to calculate pairwise post-hoc comparisons between
- factor levels. This function calculates PERMANOVA results using the
- \code{adonis()} function for all factor level pairs. Raw p values are
- returned, but it is recommended to use the provided FDR corrected p values
- since the multiple comparisons can raise your likelihood of false positive
- differences.
+The \code{\link[vegan]{adonis}} function in the
+  \code{\link[vegan]{vegan}} package does not provide a way to calculate
+  pairwise post-hoc comparisons between factor levels. This function
+  calculates PERMANOVA results using the \code{adonis()} function for all
+  factor level pairs. Raw p values are returned, but it is recommended to use
+  the provided FDR corrected p values since the multiple comparisons can
+  raise your likelihood of false positive differences.
+}
+\concept{
+Dissimilarity calculation and manipulation
 }
 

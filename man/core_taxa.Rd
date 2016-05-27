@@ -7,15 +7,15 @@
 core_taxa(input, type_header, prop_types = 1, prop_reps = 0.5)
 }
 \arguments{
-\item{input}{The input dataset as loaded by \code{load_taxa_table()}.}
+\item{input}{The input dataset as loaded by \code{\link{load_taxa_table}}.}
 
 \item{type_header}{Mapping file header (in quotation marks) of factor for
 which you are testing for differences.}
 
-\item{prop_types}{The proportion of sample types in which a taxon must
+\item{prop_types}{[OPTIONAL] The proportion of sample types in which a taxon must
 be present to be considered core.}
 
-\item{prop_reps}{The proportion of replicate samples within a sample type
+\item{prop_reps}{[OPTIONAL] The proportion of replicate samples within a sample type
 in which a taxon must be present to be considered core.}
 }
 \value{
@@ -25,8 +25,14 @@ A data frame with each core taxon as a row. The proportion of sample
  returned.
 }
 \description{
-This function returns a data frame with taxa that meet
- proportion user thresholds and are determined to be common across multiple
- sample types.
+This function returns a data frame with taxa that are
+ determined to be common across multiple sample types based on default or
+ user defined thresholds.
+}
+\examples{
+# taxa core to fruits and vegetables
+core_taxa(fruits_veggies, type_header = 'Sample_type')
+# relax the proportion of produce/sample types
+core_taxa(fruits_veggies, type_header = 'Sample_type', prop_types = 0.6)
 }
 

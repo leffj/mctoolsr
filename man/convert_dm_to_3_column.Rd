@@ -12,4 +12,7 @@ convert_dm_to_3_column(dm)
 \description{
 This is useful for performing analyses on dissimilarity values
 }
+\concept{
+Dissimilarity calculation and manipulation
+}
 

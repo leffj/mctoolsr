@@ -7,7 +7,7 @@
 export_otu_table(input, out_fp, map_fp)
 }
 \arguments{
-\item{input}{The input dataset as loaded by \code{load_taxa_table()} or
+\item{input}{The input dataset as loaded by \\code{\link{load_taxa_table}} or
 an otu table of class \code{data.frame}.}
 
 \item{out_fp}{The output filepath.}
@@ -17,5 +17,8 @@ write it to file.}
 }
 \description{
 PLEASE USE \code{export_taxa_table()} INSTEAD.
+}
+\concept{
+dont include
 }
 

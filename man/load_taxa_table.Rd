@@ -31,12 +31,15 @@ Load in a taxa table (also known as an OTU table) and a
   taxa table and mapping file will be in the same order and only samples in
   both will be loaded. The function can optionally filter samples of a
   specific type based on the mapping file. This can also be done later via
-  the filter_data() function.
+  the \code{\link{filter_data}} function.
 }
 \examples{
 \dontrun{
 load_taxa_table("filepath_to_taxa_table.txt", "filepath_to_mapping_file.txt",
   "sample_type", filter_vals = "blank")
 }
+}
+\concept{
+Load external data
 }
 

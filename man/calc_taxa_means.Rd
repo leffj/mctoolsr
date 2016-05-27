@@ -7,20 +7,27 @@
 calc_taxa_means(input, summarize_by_factor, metadata_map)
 }
 \arguments{
-\item{input}{The input dataset as loaded by \code{load_taxa_table()} or
-an otu table of class \code{data.frame}.}
+\item{input}{The input dataset as loaded by \code{\link{load_taxa_table}} or
+a taxa table of class \code{data.frame}.}
 
 \item{summarize_by_factor}{Category in mapping file to summarize by.}
 
-\item{metadata_map}{[Optional]. The metadata mapping data frame. Required if
+\item{metadata_map}{[Optional] The metadata mapping data frame. Required if
 input is a \code{data.frame}.}
 }
 \value{
-If input is a list, returns a list with a taxon table (data_loaded)
- and a mapping data frame (map_loaded). It will automatically return
- taxonomy in the list if provided in the input.
+If input is a list, returns a list with a taxa table (data_loaded)
+  and a mapping data frame (map_loaded), i.e. the output of
+  \code{\link{load_taxa_table}}. It will automatically return taxonomy in the
+  list if provided in the input.
 }
 \description{
 Calculate mean taxa values across a specified factor
+}
+\examples{
+calc_taxa_means(fruits_veggies, 'Sample_type')
+}
+\concept{
+Taxa table manipulation
 }
 

@@ -2,12 +2,12 @@
 % Please edit documentation in R/input_output_filter.R
 \name{filter_samples_by_counts}
 \alias{filter_samples_by_counts}
-\title{Filter Samples from a Dataset based on number of sequences}
+\title{Filter samples from a dataset based on number of sequences}
 \usage{
 filter_samples_by_counts(input, min_seqs)
 }
 \arguments{
-\item{input}{The input dataset as loaded by \code{load_taxa_table()}.}
+\item{input}{The input dataset as loaded by \code{\link{load_taxa_table}}.}
 
 \item{min_seqs}{A sample must have at minimum this number of sequences in
 order to be retained.}
@@ -25,5 +25,8 @@ This function is useful for removing samples that have a low
 sort(colSums(fruits_veggies$data_loaded))
 # remove samples with less than 1100 sequences
 filter_samples_by_counts(fruits_veggies, min_seqs = 1100)
+}
+\concept{
+Taxa table manipulation
 }
 

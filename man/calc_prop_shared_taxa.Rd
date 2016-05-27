@@ -7,26 +7,51 @@
 calc_prop_shared_taxa(input, type_header, sample_types, within_cat)
 }
 \arguments{
-\item{input}{Data from load_taxa_table()}
+\item{input}{The input dataset as loaded by \code{\link{load_taxa_table}}.}
 
-\item{type_header}{(Optional) The header label from the metadata map that
-has the labels which indicate the types of samples you want to calculate
+\item{type_header}{[OPTIONAL] The header label from the metadata map that has
+the labels which indicate the types of samples you want to calculate
 proportions for.}
 
-\item{sample_types}{(Optional) Use with type_header to indicate which two
-sample types for which you want to calculate proportions. Supply a character
-vector of length 2.}
+\item{sample_types}{[OPTIONAL] Use with \code{type_header} to indicate which
+two sample types for which you want to calculate proportions. Supply a
+character vector of length 2.}
 
-\item{within_cat}{(Optional) Specify a header label from the metadata map
+\item{within_cat}{[OPTIONAL] Specify a header label from the metadata map
 that tells the function to restrict pairs to within levels of this factor.
 If included, will return a data frame instead of a vector.}
 }
 \description{
-This function will calculate the mean proportion of taxa
- (i.e. OTUs) that are shared between pairs of samples in a given data set.
- It has the option to calculate this value for only pairs where each sample
- is of a different, specified type. For example, this is useful if you want
- to calculate proportion of taxa that are shared between red and blue
- samples only and not red and red or red and green, etc.
+This function will calculate the mean proportion of taxa (i.e.
+  OTUs) that are shared between pairs of samples in a given data set. It has
+  the option to calculate this value for only pairs where each sample is of a
+  different, specified type. For example, this is useful if you want to
+  calculate proportion of taxa that are shared between red and blue samples
+  only and not red and red or red and green, etc.
+}
+\details{
+If only \code{input} is provided, the proportion is calculated
+  across all samples.
+}
+\examples{
+# proportion of taxa shared between spinach and strawberries
+calc_prop_shared_taxa(
+  fruits_veggies, type_header = 'Sample_type',
+  sample_types = c('Spinach', 'Strawberries')
+)
+# proportion of taxa shared between spinach and mushrooms
+calc_prop_shared_taxa(
+  fruits_veggies, type_header = 'Sample_type',
+  sample_types = c('Strawberries', 'Mushrooms')
+)
+# proportion of taxa shared between spinach and strawberries within each
+# farming type (greater overlap within conventional)
+calc_prop_shared_taxa(
+  fruits_veggies, type_header = 'Sample_type',
+  sample_types = c('Spinach', 'Strawberries'), within_cat = 'Farm_type'
+)
+}
+\seealso{
+\link[mctoolsr]{calc_prop_taxa_from_sample_type}
 }
 

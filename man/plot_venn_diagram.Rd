@@ -18,4 +18,7 @@ considered present for a given sample category.}
 Plot venn diagram showing OTU overlap between multiple sample
  categories.
 }
+\concept{
+Plots
+}
 

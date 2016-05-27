@@ -10,7 +10,7 @@
 #'   taxa table and mapping file will be in the same order and only samples in
 #'   both will be loaded. The function can optionally filter samples of a
 #'   specific type based on the mapping file. This can also be done later via
-#'   the filter_data() function.
+#'   the \code{\link{filter_data}} function.
 #' @param tab_fp Taxa table filepath.
 #' @param map_fp Metadata mapping filepath.
 #' @param filter_cat [OPTIONAL] The map_fp header string for the factor you
@@ -22,6 +22,7 @@
 #'   these values.
 #' @return A list variable with (1) the loaded taxa table, (2) the loaded 
 #'   mapping file, and optionally (3) the loaded taxonomy.
+#' @concept Load external data
 #' @examples 
 #' \dontrun{
 #' load_taxa_table("filepath_to_taxa_table.txt", "filepath_to_mapping_file.txt",
@@ -108,18 +109,20 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals) {
   }
 
 #' @title Load a dissimilarity matrix for use with mctoolsr
-#' @description Load in a dissimilarity matrix and a corresponding metadata
+#' @description Load in a dissimilarity matrix and a corresponding metadata 
 #'   mapping file
 #' @param dm_fp Dissimilarity matrix filepath (tab-delimited text).
 #' @param map_fp Metadata mapping filepath.
-#' @param filter_cat [OPTIONAL] The map_fp header string for the factor you would like to
-#'   use to filter samples.
-#' @param filter_vals [OPTIONAL] The values within the filter category (vector or single
-#'   value) you would like to use to remove samples from the imported data.
-#' @param keep_vals [OPTIONAL] Alternatively, keep only samples represented by these
-#'   values.
+#' @param filter_cat [OPTIONAL] The map_fp header string for the factor you
+#'   would like to use to filter samples.
+#' @param filter_vals [OPTIONAL] The values within the filter category (vector
+#'   or single value) you would like to use to remove samples from the imported
+#'   data.
+#' @param keep_vals [OPTIONAL] Alternatively, keep only samples represented by
+#'   these values.
 #' @return A list variable with (1) the loaded dissimilarity matrix, and (2) the
 #'   loaded mapping file.
+#' @concept Load external data
 #' @examples
 #' \dontrun{
 #' load_dm("filepath_to_dissim_matrix.txt", "filepath_to_mapping_file.txt",
@@ -152,19 +155,21 @@ load_dm = function(dm_fp, map_fp, filter_cat, filter_vals, keep_vals) {
 
 
 #' @title Load two dissimilarity matrices for use with mctoolsr
-#' @description Load in two dissimilarity matrices and a corresponding metadata
+#' @description Load in two dissimilarity matrices and a corresponding metadata 
 #'   mapping file. Useful for Mantel tests when dms are already generated.
 #' @param dm1_fp Dissimilarity matrix filepath (tab-delimited text).
 #' @param dm2_fp Dissimilarity matrix filepath (tab-delimited text).
 #' @param map_fp Metadata mapping filepath.
-#' @param filter_cat [OPTIONAL] The map_fp header string for the factor you would like to
-#'   use to filter samples.
-#' @param filter_vals [OPTIONAL] The values within the filter category (vector or single
-#'   value) you would like to use to remove samples from the imported data.
-#' @param keep_vals [OPTIONAL] Alternatively, keep only samples represented by these
-#'   values.
-#' @return A list variable with (1) the loaded dissimilarity matrix 1, (2) the
+#' @param filter_cat [OPTIONAL] The map_fp header string for the factor you
+#'   would like to use to filter samples.
+#' @param filter_vals [OPTIONAL] The values within the filter category (vector
+#'   or single value) you would like to use to remove samples from the imported
+#'   data.
+#' @param keep_vals [OPTIONAL] Alternatively, keep only samples represented by
+#'   these values.
+#' @return A list variable with (1) the loaded dissimilarity matrix 1, (2) the 
 #'   loaded dissimilarity matrix 2, and (3) the loaded mapping file.
+#' @concept Load external data
 #' @examples
 #' \dontrun{
 #' load_dm("filepath_to_dissim_matrix1.txt", "filepath_to_dissim_matrix1.txt",
@@ -192,17 +197,19 @@ load_2_dms = function(dm1_fp, dm2_fp, map_fp, filter_cat, filter_vals, keep_vals
     map_f = map
   # match up data from dissimilarity matrix with mapping file
   samplesToUse = intersect(intersect(names(dm1), row.names(map_f)), names(dm2))
-  dm1.use = as.dist(dm1[match(samplesToUse,names(dm1)), match(samplesToUse,names(dm1))])
-  dm2.use = as.dist(dm2[match(samplesToUse,names(dm2)), match(samplesToUse,names(dm2))])
+  dm1.use = as.dist(dm1[match(samplesToUse,names(dm1)),
+                        match(samplesToUse,names(dm1))])
+  dm2.use = as.dist(dm2[match(samplesToUse,names(dm2)),
+                        match(samplesToUse,names(dm2))])
   map.use = map_f[match(samplesToUse,row.names(map_f)),]
   # output
   list(dm1_loaded = dm1.use, dm2_loaded = dm2.use, map_loaded = map.use)
 }
 
-#' @title Filter Samples from Dataset
+#' @title Filter samples from dataset
 #' @description Filter out or keep particular samples in a dataset based on
 #'   contextual metadata.
-#' @param input The input dataset as loaded by \code{load_taxa_table()}.
+#' @param input The input dataset as loaded by \code{\link{load_taxa_table}}.
 #' @param filter_cat The map_fp header string for the factor you would like to
 #'   use to filter samples.
 #' @param filter_vals The values within the filter category (vector or single
@@ -211,6 +218,7 @@ load_2_dms = function(dm1_fp, dm2_fp, map_fp, filter_cat, filter_vals, keep_vals
 #'   values.
 #' @return A list variable with (1) the loaded taxa table, (2) the loaded
 #'   mapping file, and optionally (3) the loaded taxonomy information.
+#' @concept Taxa table manipulation
 #' @examples
 #' \dontrun{
 #' ex_in_filt = filter_data(input = "example_input", filter_cat = "Sample_type",
@@ -234,14 +242,15 @@ filter_data = function(input, filter_cat, filter_vals, keep_vals) {
   }
 }
 
-#' @title Filter Samples from a Dataset based on number of sequences
+#' @title Filter samples from a dataset based on number of sequences
 #' @description This function is useful for removing samples that have a low
 #'   number of sequences.
-#' @param input The input dataset as loaded by \code{load_taxa_table()}.
+#' @param input The input dataset as loaded by \code{\link{load_taxa_table}}.
 #' @param min_seqs A sample must have at minimum this number of sequences in
 #' order to be retained.
 #' @return A list variable with (1) the loaded taxa table, (2) the loaded 
 #'   mapping file, and optionally (3) the loaded taxonomy information.
+#' @concept Taxa table manipulation
 #' @examples
 #' # see number of sequences per sample
 #' sort(colSums(fruits_veggies$data_loaded))
@@ -262,12 +271,13 @@ filter_samples_by_counts = function(input, min_seqs) {
   }
 }
 
-#' @title Filter Samples from Dissimilarity Matrix
+#' @title Filter samples from dissimilarity matrix
 #' @description Filter out or keep particular samples in a dissimilarity matrix 
 #'   based on contextual metadata.
 #' @param input_dm The input dissimilarity matrix with corresponding mapping 
-#'   file as generated by \code{load_dm()} or \code{calc_mean_dissimilarities()}
-#'   with the option to produce a resulting metadata map.
+#'   file as generated by \code{\link{load_dm}} or
+#'   \code{\link{calc_mean_dissimilarities}} with the option to produce a
+#'   resulting metadata map.
 #' @param filter_cat The metadata map header string for the factor you would 
 #'   like to use to filter samples.
 #' @param filter_vals The values within the filter category (vector or single 
@@ -275,8 +285,9 @@ filter_samples_by_counts = function(input, min_seqs) {
 #'   matrix and metadata map.
 #' @param keep_vals Alternatively, keep only samples represented by these 
 #'   values.
-#' @return A list variable with (1) the loaded dissimilarity matrix and (2) the
+#' @return A list variable with (1) the loaded dissimilarity matrix and (2) the 
 #'   loaded mapping file.
+#' @concept Dissimilarity calculation and manipulation
 #' @examples 
 #' # rarefy
 #' fruits_veggies_rar = single_rarefy(fruits_veggies, 1000)
@@ -307,13 +318,14 @@ filter_dm = function(input_dm, filter_cat, filter_vals, keep_vals) {
 #'   from two datasets that contain some overlapping sample IDs. Sample IDs that
 #'   are not present in both datasets will be dropped. The output is a list 
 #'   containing the two filtered datasets in the same order as they were input.
-#' @param ds1 The first dataset as loaded by \code{load_taxa_table()}
+#' @param ds1 The first dataset as loaded by \code{\link{load_taxa_table}}.
 #' @param ds2 The second dataset.
 #' @param match_taxa [OPTIONAL] Do you want to match taxa in addition to sample 
 #'   IDs? If \code{TRUE}, taxa will be removed if they are not in common between
 #'   datasets. Default = \code{FALSE}
 #' @return A list variable with the matched ds1 as the first element and ds2 as 
 #'   the second element.
+#' @concept Taxa table manipulation
 #' @examples 
 #' # This function would normally be run with two different datasets not the
 #' # same one as in this example. For example if you had bacterial and fungal
@@ -354,11 +366,12 @@ match_datasets = function(ds1, ds2, match_taxa = FALSE) {
 
 #' @title Export an OTU table as a text file [DEPRECATED]
 #' @description PLEASE USE \code{export_taxa_table()} INSTEAD.
-#' @param input The input dataset as loaded by \code{load_taxa_table()} or
+#' @param input The input dataset as loaded by \\code{\link{load_taxa_table}} or
 #'  an otu table of class \code{data.frame}.
 #' @param out_fp The output filepath.
 #' @param map_fp [OPTIONAL] The metadata map output filepath if you want to
 #'  write it to file.
+#' @concept dont include
 export_otu_table = function(input, out_fp, map_fp) {
   stop('This function is deprecated. Use "export_taxa_table()"')
 }
@@ -367,11 +380,12 @@ export_otu_table = function(input, out_fp, map_fp) {
 #' @description A convenient way to export a loaded taxa table as a text file.
 #'  Taxonomy strings will appear in the right most column. This is also a good
 #'  way to save an taxa table to be loaded later. Output format is tab-delimited.
-#' @param input The input dataset as loaded by \code{load_taxa_table()} or
+#' @param input The input dataset as loaded by \code{\link{load_taxa_table}} or
 #'  a taxa table of class \code{data.frame}.
 #' @param out_fp The output filepath.
 #' @param map_fp [OPTIONAL] The metadata map output filepath if you want to
 #'  write it to file.
+#' @concept Taxa table manipulation
 #' @examples 
 #' \dontrun{
 #' export_taxa_table(fruits_veggies, "exported_taxa_table", "exported_map_file")

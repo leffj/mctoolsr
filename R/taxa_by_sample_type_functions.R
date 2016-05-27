@@ -118,22 +118,38 @@
 
 #' @title Further summarize output from summarize_taxonomy by sample type
 #' @details Function to show contributions of specific taxa to variation among 
-#'  communities using Mann-Whitney (2 factor levels), Kruskal-Wallis (more 
-#'  than 2) tests, or more complex models.
+#'   communities using Mann-Whitney (2 factor levels), Kruskal-Wallis (more than
+#'   2) tests, or more complex models.
 #' @param taxa_smry_df Taxa summary data frame.
 #' @param metadata_map The metadata mapping data frame.
-#' @param out_fp (Optional) Test results output filepath. Written as a csv file.
+#' @param out_fp [OPTIONAL] Test results output filepath. Written as a csv file.
 #' @param type_header Mapping file header (in quotation marks) of factor for 
-#'  which you are testing for differences.
-#' @param filter_level (Optional) The minimum mean value needed in at least one.
-#'  of the factor levels for a taxon to be retained in the analysis.
-#' @param test_type (Optional). If omitted, no test is performed and no p-values
-#'  are reported. Otherwise, either 'MW', 'KW', or 'custom' (i.e. 
-#'  Wilcoxon/Mann-Whitney U for 2 factor levels or Kruskal-Wallis for more than 
-#'  two factor levels). See details for custom test/model implementation.
-#' @param grouping_factor (Optional) Used with 2-way tests.
-#' @param custom_test_function (Optional) Name of custom test function.
-#' @param smry_fun (Optional) The function to summarize values by (Default: mean).
+#'   which you are testing for differences.
+#' @param filter_level [OPTIONAL] The minimum mean value needed in at least one.
+#'   of the factor levels for a taxon to be retained in the analysis.
+#' @param test_type [OPTIONAL]. If omitted, no test is performed and no p-values
+#'   are reported. Otherwise, either 'MW', 'KW', or 'custom' (i.e. 
+#'   Wilcoxon/Mann-Whitney U for 2 factor levels or Kruskal-Wallis for more than
+#'   two factor levels). See details for custom test/model implementation.
+#' @param grouping_factor [OPTIONAL] Used with 2-way tests.
+#' @param custom_test_function [OPTIONAL] Name of custom test function.
+#' @param smry_fun [OPTIONAL] The function to summarize values by (Default:
+#'   mean).
+#' @concept Taxonomy-based analyses
+#' @examples 
+#' ts = summarize_taxonomy(fruits_veggies, level = 2)
+#' # differences in relative abundances of phyla across fruits/veggies
+#' taxa_summary_by_sample_type(
+#'   ts, metadata_map = fruits_veggies$map_loaded,
+#'   type_header = 'Sample_type', filter_level = 0.03,
+#'   test_type = 'KW'
+#' )
+#' # differences in relative abundances of phyla between farm types
+#' taxa_summary_by_sample_type(
+#'   ts, metadata_map = fruits_veggies$map_loaded,
+#'   type_header = 'Farm_type', filter_level = 0.03,
+#'   test_type = '2WNP', grouping_factor = 'Sample_type'
+#' )
 taxa_summary_by_sample_type = function(taxa_smry_df, metadata_map, type_header, 
                                        filter_level, test_type, grouping_factor, 
                                        custom_test_function, smry_fun = mean, 

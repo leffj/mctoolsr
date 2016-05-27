@@ -19,4 +19,7 @@ current accepted values.}
 \description{
 Use before plotting ordination.
 }
+\concept{
+Dissimilarity calculation and manipulation
+}
 

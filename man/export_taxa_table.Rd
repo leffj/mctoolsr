@@ -7,7 +7,7 @@
 export_taxa_table(input, out_fp, map_fp)
 }
 \arguments{
-\item{input}{The input dataset as loaded by \code{load_taxa_table()} or
+\item{input}{The input dataset as loaded by \code{\link{load_taxa_table}} or
 a taxa table of class \code{data.frame}.}
 
 \item{out_fp}{The output filepath.}
@@ -24,5 +24,8 @@ A convenient way to export a loaded taxa table as a text file.
 \dontrun{
 export_taxa_table(fruits_veggies, "exported_taxa_table", "exported_map_file")
 }
+}
+\concept{
+Taxa table manipulation
 }
 

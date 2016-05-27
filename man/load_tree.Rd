@@ -10,7 +10,16 @@ load_tree(tree_fp)
 \item{tree_fp}{The phylogenetic tree file path.}
 }
 \description{
-A wrapper for \code{read.tree()} in \code{ape}. Reads in a
- phylogenetic tree in Newic or New Hampshire format.
+A wrapper for \code{\link[ape]{read.tree}} in
+  \code{\link[ape]{ape}}. Reads in a phylogenetic tree in Newic or New
+  Hampshire format.
+}
+\examples{
+\dontrun{
+load_tree("tree file path")
+}
+}
+\concept{
+Load external data
 }
 

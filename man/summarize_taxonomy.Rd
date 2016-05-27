@@ -2,30 +2,31 @@
 % Please edit documentation in R/taxonomy-based.R
 \name{summarize_taxonomy}
 \alias{summarize_taxonomy}
-\title{Calculate Values for Coarser Taxonomic Groupings}
+\title{Calculate values for coarser taxonomic groupings}
 \usage{
 summarize_taxonomy(input, level, relative = TRUE, report_higher_tax = TRUE)
 }
 \arguments{
-\item{input}{The input dataset}
+\item{input}{The input dataset.}
 
-\item{level}{The taxonomy level to summarize by [integer]}
+\item{level}{The taxonomy level to summarize by [integer].}
 
-\item{relative}{Return relative abundances or not (default = TRUE)}
+\item{relative}{Return relative abundances or not (default = TRUE).}
 
 \item{report_higher_tax}{Whether or not to return taxonomic strings higher
-than the indecated level (default = TRUE)}
+than the indecated level (default = TRUE).}
 }
 \description{
-Given input as generated from \code{load_taxon_table()},
+Given input as generated from \code{\link{load_taxon_table}},
   calculate relative abundances (or absolute abundances) of taxa at a coarser
   taxonomic threshold. Taxonomy must have been loaded for this function to
   work.
 }
 \examples{
-## Return relative abundances of phyla for each sample
-\dontrun{
-summarize_taxonomy(input = example_input, level = 2)
+# Return relative abundances of phyla for each sample
+summarize_taxonomy(fruits_veggies, level = 2)
 }
+\concept{
+Taxonomy-based analyses
 }
 

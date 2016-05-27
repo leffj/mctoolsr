@@ -11,14 +11,15 @@ load_dm(dm_fp, map_fp, filter_cat, filter_vals, keep_vals)
 
 \item{map_fp}{Metadata mapping filepath.}
 
-\item{filter_cat}{[OPTIONAL] The map_fp header string for the factor you would like to
-use to filter samples.}
+\item{filter_cat}{[OPTIONAL] The map_fp header string for the factor you
+would like to use to filter samples.}
 
-\item{filter_vals}{[OPTIONAL] The values within the filter category (vector or single
-value) you would like to use to remove samples from the imported data.}
+\item{filter_vals}{[OPTIONAL] The values within the filter category (vector
+or single value) you would like to use to remove samples from the imported
+data.}
 
-\item{keep_vals}{[OPTIONAL] Alternatively, keep only samples represented by these
-values.}
+\item{keep_vals}{[OPTIONAL] Alternatively, keep only samples represented by
+these values.}
 }
 \value{
 A list variable with (1) the loaded dissimilarity matrix, and (2) the
@@ -33,5 +34,8 @@ Load in a dissimilarity matrix and a corresponding metadata
 load_dm("filepath_to_dissim_matrix.txt", "filepath_to_mapping_file.txt",
   "sample_type", filter_vals = "blank")
 }
+}
+\concept{
+Load external data
 }
 

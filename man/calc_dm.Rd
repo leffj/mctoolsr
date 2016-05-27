@@ -13,11 +13,14 @@ calc_dm(tax_table, method = "bray_sq_trans")
 Available methods include: 'bray_sq_trans', 'bray', 'jaccard', '.}
 }
 \value{
-A variable of class 'dist'.
+A variable of class \code{dist}.
 }
 \description{
 The default is to calculate Bray-Curtis dissimilarities after
  performing square-root transformations on the data. Send requests to add
  additional metrics.
+}
+\concept{
+Dissimilarity calculation and manipulation
 }
 

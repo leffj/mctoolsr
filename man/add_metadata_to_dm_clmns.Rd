@@ -20,4 +20,7 @@ you would like to add to the dissimilarities dataframe.}
 Add metadata to an additional column in column formatted
  dissimilarities dataframe
 }
+\concept{
+Dissimilarity calculation and manipulation
+}
 

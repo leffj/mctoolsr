@@ -2,12 +2,12 @@
 % Please edit documentation in R/input_output_filter.R
 \name{filter_data}
 \alias{filter_data}
-\title{Filter Samples from Dataset}
+\title{Filter samples from dataset}
 \usage{
 filter_data(input, filter_cat, filter_vals, keep_vals)
 }
 \arguments{
-\item{input}{The input dataset as loaded by \code{load_taxa_table()}.}
+\item{input}{The input dataset as loaded by \code{\link{load_taxa_table}}.}
 
 \item{filter_cat}{The map_fp header string for the factor you would like to
 use to filter samples.}
@@ -31,5 +31,8 @@ Filter out or keep particular samples in a dataset based on
 ex_in_filt = filter_data(input = "example_input", filter_cat = "Sample_type",
                          filter_vals = c("mushrooms", "strawberries"))
 }
+}
+\concept{
+Taxa table manipulation
 }
 

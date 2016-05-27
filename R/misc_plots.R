@@ -11,7 +11,7 @@
 #' @param category The category (header in map) to group samples by.
 #' @param pres_thresh The threshold relative abundance for an OTU to be 
 #'  considered present for a given sample category.
-#' 
+#' @concept Plots
 plot_venn_diagram = function(input, category, pres_thresh){
   if (!requireNamespace("VennDiagram", quietly = TRUE)) {
     stop(paste0("'VennDiagram' package (>= 1.6.15) needed for this function ", 

@@ -7,7 +7,7 @@
 match_datasets(ds1, ds2, match_taxa = FALSE)
 }
 \arguments{
-\item{ds1}{The first dataset as loaded by \code{load_taxa_table()}}
+\item{ds1}{The first dataset as loaded by \code{\link{load_taxa_table}}.}
 
 \item{ds2}{The second dataset.}
 
@@ -30,5 +30,8 @@ Function to match up sample order and optionally,  taxa order
 # same one as in this example. For example if you had bacterial and fungal
 # data for the same samples and wanted to compare the two.
 match_datasets(fruits_veggies, fruits_veggies)
+}
+\concept{
+Taxa table manipulation
 }
 

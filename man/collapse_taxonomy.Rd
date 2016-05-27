@@ -7,10 +7,16 @@
 collapse_taxonomy(taxonomy_df)
 }
 \arguments{
-\item{taxonomy_df}{The dataframe containing taxonomy as loaded by \code{
-load_taxa_table()}.}
+\item{taxonomy_df}{The dataframe containing taxonomy as loaded by
+\code{\link{load_taxa_table}}.}
 }
 \description{
 Collapse taxonomy dataframe to character vector
+}
+\examples{
+collapse_taxonomy(fruits_veggies$taxonomy_loaded)
+}
+\concept{
+Taxonomy-based analyses
 }
 

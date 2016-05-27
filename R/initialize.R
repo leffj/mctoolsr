@@ -22,7 +22,7 @@
     mctoolsr.path = "",
     mctoolsr.install.args = "",
     mctoolsr.name = "mctoolsr",
-    mctoolsr.desc.author = '"Jon Leff <jonathan.leff@colorado.edu> [aut, cre]"',
+    mctoolsr.desc.author = '"Jonathan W. Leff <jonathan.leff@colorado.edu> [aut, cre]"',
     mctoolsr.desc.license = "GPL-3",
     mctoolsr.desc.suggests = NULL,
     mctoolsr.desc = list()

@@ -7,11 +7,19 @@
 filter_tree(tree, tip_labels)
 }
 \arguments{
-\item{tree}{The phylogenetic tree from \code{load_tree()}.}
+\item{tree}{The phylogenetic tree from \code{\link{load_tree}}.}
 
 \item{tip_labels}{The tip labels to retain.}
 }
 \description{
 Filter tips in phylogenetic tree
+}
+\examples{
+\dontrun{
+filter_tree(loaded_tree, taxa_to_keep)
+}
+}
+\concept{
+Phylogeny
 }
 

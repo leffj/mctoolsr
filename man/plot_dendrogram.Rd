@@ -25,4 +25,7 @@ intended leaf label colors.}
 \description{
 Generate a dendrogram based on a dissimilarity matrix
 }
+\concept{
+Plots
+}
 

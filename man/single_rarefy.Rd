@@ -7,12 +7,12 @@
 single_rarefy(input, depth)
 }
 \arguments{
-\item{input}{The input dataset as loaded by \code{load_taxa_table()}.}
+\item{input}{The input dataset as loaded by \code{\link{load_taxa_table}}.}
 
 \item{depth}{The number of observations to randomly select for each sample.}
 }
 \value{
-Will return a dataset object similar to the input.
+Will return a dataset list similar to the input.
 }
 \description{
 Rarefying means to randomly select a specified number of
@@ -20,5 +20,11 @@ Rarefying means to randomly select a specified number of
  differences in the number of observations (i.e. sequencing depth) across
  samples. Samples with fewer observations (sequences) than the specified
  depth will be removed.
+}
+\examples{
+single_rarefy(fruits_veggies, 1000)
+}
+\concept{
+Taxa table normalization
 }
 

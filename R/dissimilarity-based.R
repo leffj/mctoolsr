@@ -11,7 +11,8 @@
 #' @param tax_table The taxa table.
 #' @param method The method to use to calculate the dissimilarity metric.
 #'  Available methods include: 'bray_sq_trans', 'bray', 'jaccard', '.
-#' @return A variable of class 'dist'.
+#' @return A variable of class \code{dist}.
+#' @concept Dissimilarity calculation and manipulation
 calc_dm = function(tax_table, method = 'bray_sq_trans'){
   # check for and warn about samples with no sequences
   if(min(colSums(tax_table)) == 0){
@@ -42,6 +43,7 @@ calc_dm = function(tax_table, method = 'bray_sq_trans'){
 #'  current accepted values.
 #' @param metadata_map Required if 'constrained' ord_type.
 #' @param constrain_factor Required if 'constrained' ord_type.
+#' @concept Dissimilarity calculation and manipulation
 calc_ordination = function(dm, ord_type, metadata_map, constrain_factor){
   dm = as.dist(dm)
   if(ord_type == 'NMDS' | ord_type == 'nmds'){
@@ -65,6 +67,7 @@ calc_ordination = function(dm, ord_type, metadata_map, constrain_factor){
 #' @param shape_cat The metadata map header used for points' shapes (optional).
 #' @param hulls Whether or not to include an outline around sample categories.
 #' @param ... Additional arguments passed to ggplot2's \code{geom_point()}.
+#' @concept Plots
 plot_ordination = function(input, ordination_axes, color_cat, shape_cat, 
                            hulls = FALSE, ...){
   if(missing(color_cat)){
@@ -114,7 +117,8 @@ plot_ordination = function(input, ordination_axes, color_cat, shape_cat,
 #' @param dm Dissimilarity matrix.
 #' @param metadata_map The metadata mapping data frame.
 #' @param color_cat The metadata map header used to color points.
-#' @param shape_cat The metadata map header used for points' shapes (optional).
+#' @param shape_cat [OPTIONAL] The metadata map header used for points' shapes.
+#' @concept Plots
 plot_nmds = function(dm, metadata_map = NULL, color_cat, shape_cat){
   if(missing(color_cat)){
     warning('No mapping category to color by.')
@@ -155,6 +159,7 @@ plot_nmds = function(dm, metadata_map = NULL, color_cat, shape_cat){
 #'  intended leaf label colors.
 #' @param method The clustering method to use when creating the dendrogram.
 #' @param ... Other parameters passed on to geom_text
+#' @concept Plots
 plot_dendrogram = function(dm, metadata_map, labels, color_by, 
                            method = 'complete', ...) {
   if (!requireNamespace("ggdendro", quietly = TRUE)) {
@@ -229,6 +234,7 @@ plot_dendrogram = function(dm, metadata_map, labels, color_by,
 #' @title Convert dissimilarity matrix to 3 column format
 #' @description This is useful for performing analyses on dissimilarity values
 #' @param dm Dissimilarity matrix of either class 'dist' or class 'data.frame'
+#' @concept Dissimilarity calculation and manipulation
 convert_dm_to_3_column = function(dm){
   if(class(dm) == 'data.frame'){
     dmat = as.dist(dm)
@@ -252,6 +258,7 @@ convert_dm_to_3_column = function(dm){
 #' @param metadata_map The metadata dataframe.
 #' @param cat The header string from the metadata map corresponding to the data
 #'  you would like to add to the dissimilarities dataframe.
+#' @concept Dissimilarity calculation and manipulation
 add_metadata_to_dm_clmns = function(dm_clmns, metadata_map, cat){
   cat1 = metadata_map[match(dm_clmns$x1, row.names(metadata_map)), cat]
   cat2 = metadata_map[match(dm_clmns$x2, row.names(metadata_map)), cat]
@@ -315,12 +322,13 @@ add_metadata_to_dm_clmns = function(dm_clmns, metadata_map, cat){
 #' @title Calculate mean dissimilarities using a metadata factor
 #' @description Calculate mean dissimilarities across all levels of a given factor
 #' 
-#' @param dm Dissimilarity matrix - typically created using 'calc_dm()'.
+#' @param dm Dissimilarity matrix - typically created using \code{\link{calc_dm}}.
 #' @param metadata_map The metadata mapping dataframe.
 #' @param summarize_by_factor Category in mapping file to summarize by.
 #' @param return_map Whether or not to return summarized mapping files. If true,
 #'  will return a list (default: FALSE).
 #' @return Mean dissimilarities.
+#' @concept Dissimilarity calculation and manipulation
 calc_mean_dissimilarities = function(dm, metadata_map, summarize_by_factor, 
                                      return_map = FALSE){
   .sumry_fun = function(x){
@@ -368,19 +376,20 @@ calc_mean_dissimilarities = function(dm, metadata_map, summarize_by_factor,
 
 
 #' @title Calculate pairwise PERMANOVA results
-#' @description The \code{adonis()} function in the \code{vegan} package does
-#'  not provide a way to calculate pairwise post-hoc comparisons between
-#'  factor levels. This function calculates PERMANOVA results using the 
-#'  \code{adonis()} function for all factor level pairs. Raw p values are 
-#'  returned, but it is recommended to use the provided FDR corrected p values
-#'  since the multiple comparisons can raise your likelihood of false positive
-#'  differences.
+#' @description The \code{\link[vegan]{adonis}} function in the
+#'   \code{\link[vegan]{vegan}} package does not provide a way to calculate
+#'   pairwise post-hoc comparisons between factor levels. This function
+#'   calculates PERMANOVA results using the \code{adonis()} function for all
+#'   factor level pairs. Raw p values are returned, but it is recommended to use
+#'   the provided FDR corrected p values since the multiple comparisons can
+#'   raise your likelihood of false positive differences.
 #' @param dm Dissimilarity matrix of class \code{dist}.
 #' @param metadata_map The metadata mapping dataframe with samples matching and
 #'  in the same order as the ones in the provided dm.
 #' @param compare_header The header in the metadata mapping dataframe with the
 #'  factor levels to use for the pairwise comparisons.
 #' @return A dataframe with R2 and P values.
+#' @concept Dissimilarity calculation and manipulation
 calc_pairwise_permanovas = function(dm, metadata_map, compare_header) {
   comp_var = metadata_map[, compare_header]
   comp_pairs = combn(levels(comp_var), 2)

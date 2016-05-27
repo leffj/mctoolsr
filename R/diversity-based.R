@@ -14,9 +14,9 @@
 #' @details Richness is the number of unique species per sample. Simpson's 
 #'   diversity metric (1 - D) quantifies evenness, and Shannon diversity is a 
 #'   combination of richness and evenness.
+#' @concept Diversity
 #' @examples 
 #' calc_diversity(fruits_veggies$data_loaded, "shannon")
-#'  
 calc_diversity = function(tax_table, metric){
   metrics = c('richness', 'shannon', 'simpson')
   if(metric == 'richness'){
@@ -40,6 +40,7 @@ calc_diversity = function(tax_table, metric){
 #' @details Richness is the number of unique species per sample. Simpson's 
 #'  diversity metric quantifies evenness, and Shannon diversity is a combination
 #'  of richness and evenness.
+#' @concept Plots
 #' @examples
 #' plot_diversity(fruits_veggies, "Sample_type", "shannon")
 plot_diversity = function(input, variable, metric){

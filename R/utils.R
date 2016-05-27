@@ -79,46 +79,21 @@
   }
 }
 
-#' @title Convert Taxon Table to Relative Abundances
-#' @description Convert taxon table or taxon table in data input to relative 
-#' abundances
-#' @param input Either a dataset as generated using 'load_taxon_table' which
-#' includes a mapping file or an individual taxon table
-convert_to_relative_abundances = function(input){
-  if('map_loaded' %in% names(input)){
-    seq_cts = colSums(input$data_loaded)
-    rel_abund_table = as.data.frame(t(apply(input$data_loaded, 1, 
-                                            function(x) x / seq_cts)))
-    list(data_loaded = rel_abund_table, map_loaded = input$map_loaded, 
-         taxonomy_loaded = input$taxonomy_loaded)
-  } else {
-    seq_cts = colSums(input, na.rm = TRUE)
-    rel_abund_table = as.data.frame(t(apply(input, 1, function(x) x / seq_cts)))
-    rel_abund_table
-  }
-}
-
 #' @title Rename samples in an mctoolsr dataset
 #' @description Rename the samples by substituting column names in the taxa 
 #'  table and row names in the metadata map with values from a metadata map
 #'  column that you specify. Note that all values in the metadata map column 
 #'  must be unique.
-#' @param input The input dataset as loaded by \code{load_taxa_table()}.
+#' @param input The input dataset as loaded by \code{\link{load_taxa_table}}.
 #' @param name_header The header value in the metadata map that will be used
 #'  to rename the samples.
+#' @concept Taxa table manipulation
+#' @examples 
+#' fruits_veggies$map_loaded$alt_id =
+#' paste0('alt', 1:nrow(fruits_veggies$map_loaded))
+#' rename_samples(fruits_veggies, 'alt_id')
 rename_samples = function(input, name_header) {
   colnames(input$data_loaded) = input$map_loaded[, name_header]
   row.names(input$map_loaded) = input$map_loaded[, name_header]
   input
-}
-
-#' @title Return the most abundant taxa in a dataset
-#' @description Return the n most abundant taxa as calculated by the mean 
-#' sequence counts across all samples.
-#' @param input The input dataset as loaded by \code{load_taxa_table()}.
-#' @param number_taxa The number of top taxa to display.
-return_top_taxa = function(input, number_taxa){
-  taxa_ordered = input$taxonomy_loaded[order(rowMeans(input$data_loaded), 
-                                             decreasing = T), ]
-  head(taxa_ordered, n = number_taxa)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/taxonomy-based.R
 \name{plot_ts_heatmap}
 \alias{plot_ts_heatmap}
-\title{Plot Taxa Summary Heatmap}
+\title{Plot taxa summary heatmap}
 \usage{
 plot_ts_heatmap(tax_table, metadata_map, min_rel_abund, type_header,
   scale_by = "all", custom_sample_order, rev_taxa = FALSE,
@@ -11,7 +11,7 @@ plot_ts_heatmap(tax_table, metadata_map, min_rel_abund, type_header,
 }
 \arguments{
 \item{tax_table}{A taxa table dataframe. The output of
-\code{summarize_taxonomy()}.}
+\code{\link{summarize_taxonomy}}.}
 
 \item{metadata_map}{A metadata mapping dataframe. Usually,
 \code{input$map_loaded}}
@@ -21,30 +21,33 @@ be grouped into 'Other'. Between 0 and 1.}
 
 \item{type_header}{The metadata_map header label used to group samples.}
 
-\item{scale_by}{[OPTIONAL] Whether to scale colors by (a) 'sample_types', (b) 'taxa', or
-(c) 'all'. Default = 'all'.}
+\item{scale_by}{[OPTIONAL] Whether to scale colors by (a) 'sample_types', (b)
+'taxa', or (c) 'all'. Default = 'all'.}
 
 \item{custom_sample_order}{[OPTIONAL] A vector with the order of the sample
 names (top to bottom).}
 
 \item{rev_taxa}{[OPTIONAL] Set to \code{TRUE} if you want to reverse the
-order of the taxon strings. Useful if using with \code{coord_flip()} in
-ggplot2 to rotate the plot 90 degrees.}
+order of the taxon strings. Useful if using with
+\code{[ggplot2]{coord_flip}} in ggplot2 to rotate the plot 90 degrees.}
 
-\item{custom_taxa_order}{[OPTIONAL] A vector with the order of the taxa
-names (top to bottom). Note that these are the names after grouping low
-abundance taxa into either 'Other' or your custom \code{other_label}.}
+\item{custom_taxa_order}{[OPTIONAL] A vector with the order of the taxa names
+(top to bottom). Note that these are the names after grouping low abundance
+taxa into either 'Other' or your custom \code{other_label}.}
 
 \item{other_label}{[OPTIONAL] A string to relabel the 'Other' taxa category
 which contain all taxa less than \code{min_rel_abund}.}
 
-\item{remove_other}{[OPTIONAL] Set to \code{TRUE} if you want to remove
-the line representing the 'Other' taxa category.}
+\item{remove_other}{[OPTIONAL] Set to \code{TRUE} if you want to remove the
+line representing the 'Other' taxa category.}
 
 \item{colors}{[OPTIONAL] A vector with custom fill colors (low, mid, high).}
 }
 \description{
 A quick way to create a heatmap from a taxa summary dataframe.
- Samples are grouped by a category that is specified in 'type_header'.
+  Samples are grouped by a category that is specified in \code{type_header}.
+}
+\concept{
+Plots
 }
 
