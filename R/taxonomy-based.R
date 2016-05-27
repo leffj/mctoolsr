@@ -463,20 +463,25 @@ calc_taxa_changes = function(ts, metadata_map, block_header,
                                block_header]
   ts_melt$Tx = metadata_map[match(ts_melt$Sample_ID, row.names(metadata_map)),
                             treatment_header]
-  ts_melt_filt = dplyr::filter(ts_melt, Tx == control_label)
-  control_means = dplyr::summarise(dplyr::group_by(ts_melt_filt, Taxon, block),
-                                   mean_RA = mean(Relative_abundance))
+  ts_melt_filt = ts_melt[ts_melt$Tx == control_label, ]
+  # ts_melt_filt = dplyr::filter_(ts_melt, lazyeval::interp("Tx == control_label"), control_label = control_label)
+  control_means = dplyr::summarise_(dplyr::group_by_(ts_melt_filt, "Taxon", "block"),
+                                   mean_RA = "mean(Relative_abundance)")
   # calc percent change
   ts_melt$block_control_mean =
     control_means$mean_RA[match(
       paste0(ts_melt$block, ts_melt$Taxon),
       paste0(control_means$block, control_means$Taxon)
     )]
-  ts_melt = dplyr::mutate(
-    ts_melt, pct_change =
-      (Relative_abundance - block_control_mean) /
-      block_control_mean * 100
-  )
+  ts_melt =
+    dplyr::mutate_(
+      ts_melt,
+      pct_change =
+        paste0(
+          "(Relative_abundance - block_control_mean) /",
+          "block_control_mean * 100"
+        )
+    )
   ts_melt
 }
 

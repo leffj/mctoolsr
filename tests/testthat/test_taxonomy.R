@@ -72,3 +72,26 @@ test_that("Filtering taxonomy from taxa summary works as expected.", {
                     row.names(no_firm_act) == FALSE))
 })
 
+test_that("Taxa changes calculated correctly.", {
+  ts = summarize_taxonomy(fruits_veggies, 2)
+  ts_filt = filter_taxa_from_table(ts, filter_thresh = 0.01)
+  st = fruits_veggies$map_loaded$Sample_type
+  ft = fruits_veggies$map_loaded$Farm_type
+  prot = t(ts_filt['k__Bacteria; p__Proteobacteria', ])[,1]
+  testdf = data.frame(st, ft, prot)[order(st, ft), ]
+  testdf_straw = testdf[testdf$st == 'Strawberries',]
+  conv_mean = tapply(testdf_straw$prot, testdf_straw$ft, mean)['Conventional']
+  org = testdf_straw[testdf_straw$ft == 'Organic',]
+  testvals = (org$prot - conv_mean) / conv_mean * 100
+  row.names(org)
+  calcvals_df = calc_taxa_changes(
+    ts = ts_filt, metadata_map = fruits_veggies$map_loaded,
+    block_header = 'Sample_type',
+    treatment_header = 'Farm_type',
+    control_label = 'Conventional')
+  calcvals = dplyr::filter(
+    calcvals_df, block == 'Strawberries', Tx == 'Organic',
+    Taxon == 'k__Bacteria; p__Proteobacteria'
+  )$pct_change
+  expect_identical(calcvals, testvals)
+})

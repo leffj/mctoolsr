@@ -32,7 +32,7 @@ core_taxa = function(input, type_header, prop_types = 1, prop_reps = 0.5) {
   gt_0 = function(x)
     sum(x > 0)
   by_type = dplyr::summarise(
-    dplyr::group_by(df_m, type, OTU_ID),
+    dplyr::group_by_(df_m, "type", "OTU_ID"),
     reps = length(value), reps_obs = gt_0(value),
     mean_val = mean(value)
   )
@@ -110,8 +110,9 @@ calc_prop_shared_taxa = function(input, type_header, sample_types, within_cat) {
       pairs$S2_type =
         input$map_loaded[match(pairs[, 2], row.names(input$map_loaded)),
                          type_header]
-      pairs = dplyr::filter(pairs, S1_type != S2_type, S1_type %in% sample_types,
-                            S2_type %in% sample_types)
+      conds = pairs$S1_type != pairs$S2_type &
+        pairs$S1_type %in% sample_types & pairs$S2_type %in% sample_types
+      pairs = pairs[conds,]
       # check if missing sample type(s)
       mis_sts = sample_types[!sample_types %in% c(levels(pairs$S1_type),
                                                   levels(pairs$S2_type))]
@@ -193,9 +194,9 @@ calc_prop_taxa_from_sample_type = function(input, type_header, primary_type,
       input$map_loaded[match(pairs[, 2], row.names(input$map_loaded)),
                        type_header]
     types = c(primary_type, source_type)
-    pairs = dplyr::filter(pairs, S1_type != S2_type,
-                          S1_type %in% types,
-                          S2_type %in% types)
+    conds = pairs$S1_type != pairs$S2_type &
+      pairs$S1_type %in% types & pairs$S2_type %in% types
+    pairs = pairs[conds,]
     # check if missing sample type(s)
     mis_sts = types[!types %in% c(levels(pairs$S1_type), levels(pairs$S2_type))]
     if (length(mis_sts) > 0)
