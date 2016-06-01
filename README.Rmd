@@ -1,7 +1,7 @@
 ---
 title: "Getting Started with mctoolsr"
 author: "Jonathan W. Leff"
-date: "2016-04-11"
+date: "2016-06-01"
 output: 
   html_document: 
     keep_md: yes
@@ -56,7 +56,7 @@ The package is in initial development, so for now, please simply cite the Github
 Note that the following examples use an example dataset taken from a study examining the bacterial communities associated with fruits and vegetables ([Leff et al. 2013][ref1]). You can find this dataset in the mctoolsr/examples directory.    
 
 
-#### Loading OTU tables and metadata
+#### Loading taxa tables and metadata
 
 You can load a taxa (i.e. OTU) table in biom format using the following approach. Note that you don't need to use `system.file()` when using your own filepaths -- just use the filepath directly. This function just helps your system find the example files.
 
@@ -123,7 +123,7 @@ dm = calc_dm(input_rar$data_loaded)
 
 There are two ways to plot ordinations in **mctoolsr**. The multistep way is shown here, but there is also a shortcut using the `plot_nmds()` function.
 
-```{r fig.width = 4}
+```{r fig.width = 6}
 ord = calc_ordination(dm, 'nmds')
 plot_ordination(input_rar, ord, 'Sample_type', 'Farm_type', hulls = TRUE)
 ```  
@@ -133,7 +133,7 @@ plot_ordination(input_rar, ord, 'Sample_type', 'Farm_type', hulls = TRUE)
 
 It is easy to filter samples from your dataset in **mctoolsr**. You can specify to remove samples meeting a specified condition in the metadata or keep those samples. In the example below, lettuce samples are removed, and the ordination is plotted again.
 
-```{r fig.width = 4}
+```{r fig.width = 6}
 input_rar_filt = filter_data(input_rar, 'Sample_type', filter_vals = 'Lettuce')
 dm = calc_dm(input_rar_filt$data_loaded)
 ord = calc_ordination(dm, 'nmds')
@@ -145,7 +145,7 @@ plot_ordination(input_rar_filt, ord, 'Sample_type', 'Farm_type', hulls = TRUE)
 
 There are multiple taxa filtering options in **mctoolsr**. This example shows how to explore the proteobacteria sequences across the samples. Taxa can also be filtered based on their relative abundance.
 
-```{r fig.width = 4}
+```{r fig.width = 6}
 input_proteobact = filter_taxa_from_input(input, taxa_to_keep = 'p__Proteobacteria')
 sort(colSums(input_proteobact$data_loaded))
 input_proteobact_rar = single_rarefy(input_proteobact, 219)
@@ -171,7 +171,7 @@ This analysis demonstrates that Pseudomonadaceae and Sphingobacteriaceae tend to
 
 Sometimes it is necessary to calculate mean dissimilarities. This is important in cases where sample types are pseudoreplecated. This is not the case here, but this example demonstrates this functionality.
 
-```{r fig.width = 4}
+```{r fig.width = 6}
 dm = calc_dm(input_rar_filt$data_loaded)
 dm_aggregated = calc_mean_dissimilarities(dm, input_rar_filt$map_loaded, 
                                           'Sample_Farming', return_map = TRUE)
@@ -180,12 +180,12 @@ plot_ordination(dm_aggregated, ord, color_cat = 'Sample_type')
 ```
 
 
-#### Exporting an OTU table
+#### Exporting a taxa table
 
-OTU tables that have been edited in **mctoolsr* can be exported in text (tab delimited) format for later use. Use this function:
+Taxa tables that have been edited in **mctoolsr* can be exported in text (tab delimited) format for later use. Use this function:
 
 ```{r eval=FALSE}
-export_otu_table(input_rar_filt, "export/path/otu_table_export.txt")
+export_taxa_table(input_rar_filt, "export/path/otu_table_export.txt")
 ```
 
 
