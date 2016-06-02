@@ -42,3 +42,34 @@ test_that("Mean dissimilarities are calculated correctly.", {
                                 'Sample_type'), 7)
     })
 })
+
+test_that("Dendrogram plots without error.", {
+  expect_that(plot_dendrogram(calc_dm(fruits_veggies$data_loaded), 
+                              fruits_veggies$map_loaded, "Sample_type", 
+                              "Farm_type"), 
+              not(throws_error()))
+})
+
+test_that("plot_nmds does not throw error when plotting.", {
+  expect_that(plot_nmds(calc_dm(fruits_veggies$data_loaded), 
+                        fruits_veggies$map_loaded, "Sample_type", "Farm_type"),
+              not(throws_error()))
+})
+
+test_that("Converting to 3 column format does not throw error.", {
+  expect_that(convert_dm_to_3_column(calc_dm(fruits_veggies$data_loaded)),
+              not(throws_error()))
+})
+
+test_that("Metadata adds without error.", {
+  expect_that(add_metadata_to_dm_clmns(convert_dm_to_3_column(calc_dm(
+    fruits_veggies$data_loaded)), fruits_veggies$map_loaded, "Sample_type"),
+    not(throws_error()))
+})
+
+test_that("Pairwise PERMANOVA calculations go without error.", {
+  expect_that(calc_pairwise_permanovas(calc_dm(fruits_veggies$data_loaded),
+                                       fruits_veggies$map_loaded, 
+                                       "Sample_type"),
+              not(throws_error()))
+})
