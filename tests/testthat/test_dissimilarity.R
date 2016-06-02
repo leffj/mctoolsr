@@ -29,7 +29,7 @@ test_that("Calculating mean dissimilarities doesn't throw error.", {
 })
 
 test_that("Mean dissimilarities are calculated correctly.", {
-  testthat::expect_equivalent({
+  expect_equivalent({
     known_dm = data.frame(Lettuce = c(NA, 0.9497335, 0.8986858, 0.7917143), 
                           Mushrooms = c(NA, NA, 0.9699253, 0.9411904),
                           Strawberries = c(NA, NA, NA, 0.8495972),
@@ -51,9 +51,14 @@ test_that("Dendrogram plots without error.", {
 })
 
 test_that("plot_nmds does not throw error when plotting.", {
-  expect_that(plot_nmds(calc_dm(fruits_veggies$data_loaded), 
-                        fruits_veggies$map_loaded, "Sample_type", "Farm_type"),
-              not(throws_error()))
+  expect_that({
+    capture.output(plot_nmds(
+      calc_dm(fruits_veggies$data_loaded),
+      fruits_veggies$map_loaded, "Sample_type", "Farm_type"
+    ), file = NULL)
+  },
+  not(throws_error()))
+  unlink('Rplots.pdf')
 })
 
 test_that("Converting to 3 column format does not throw error.", {
