@@ -16,8 +16,15 @@ current accepted values.}
 
 \item{constrain_factor}{Required if 'constrained' ord_type.}
 }
+\value{
+A data frame consisting of the coordinates.
+}
 \description{
 Use before plotting ordination.
+}
+\examples{
+dm = calc_dm(fruits_veggies$data_loaded)
+ord = calc_ordination(dm, "nmds")
 }
 \concept{
 Dissimilarity calculation and manipulation

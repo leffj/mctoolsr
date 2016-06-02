@@ -18,6 +18,11 @@ plot_nmds(dm, metadata_map = NULL, color_cat, shape_cat)
 \description{
 Used to generate a quick ordination.
 }
+\examples{
+dm = calc_dm(fruits_veggies$data_loaded)
+plot_nmds(dm, metadata_map = fruits_veggies$map_loaded, "Sample_type",
+          "Farm_type")
+}
 \concept{
 Plots
 }

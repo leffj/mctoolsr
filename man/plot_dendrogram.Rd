@@ -9,14 +9,14 @@ plot_dendrogram(dm, metadata_map, labels, color_by, method = "complete", ...)
 \arguments{
 \item{dm}{Dissimilarity matrix.}
 
-\item{metadata_map}{The metadata mapping dataframe.
-Typically, input$map_loaded.}
+\item{metadata_map}{The metadata mapping dataframe. Typically,
+input$map_loaded.}
 
 \item{labels}{The metadata mapping dataframe column name representing the
 intended leaf labels.}
 
-\item{color_by}{[OPTIONAL] The metadata mapping dataframe column name representing the
-intended leaf label colors.}
+\item{color_by}{[OPTIONAL] The metadata mapping dataframe column name
+representing the intended leaf label colors.}
 
 \item{method}{The clustering method to use when creating the dendrogram.}
 

@@ -22,7 +22,7 @@ plot_ordination(input, ordination_axes, color_cat, shape_cat, hulls = FALSE,
 }
 \description{
 Used to generate a plot from the output of \code{
- calc_ordination()}
+  calc_ordination()}
 }
 \examples{
 fvrar = single_rarefy(fruits_veggies, 100)

@@ -7,10 +7,19 @@
 convert_dm_to_3_column(dm)
 }
 \arguments{
-\item{dm}{Dissimilarity matrix of either class 'dist' or class 'data.frame'}
+\item{dm}{Dissimilarity matrix of either class \code{dist} or class
+\code{data.frame}.}
+}
+\value{
+The dissimilarity matrix as a 3 column data frame with coulmns:
+  \code{c('x1', 'x2', 'dist')}.
 }
 \description{
-This is useful for performing analyses on dissimilarity values
+This is useful for performing analyses on dissimilarity values.
+}
+\examples{
+dm = calc_dm(fruits_veggies$data_loaded)
+dm_cols = convert_dm_to_3_column(dm)
 }
 \concept{
 Dissimilarity calculation and manipulation

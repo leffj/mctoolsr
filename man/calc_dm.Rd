@@ -17,8 +17,11 @@ A variable of class \code{dist}.
 }
 \description{
 The default is to calculate Bray-Curtis dissimilarities after
- performing square-root transformations on the data. Send requests to add
- additional metrics.
+  performing square-root transformations on the data. Send requests to add
+  additional metrics.
+}
+\examples{
+dm = calc_dm(fruits_veggies$data_loaded, method = "bray_sq_trans")
 }
 \concept{
 Dissimilarity calculation and manipulation
