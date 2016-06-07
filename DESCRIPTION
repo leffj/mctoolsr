@@ -3,7 +3,7 @@ Type: Package
 Title: Microbial Community Data Analysis Tools
 Version: 0.0.2.2
 Date: 2016-06-02
-Authors@R: c(person("Jonathan", "Leff", email = "jonathan.leff@colorado.edu",
+Authors@R: c(person("Jonathan W.", "Leff", email = "jonathan.leff@colorado.edu",
                   role = c("aut", "cre")), person("Jeremy", "Diaz", email = "jeremy.diaz@colorado.edu", role = c("ctb")))
 Maintainer: Jonathan Leff <jonathan.leff@colorado.edu>
 URL: https://github.com/leffj/mctoolsr
