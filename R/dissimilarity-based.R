@@ -380,26 +380,31 @@ add_metadata_to_dm_clmns = function(dm_clmns, metadata_map, cat){
 #' MD = calc_mean_dissimilarities(DM, fruits_veggies$map_loaded, "Sample_type")
 calc_mean_dissimilarities = function(dm, metadata_map, summarize_by_factor, 
                                      return_map = FALSE){
-  .sumry_fun = function(x){
-    if(is.numeric(x)){
-      mean(x)
+  .sumry_fun = function(x) {
+    if (is.numeric(x)) {
+      mean(x, na.rm = TRUE)
     } else {
-      if(length(unique(x)) == 1){
+      x = as.factor(x)
+      if (length(unique(x)) == 1) {
         unique(x)
-      } else NA
+      } else
+        NA
     }
   }
   # check that dm labels match metadata sample IDs
-  if(!identical(labels(dm), row.names(metadata_map))) {
+  if (!identical(labels(dm), row.names(metadata_map))) {
     warning('Dissimilarity matrix labels and metadata sample IDs do not match.')
   }
   dm_clmns = convert_dm_to_3_column(dm)
   # list sample 1 and sample 2 factor categories in new clmns
-  dm_clmns_wCat = add_metadata_to_dm_clmns(dm_clmns, metadata_map, summarize_by_factor)
+  dm_clmns_wCat = add_metadata_to_dm_clmns(dm_clmns, metadata_map, 
+                                           summarize_by_factor)
   # only take samples in mapping file
-  dm_clmns_wCat = dm_clmns_wCat[!is.na(dm_clmns_wCat[, 4]) & !is.na(dm_clmns_wCat[, 5]), ]
+  dm_clmns_wCat = dm_clmns_wCat[!is.na(dm_clmns_wCat[, 4]) &
+                                  !is.na(dm_clmns_wCat[, 5]),]
   # remove rows where distances are comparing samples from the same cat
-  dm_clmns_wCat_reduced = dm_clmns_wCat[dm_clmns_wCat[, 4] != dm_clmns_wCat[, 5], ]
+  dm_clmns_wCat_reduced = dm_clmns_wCat[dm_clmns_wCat[, 4] != 
+                                          dm_clmns_wCat[, 5], ]
   # get pairwise comparison while accounting for differences in category order
   tx_combo = .id_treatment_combination(col1 = dm_clmns_wCat_reduced[, 4], 
                                        col2 = dm_clmns_wCat_reduced[, 5])
@@ -422,7 +427,6 @@ calc_mean_dissimilarities = function(dm, metadata_map, summarize_by_factor,
     list(dm_loaded = dm_loaded, map_loaded = map_loaded) 
   } else as.dist(.convert_one_column_to_matrix(means2))
 }
-
 
 #' @title Calculate pairwise PERMANOVA results
 #' @description The \code{\link[vegan]{adonis}} function in the 
