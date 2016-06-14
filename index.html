@@ -35,9 +35,9 @@
 <a id="getting-started-with-mctoolsr" class="anchor" href="#getting-started-with-mctoolsr" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Started with mctoolsr</h1>
 
 <p>Jonathan W. Leff<br>
-2016-06-01  </p>
+2016-06-14  </p>
 
-<p><strong>mctoolsr</strong> (prononounced, M-C-tools-R) is an <strong>R</strong> package developed to facilitate microbial community analyses. The current functions are meant to handle an input taxa (OTU) table in either biom or tab-delimited format and help streamline common (and more specialized) downstream analyses. It is under active development, so please submit bug reports and feature requests as indicated below.</p>
+<p><strong>mctoolsr</strong> (prononounced M-C-tools-R) is an <strong>R</strong> package developed to facilitate microbial community analyses. The current functions are meant to handle an input taxa (OTU) table in either biom or tab-delimited format and help streamline common (and more specialized) downstream analyses. It is under active development, so please submit bug reports and feature requests as indicated below.</p>
 
 <p>This document serves as a brief introduction to using <strong>mctoolsr</strong>. This document will go through getting the package working and a few examples using the most popular functions.</p>
 
@@ -164,12 +164,19 @@
 <span class="pl-smi">tax_sum_phyla</span>[<span class="pl-c1">1</span><span class="pl-k">:</span><span class="pl-c1">5</span>, <span class="pl-c1">1</span><span class="pl-k">:</span><span class="pl-c1">8</span>]</pre></div>
 
 <pre><code>##                    ProA12 ProA13 ProA14 ProA15 ProA16 ProA33 ProA34 ProA35
-## p__                 0.001   0.00  0.000  0.000  0.000  0.000  0.000  0.000
-## p__[Thermi]         0.001   0.00  0.000  0.000  0.000  0.000  0.003  0.000
-## p__Acidobacteria    0.001   0.00  0.000  0.000  0.000  0.000  0.000  0.000
-## p__Actinobacteria   0.382   0.01  0.004  0.023  0.002  0.049  0.070  0.092
-## p__Armatimonadetes  0.000   0.00  0.000  0.001  0.000  0.000  0.000  0.000
+## p__                 0.001  0.000  0.000  0.000  0.000  0.000  0.000  0.000
+## p__[Thermi]         0.000  0.000  0.000  0.000  0.000  0.000  0.003  0.000
+## p__Acidobacteria    0.002  0.000  0.000  0.000  0.000  0.000  0.000  0.000
+## p__Actinobacteria   0.380  0.006  0.002  0.024  0.002  0.051  0.075  0.087
+## p__Armatimonadetes  0.000  0.000  0.000  0.003  0.000  0.000  0.000  0.000
 </code></pre>
+
+<p>You can also quickly show differences in the relative abundances of taxanomic groups using a heatmap as shown below. We can easily see that mushrooms have a much lower relative abundance of Enterobacteriaceae than the other sample types.</p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-v">tax_sum_families</span> <span class="pl-k">=</span> summarize_taxonomy(<span class="pl-smi">input_rar</span>, <span class="pl-v">level</span> <span class="pl-k">=</span> <span class="pl-c1">5</span>, <span class="pl-v">report_higher_tax</span> <span class="pl-k">=</span> <span class="pl-c1">FALSE</span>)
+plot_ts_heatmap(<span class="pl-smi">tax_sum_families</span>, <span class="pl-smi">input_rar</span><span class="pl-k">$</span><span class="pl-smi">map_loaded</span>, <span class="pl-c1">0.01</span>, <span class="pl-s"><span class="pl-pds">'</span>Sample_type<span class="pl-pds">'</span></span>, <span class="pl-v">custom_sample_order</span> <span class="pl-k">=</span> c(<span class="pl-s"><span class="pl-pds">'</span>Lettuce<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>Spinach<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>Strawberries<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>Mushrooms<span class="pl-pds">'</span></span>))</pre></div>
+
+<p><img src="README_files/figure-html/unnamed-chunk-9-1.png" alt=""></p>
 
 <h4>
 <a id="calculating-a-dissimilarity-matrix" class="anchor" href="#calculating-a-dissimilarity-matrix" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Calculating a dissimilarity matrix</h4>
@@ -185,15 +192,15 @@
 
 <div class="highlight highlight-source-r"><pre><span class="pl-v">ord</span> <span class="pl-k">=</span> calc_ordination(<span class="pl-smi">dm</span>, <span class="pl-s"><span class="pl-pds">'</span>nmds<span class="pl-pds">'</span></span>)</pre></div>
 
-<pre><code>## Run 0 stress 0.1129999 
-## Run 1 stress 0.1130003 
-## ... procrustes: rmse 8.348814e-05  max resid 0.0003674289 
+<pre><code>## Run 0 stress 0.1206532 
+## Run 1 stress 0.1206548 
+## ... procrustes: rmse 0.0001599613  max resid 0.0007254419 
 ## *** Solution reached
 </code></pre>
 
 <div class="highlight highlight-source-r"><pre>plot_ordination(<span class="pl-smi">input_rar</span>, <span class="pl-smi">ord</span>, <span class="pl-s"><span class="pl-pds">'</span>Sample_type<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>Farm_type<span class="pl-pds">'</span></span>, <span class="pl-v">hulls</span> <span class="pl-k">=</span> <span class="pl-c1">TRUE</span>)</pre></div>
 
-<p><img src="README_files/figure-html/unnamed-chunk-10-1.png" alt=""> </p>
+<p><img src="README_files/figure-html/unnamed-chunk-11-1.png" alt=""></p>
 
 <h4>
 <a id="filtering-samples" class="anchor" href="#filtering-samples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Filtering samples</h4>
@@ -208,17 +215,26 @@
 <div class="highlight highlight-source-r"><pre><span class="pl-v">dm</span> <span class="pl-k">=</span> calc_dm(<span class="pl-smi">input_rar_filt</span><span class="pl-k">$</span><span class="pl-smi">data_loaded</span>)
 <span class="pl-v">ord</span> <span class="pl-k">=</span> calc_ordination(<span class="pl-smi">dm</span>, <span class="pl-s"><span class="pl-pds">'</span>nmds<span class="pl-pds">'</span></span>)</pre></div>
 
-<pre><code>## Run 0 stress 0.10499 
-## Run 1 stress 0.1239615 
-## Run 2 stress 0.1239609 
-## Run 3 stress 0.1049921 
-## ... procrustes: rmse 0.0005446086  max resid 0.002104219 
+<pre><code>## Run 0 stress 0.1235166 
+## Run 1 stress 0.1212337 
+## ... New best solution
+## ... procrustes: rmse 0.08556598  max resid 0.2920493 
+## Run 2 stress 0.1146686 
+## ... New best solution
+## ... procrustes: rmse 0.08985927  max resid 0.2832726 
+## Run 3 stress 0.1145554 
+## ... New best solution
+## ... procrustes: rmse 0.009807793  max resid 0.0367577 
+## Run 4 stress 0.1217904 
+## Run 5 stress 0.1145536 
+## ... New best solution
+## ... procrustes: rmse 0.0002374229  max resid 0.0008392381 
 ## *** Solution reached
 </code></pre>
 
 <div class="highlight highlight-source-r"><pre>plot_ordination(<span class="pl-smi">input_rar_filt</span>, <span class="pl-smi">ord</span>, <span class="pl-s"><span class="pl-pds">'</span>Sample_type<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>Farm_type<span class="pl-pds">'</span></span>, <span class="pl-v">hulls</span> <span class="pl-k">=</span> <span class="pl-c1">TRUE</span>)</pre></div>
 
-<p><img src="README_files/figure-html/unnamed-chunk-11-1.png" alt=""> </p>
+<p><img src="README_files/figure-html/unnamed-chunk-12-1.png" alt=""></p>
 
 <h4>
 <a id="filtering-taxa" class="anchor" href="#filtering-taxa" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Filtering taxa</h4>
@@ -250,17 +266,19 @@
 <div class="highlight highlight-source-r"><pre>plot_nmds(calc_dm(<span class="pl-smi">input_proteobact_rar</span><span class="pl-k">$</span><span class="pl-smi">data_loaded</span>), <span class="pl-v">metadata_map</span> <span class="pl-k">=</span> <span class="pl-smi">input_proteobact_rar</span><span class="pl-k">$</span><span class="pl-smi">map_loaded</span>, 
           <span class="pl-v">color_cat</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>Sample_type<span class="pl-pds">'</span></span>)</pre></div>
 
-<pre><code>## Run 0 stress 0.1422097 
-## Run 1 stress 0.1353815 
+<pre><code>## Run 0 stress 0.123787 
+## Run 1 stress 0.125684 
+## Run 2 stress 0.1144185 
 ## ... New best solution
-## ... procrustes: rmse 0.1211589  max resid 0.2623186 
-## Run 2 stress 0.1353809 
+## ... procrustes: rmse 0.09762337  max resid 0.2789194 
+## Run 3 stress 0.1252272 
+## Run 4 stress 0.114415 
 ## ... New best solution
-## ... procrustes: rmse 0.0007028095  max resid 0.0034041 
+## ... procrustes: rmse 0.001719574  max resid 0.005385391 
 ## *** Solution reached
 </code></pre>
 
-<p><img src="README_files/figure-html/unnamed-chunk-12-1.png" alt=""> </p>
+<p><img src="README_files/figure-html/unnamed-chunk-13-1.png" alt=""></p>
 
 <h4>
 <a id="taxa-based-exploration" class="anchor" href="#taxa-based-exploration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Taxa based exploration</h4>
@@ -272,21 +290,21 @@ taxa_summary_by_sample_type(<span class="pl-smi">tax_sum_families</span>, <span 
                             <span class="pl-v">type_header</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>Sample_type<span class="pl-pds">'</span></span>, <span class="pl-v">filter_level</span> <span class="pl-k">=</span> <span class="pl-c1">0.05</span>, <span class="pl-v">test_type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>KW<span class="pl-pds">'</span></span>)</pre></div>
 
 <pre><code>##                               pvals     pvalsBon     pvalsFDR Mushrooms
-## f__Pseudomonadaceae    2.095377e-05 0.0001466764 0.0001466764  0.145875
-## f__Sphingobacteriaceae 8.194057e-05 0.0005735840 0.0002867920  0.286750
-## f__[Weeksellaceae]     3.690334e-04 0.0025832336 0.0008610779  0.108875
-## f__Enterobacteriaceae  3.805965e-04 0.0026641754 0.0006660438  0.031875
-## unclassified           2.288113e-03 0.0160167906 0.0032033581  0.072125
-## f__Bacillaceae         1.093122e-02 0.0765185262 0.0127530877  0.002750
-## f__Sphingomonadaceae   3.461292e-02 0.2422904312 0.0346129187  0.008000
+## f__Pseudomonadaceae    2.251673e-05 0.0001576171 0.0001576171  0.141625
+## f__Sphingobacteriaceae 7.934777e-05 0.0005554344 0.0002777172  0.293125
+## f__[Weeksellaceae]     3.012755e-04 0.0021089282 0.0007029761  0.105625
+## f__Enterobacteriaceae  3.120009e-04 0.0021840065 0.0005460016  0.033250
+## unclassified           1.977469e-03 0.0138422830 0.0027684566  0.077125
+## f__Bacillaceae         2.342285e-02 0.1639599761 0.0273266627  0.002250
+## f__Sphingomonadaceae   3.513676e-02 0.2459572979 0.0351367568  0.008000
 ##                             Spinach Strawberries
-## f__Pseudomonadaceae    0.0658571429 0.0014615385
-## f__Sphingobacteriaceae 0.0032857143 0.0009230769
-## f__[Weeksellaceae]     0.0025714286 0.0017692308
-## f__Enterobacteriaceae  0.7307142857 0.6174615385
-## unclassified           0.0281428571 0.0228461538
-## f__Bacillaceae         0.0050000000 0.1619230769
-## f__Sphingomonadaceae   0.0008571429 0.0597692308
+## f__Pseudomonadaceae    0.0678571429 0.0019230769
+## f__Sphingobacteriaceae 0.0032857143 0.0007692308
+## f__[Weeksellaceae]     0.0021428571 0.0016153846
+## f__Enterobacteriaceae  0.7261428571 0.6177692308
+## unclassified           0.0301428571 0.0226923077
+## f__Bacillaceae         0.0042857143 0.1580769231
+## f__Sphingomonadaceae   0.0005714286 0.0611538462
 </code></pre>
 
 <p>This analysis demonstrates that Pseudomonadaceae and Sphingobacteriaceae tend to have higher relative abundances on mushrooms than spinach and strawberries. The p values are based on Kruskal-Wallis tests and two different corrections are reported to deal with the multiple comparisons (Bonferroni and FDR). Rare taxa are filtered out using the <code>filter_level</code> peramter. The values indicated under the sample types are mean relative abundances.    </p>
@@ -302,45 +320,45 @@ taxa_summary_by_sample_type(<span class="pl-smi">tax_sum_families</span>, <span 
 <span class="pl-v">ord</span> <span class="pl-k">=</span> calc_ordination(<span class="pl-smi">dm_aggregated</span><span class="pl-k">$</span><span class="pl-smi">dm</span>, <span class="pl-v">ord_type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>nmds<span class="pl-pds">'</span></span>)</pre></div>
 
 <pre><code>## Run 0 stress 0 
-## Run 1 stress 0 
-## ... procrustes: rmse 0.1601357  max resid 0.2796064 
-## Run 2 stress 7.154952e-05 
-## ... procrustes: rmse 0.2366454  max resid 0.4165301 
+## Run 1 stress 2.739166e-05 
+## ... procrustes: rmse 0.218308  max resid 0.3745 
+## Run 2 stress 0 
+## ... procrustes: rmse 0.2446559  max resid 0.4250695 
 ## Run 3 stress 0 
-## ... procrustes: rmse 0.2188863  max resid 0.3178882 
-## Run 4 stress 0 
-## ... procrustes: rmse 0.2262325  max resid 0.3089372 
+## ... procrustes: rmse 0.1148544  max resid 0.2019954 
+## Run 4 stress 9.070047e-05 
+## ... procrustes: rmse 0.01741263  max resid 0.03149269 
 ## Run 5 stress 0 
-## ... procrustes: rmse 0.1715638  max resid 0.2354397 
-## Run 6 stress 0 
-## ... procrustes: rmse 0.2009553  max resid 0.324707 
+## ... procrustes: rmse 0.0294611  max resid 0.05420394 
+## Run 6 stress 8.900239e-05 
+## ... procrustes: rmse 0.01434851  max resid 0.02136145 
 ## Run 7 stress 0 
-## ... procrustes: rmse 0.1657559  max resid 0.2912538 
-## Run 8 stress 7.95778e-06 
-## ... procrustes: rmse 0.2487959  max resid 0.3339748 
+## ... procrustes: rmse 0.1967323  max resid 0.3594271 
+## Run 8 stress 0 
+## ... procrustes: rmse 0.1852564  max resid 0.3277199 
 ## Run 9 stress 0 
-## ... procrustes: rmse 0.04410468  max resid 0.08375934 
-## Run 10 stress 0.1842127 
+## ... procrustes: rmse 0.2321982  max resid 0.370431 
+## Run 10 stress 0 
+## ... procrustes: rmse 0.2616707  max resid 0.4185312 
 ## Run 11 stress 0 
-## ... procrustes: rmse 0.2451649  max resid 0.3865037 
-## Run 12 stress 9.755031e-05 
-## ... procrustes: rmse 0.1802635  max resid 0.3238837 
-## Run 13 stress 0 
-## ... procrustes: rmse 0.2025429  max resid 0.3405505 
+## ... procrustes: rmse 0.2533339  max resid 0.4033764 
+## Run 12 stress 0 
+## ... procrustes: rmse 0.248833  max resid 0.3975527 
+## Run 13 stress 0.1842128 
 ## Run 14 stress 0 
-## ... procrustes: rmse 0.1394037  max resid 0.1877957 
-## Run 15 stress 0 
-## ... procrustes: rmse 0.2394039  max resid 0.3776172 
-## Run 16 stress 8.916611e-05 
-## ... procrustes: rmse 0.2356938  max resid 0.3258205 
-## Run 17 stress 6.098074e-05 
-## ... procrustes: rmse 0.1925284  max resid 0.3579026 
-## Run 18 stress 9.267811e-05 
-## ... procrustes: rmse 0.2307023  max resid 0.3148279 
-## Run 19 stress 8.431551e-05 
-## ... procrustes: rmse 0.2392535  max resid 0.4202549 
-## Run 20 stress 5.9059e-05 
-## ... procrustes: rmse 0.2345371  max resid 0.3936978
+## ... procrustes: rmse 0.0169415  max resid 0.02214461 
+## Run 15 stress 8.698707e-05 
+## ... procrustes: rmse 0.01545266  max resid 0.02704799 
+## Run 16 stress 8.18449e-05 
+## ... procrustes: rmse 0.246017  max resid 0.3454335 
+## Run 17 stress 8.648759e-05 
+## ... procrustes: rmse 0.1811352  max resid 0.3231973 
+## Run 18 stress 3.307416e-05 
+## ... procrustes: rmse 0.0169743  max resid 0.02833947 
+## Run 19 stress 0 
+## ... procrustes: rmse 0.2408064  max resid 0.3820194 
+## Run 20 stress 0 
+## ... procrustes: rmse 0.2072957  max resid 0.366378
 </code></pre>
 
 <pre><code>## Warning in vegan::metaMDS(dm, k = 2): Stress is (nearly) zero - you may
@@ -349,7 +367,7 @@ taxa_summary_by_sample_type(<span class="pl-smi">tax_sum_families</span>, <span 
 
 <div class="highlight highlight-source-r"><pre>plot_ordination(<span class="pl-smi">dm_aggregated</span>, <span class="pl-smi">ord</span>, <span class="pl-v">color_cat</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>Sample_type<span class="pl-pds">'</span></span>)</pre></div>
 
-<p><img src="README_files/figure-html/unnamed-chunk-14-1.png" alt=""> </p>
+<p><img src="README_files/figure-html/unnamed-chunk-15-1.png" alt=""></p>
 
 <h4>
 <a id="exporting-a-taxa-table" class="anchor" href="#exporting-a-taxa-table" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Exporting a taxa table</h4>
