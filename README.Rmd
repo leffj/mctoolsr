@@ -1,13 +1,13 @@
 ---
 title: "Getting Started with mctoolsr"
 author: "Jonathan W. Leff"
-date: "2016-06-01"
+date: "2016-06-14"
 output: 
   html_document: 
     keep_md: yes
 ---
 
-**mctoolsr** (prononounced, M-C-tools-R) is an **R** package developed to facilitate microbial community analyses. The current functions are meant to handle an input taxa (OTU) table in either biom or tab-delimited format and help streamline common (and more specialized) downstream analyses. It is under active development, so please submit bug reports and feature requests as indicated below.
+**mctoolsr** (prononounced M-C-tools-R) is an **R** package developed to facilitate microbial community analyses. The current functions are meant to handle an input taxa (OTU) table in either biom or tab-delimited format and help streamline common (and more specialized) downstream analyses. It is under active development, so please submit bug reports and feature requests as indicated below.
 
 This document serves as a brief introduction to using **mctoolsr**. This document will go through getting the package working and a few examples using the most popular functions.
 
@@ -108,6 +108,13 @@ It is useful to get a feel for the taxonomic composition of your samples early o
 tax_sum_phyla = summarize_taxonomy(input_rar, level = 2, report_higher_tax = FALSE)
 tax_sum_phyla[1:5, 1:8]
 ```  
+
+You can also quickly show differences in the relative abundances of taxanomic groups using a heatmap as shown below. We can easily see that mushrooms have a much lower relative abundance of Enterobacteriaceae than the other sample types.
+
+```{r, fig.height=4, fig.width=6}
+tax_sum_families = summarize_taxonomy(input_rar, level = 5, report_higher_tax = FALSE)
+plot_ts_heatmap(tax_sum_families, input_rar$map_loaded, 0.01, 'Sample_type', custom_sample_order = c('Lettuce', 'Spinach', 'Strawberries', 'Mushrooms'))
+```
 
 
 #### Calculating a dissimilarity matrix
