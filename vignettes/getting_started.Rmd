@@ -103,6 +103,12 @@ tax_sum_phyla = summarize_taxonomy(input_rar, level = 2, report_higher_tax = FAL
 tax_sum_phyla[1:5, 1:8]
 ```  
 
+You can also quickly show differences in the relative abundances of taxanomic groups using a heatmap as shown below. We can easily see that mushrooms have a much lower relative abundance of Enterobacteriaceae than the other sample types.
+
+```{r, fig.width = 6}
+tax_sum_families = summarize_taxonomy(input_rar, level = 5, report_higher_tax = FALSE)
+plot_ts_heatmap(tax_sum_families, input_rar$map_loaded, 0.01, 'Sample_type', custom_sample_order = c('Lettuce', 'Spinach', 'Strawberries', 'Mushrooms'))
+```
 
 #### Calculating a dissimilarity matrix
 
