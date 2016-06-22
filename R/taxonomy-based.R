@@ -219,7 +219,14 @@ filter_taxa_from_table = function(tax_table, filter_thresh, taxa_to_keep,
     )
     if (length(rows_keep_tmp) == 0)
       stop('Taxa not found.')
-    rows_keep = intersect(rows_keep, rows_keep_tmp)
+    if (class(rows_keep_tmp) == 'list') {
+      for (i in 1:length(rows_keep_tmp)) {
+        if (length(rows_keep_tmp[[i]]) == 0) {
+          warning(paste0(labels(rows_keep_tmp)[i]), " not found.")
+        }
+      }
+    }
+    rows_keep = intersect(rows_keep, unlist(rows_keep_tmp))
   }
   # if particular taxa to remove, identify those rows
   if (!missing(taxa_to_remove)) {
@@ -231,7 +238,14 @@ filter_taxa_from_table = function(tax_table, filter_thresh, taxa_to_keep,
     if (length(rows_remove) == 0) {
       stop('Taxa not found.')
     }
-    rows_keep = rows_keep[!rows_keep %in% rows_remove]
+    if (class(rows_remove) == 'list') {
+      for (i in 1:length(rows_remove)) {
+        if (length(rows_remove[[i]]) == 0) {
+          warning(paste0(labels(rows_remove)[i]), " not found.")
+        }
+      }
+    }
+    rows_keep = rows_keep[!rows_keep %in% unlist(rows_remove)]
   }
   tax_table[rows_keep,]
 }

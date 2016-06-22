@@ -70,6 +70,33 @@ test_that("Filtering taxonomy from taxa summary works as expected.", {
                                          c('Firmicutes', 'Actinobacteria'))
   expect_true(all(c('Firmicutes', 'Actinobacteria') %in% 
                     row.names(no_firm_act) == FALSE))
+  # try keeping multiple taxa with one that doesn't exist
+  filtered = suppressWarnings(filter_taxa_from_table(
+    tax_table = ts,
+    taxa_to_keep = c('Proteobacteria',
+                     'Firmites',
+                     'Actinobacteria')
+  ))
+  expect_equal(
+    row.names(filtered),
+    c(
+      "k__Bacteria; p__Actinobacteria",
+      "k__Bacteria; p__Proteobacteria"
+    )
+  )
+  # try filtering multiple taxa with one that doesn't exist
+  filtered = suppressWarnings(filter_taxa_from_table(
+    tax_table = ts,
+    taxa_to_remove = c('Proteobacteria',
+                     'Firmites',
+                     'Actinobacteria')
+  ))
+  expect_false(all(
+    c(
+      "k__Bacteria; p__Actinobacteria",
+      "k__Bacteria; p__Proteobacteria"
+    ) %in% row.names(filtered)
+  ))
 })
 
 test_that("Taxa changes calculated correctly.", {
