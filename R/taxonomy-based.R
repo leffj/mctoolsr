@@ -184,6 +184,18 @@ plot_taxa_bars = function(tax_table, metadata_map, type_header, num_taxa,
   # plot
 }
 
+#' @keywords internal
+#' @param x rows to keep or remove
+.warn_missing_taxa_in_list = function(x) {
+  if (class(x) == 'list') {
+    for (i in 1:length(x)) {
+      if (length(x[[i]]) == 0) {
+        warning(paste0(labels(x)[i]), " not found.")
+      }
+    }
+  }
+}
+
 #' @title Filter taxa from an individual taxa summary table
 #' @details Can use one or more of the parameters to do filtering. Threshold 
 #'   filtering takes precidence over taxa filtering. If taxa to keep and taxa to
@@ -219,13 +231,7 @@ filter_taxa_from_table = function(tax_table, filter_thresh, taxa_to_keep,
     )
     if (length(rows_keep_tmp) == 0)
       stop('Taxa not found.')
-    if (class(rows_keep_tmp) == 'list') {
-      for (i in 1:length(rows_keep_tmp)) {
-        if (length(rows_keep_tmp[[i]]) == 0) {
-          warning(paste0(labels(rows_keep_tmp)[i]), " not found.")
-        }
-      }
-    }
+    .warn_missing_taxa_in_list(rows_keep_tmp)
     rows_keep = intersect(rows_keep, unlist(rows_keep_tmp))
   }
   # if particular taxa to remove, identify those rows
@@ -238,13 +244,7 @@ filter_taxa_from_table = function(tax_table, filter_thresh, taxa_to_keep,
     if (length(rows_remove) == 0) {
       stop('Taxa not found.')
     }
-    if (class(rows_remove) == 'list') {
-      for (i in 1:length(rows_remove)) {
-        if (length(rows_remove[[i]]) == 0) {
-          warning(paste0(labels(rows_remove)[i]), " not found.")
-        }
-      }
-    }
+    .warn_missing_taxa_in_list(rows_remove)
     rows_keep = rows_keep[!rows_keep %in% unlist(rows_remove)]
   }
   tax_table[rows_keep,]
@@ -302,6 +302,7 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
     if (length(rows_keep_tmp[[1]]) == 0) {
       stop('Taxa not found.')
     }
+    .warn_missing_taxa_in_list(rows_keep_tmp)
     rows_keep = intersect(rows_keep, unlist(rows_keep_tmp))
   }
   # if particular taxa IDs specified to keep, identify those rows.
@@ -325,6 +326,7 @@ filter_taxa_from_input = function(input, filter_thresh, taxa_to_keep,
     if (length(rows_remove[[1]]) == 0) {
       stop('Taxa not found.')
     }
+    .warn_missing_taxa_in_list(rows_remove)
     rows_keep = rows_keep[!rows_keep %in% unlist(rows_remove)]
   }
   # if particular taxa IDs to remove, identify those rows
