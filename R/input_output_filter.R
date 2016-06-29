@@ -20,6 +20,9 @@
 #'   data.
 #' @param keep_vals [OPTIONAL] Alternatively, keep only samples represented by
 #'   these values.
+#' @param taxa_fp [OPTIONAL] If taxonomy is not contained in the taxa table, you
+#'   can supply a tab-delimited file with the taxon ID in the first column and
+#'   the taxonomy in the second column. It assumes no header line in the file.
 #' @return A list variable with (1) the loaded taxa table, (2) the loaded 
 #'   mapping file, and optionally (3) the loaded taxonomy.
 #' @concept Load external data
@@ -28,7 +31,8 @@
 #' load_taxa_table("filepath_to_taxa_table.txt", "filepath_to_mapping_file.txt",
 #'   "sample_type", filter_vals = "blank")
 #' }
-load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals) {
+load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals, 
+                           taxa_fp) {
   # load data
   if (tools::file_ext(tab_fp) == 'biom') {
     data_b = biom::read_biom(tab_fp)
@@ -56,16 +60,19 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals) {
       data$taxonomy = NULL
     } else {
       data_taxonomy = NULL
-      warning(
-        paste0(
-          'No taxonomy loaded. If taxonomy should have been loaded,
-          check that "taxonomy" header exists.'
-        )
-        )
     }
+    if (is.null(data_taxonomy)) {
+      if (!missing(taxa_fp)) {
+        taxadf = read.delim(taxa_fp, header = FALSE)
+        idxs = match(taxadf$V1, row.names(data))
+        data_taxonomy = .parse_taxonomy(taxadf$V2[idxs])
+      } else {
+      warning('No taxonomy loaded. If taxonomy should have been loaded, check ', 
+              'that "taxonomy" header exists.')
+      }
     }
-  else
-    stop('Input file must be either biom (.biom) or tab-delimited (.txt) format.')
+  } else stop('Input file must be either biom (.biom) or tab-delimited (.txt) ', 
+              'format.')
   # import mapping file
   map = tryCatch(
     read.table(
