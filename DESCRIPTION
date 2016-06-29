@@ -1,17 +1,25 @@
 Package: mctoolsr
 Type: Package
 Title: Microbial Community Data Analysis Tools
-Version: 0.1.0.1
-Date: 2016-06-22
+Version: 0.1.0.4
+Date: 2016-06-29
 Authors@R: c(person("Jonathan W.", "Leff", email = "jonathan.leff@colorado.edu",
                   role = c("aut", "cre")), person("Jeremy", "Diaz", email = "jeremy.diaz@colorado.edu", role = c("ctb")))
 Maintainer: Jonathan Leff <jonathan.leff@colorado.edu>
 URL: https://github.com/leffj/mctoolsr
 BugReports: https://github.com/leffj/mctoolsr/issues
-Description: This package is intended to aid molecular microbial community data analysis. Several bioinformatic pipelines (e.g., UPARSE, MOTHUR, QIIME, etc.) take marker gene (e.g., 16S rRNA, fungal ITS, etc) sequences as input and produce taxa tables (i.e. OTU tables). mctoolsr is designed to perform common (and less common) exploratory analyses and build plots with these data. The goal is to simplify repetative tasks in R and to easily integrate with R code that you have already developed or will develop in the future.
-Depends: R (>= 3.1.0)
+Description: This package is intended to aid molecular microbial community
+    data analysis. Several bioinformatic pipelines (e.g., UPARSE, MOTHUR, QIIME,
+    etc.) take marker gene (e.g., 16S rRNA, fungal ITS, etc) sequences as input and
+    produce taxa tables (i.e. OTU tables). mctoolsr is designed to perform common
+    (and less common) exploratory analyses and build plots with these data. The goal
+    is to simplify repetative tasks in R and to easily integrate with R code that
+    you have already developed or will develop in the future.
+Depends:
+    R (>= 3.1.0)
 License: GPL-3
-Imports: dplyr,
+Imports:
+    dplyr,
     ggplot2,
     tools,
     biom,
@@ -20,7 +28,8 @@ Imports: dplyr,
     nlme,
     grid,
     scales
-Suggests: VennDiagram (>= 1.6.15),
+Suggests:
+    VennDiagram (>= 1.6.15),
     ggdendro,
     ape,
     knitr,
@@ -28,3 +37,4 @@ Suggests: VennDiagram (>= 1.6.15),
     devtools
 LazyData: true
 VignetteBuilder: knitr
+RoxygenNote: 5.0.1
