@@ -22,7 +22,8 @@
 #'   these values.
 #' @param taxa_fp [OPTIONAL] If taxonomy is not contained in the taxa table, you
 #'   can supply a tab-delimited file with the taxon ID in the first column and
-#'   the taxonomy in the second column. It assumes no header line in the file.
+#'   the taxonomy in the second column. It assumes no header line in the file. 
+#'   Lines beginning with '#' are ignored.
 #' @return A list variable with (1) the loaded taxa table, (2) the loaded 
 #'   mapping file, and optionally (3) the loaded taxonomy.
 #' @concept Load external data
@@ -63,7 +64,7 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals,
     }
     if (is.null(data_taxonomy)) {
       if (!missing(taxa_fp)) {
-        taxadf = read.delim(taxa_fp, header = FALSE)
+        taxadf = read.delim(taxa_fp, header = FALSE, "#")
         idxs = match(taxadf$V1, row.names(data))
         data_taxonomy = .parse_taxonomy(taxadf$V2[idxs])
         row.names(data_taxonomy) = taxadf$V1[idxs]

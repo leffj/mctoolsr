@@ -23,7 +23,8 @@ these values.}
 
 \item{taxa_fp}{[OPTIONAL] If taxonomy is not contained in the taxa table, you
 can supply a tab-delimited file with the taxon ID in the first column and
-the taxonomy in the second column. It assumes no header line in the file.}
+the taxonomy in the second column. It assumes no header line in the file. 
+Lines beginning with '#' are ignored.}
 }
 \value{
 A list variable with (1) the loaded taxa table, (2) the loaded 

@@ -185,7 +185,7 @@ plot_taxa_bars = function(tax_table, metadata_map, type_header, num_taxa,
 }
 
 #' @keywords internal
-#' @param x rows to keep or remove
+# @param x rows to keep or remove
 .warn_missing_taxa_in_list = function(x) {
   if (class(x) == 'list') {
     for (i in 1:length(x)) {
