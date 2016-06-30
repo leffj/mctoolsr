@@ -64,10 +64,10 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals,
     }
     if (is.null(data_taxonomy)) {
       if (!missing(taxa_fp)) {
-        taxadf = read.delim(taxa_fp, header = FALSE, "#")
-        idxs = match(taxadf$V1, row.names(data))
+        taxadf = read.delim(taxa_fp, header = FALSE, comment.char = "#")
+        idxs = match(row.names(data), taxadf$V1)
         data_taxonomy = .parse_taxonomy(taxadf$V2[idxs])
-        row.names(data_taxonomy) = taxadf$V1[idxs]
+        row.names(data_taxonomy) = row.names(data)
       } else {
       warning('No taxonomy loaded. If taxonomy should have been loaded, check ', 
               'that "taxonomy" header exists.')
