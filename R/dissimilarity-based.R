@@ -380,17 +380,6 @@ add_metadata_to_dm_clmns = function(dm_clmns, metadata_map, cat){
 #' MD = calc_mean_dissimilarities(DM, fruits_veggies$map_loaded, "Sample_type")
 calc_mean_dissimilarities = function(dm, metadata_map, summarize_by_factor, 
                                      return_map = FALSE){
-  .sumry_fun = function(x) {
-    if (is.numeric(x)) {
-      mean(x, na.rm = TRUE)
-    } else {
-      x = as.factor(x)
-      if (length(unique(x)) == 1) {
-        unique(x)
-      } else
-        NA
-    }
-  }
   # check that dm labels match metadata sample IDs
   if (!identical(labels(dm), row.names(metadata_map))) {
     warning('Dissimilarity matrix labels and metadata sample IDs do not match.')
@@ -417,11 +406,7 @@ calc_mean_dissimilarities = function(dm, metadata_map, summarize_by_factor,
                                               split = '__')), 
                       mean_dist = means$mean_dist)
   if(return_map){
-    mean_map = dplyr::summarise_each(dplyr::group_by_(metadata_map, 
-                                                      summarize_by_factor), 
-                                     dplyr::funs(.sumry_fun))
-    mean_map = as.data.frame(as.matrix(mean_map))
-    row.names(mean_map) = mean_map[, summarize_by_factor]
+    mean_map = .summarize_map(metadata_map, summarize_by_factor)
     dm_loaded = as.dist(.convert_one_column_to_matrix(means2))
     map_loaded = mean_map[match(labels(dm_loaded), row.names(mean_map)), ]
     list(dm_loaded = dm_loaded, map_loaded = map_loaded) 
