@@ -56,7 +56,6 @@
     vec[na_idxs] = 'NO_VALUE'
     metadata_map[, summarize_by_factor] = factor(vec)
   }
-  mean_map = NULL
   for (i in seq_along(metadata_map)) {
     name = colnames(metadata_map)[i]
     if (class(unlist(metadata_map[i])) == 'factor') {
@@ -65,15 +64,15 @@
       x = unlist(metadata_map[i])
     }
     result = tapply(x, metadata_map[, summarize_by_factor], .smry_fun)
-    newnames = c(colnames(mean_map), name)
-    mean_map = cbind(mean_map, result)
-    colnames(mean_map) = newnames
+    if(i == 1){
+      mean_map = data.frame(result)
+      colnames(mean_map) = name
+    } else {
+      newnames = c(colnames(mean_map), name)
+      mean_map = cbind(mean_map, result)
+      colnames(mean_map) = newnames
+    }
   }
-  # mean_map = dplyr::summarise_each(dplyr::group_by_(metadata_map,
-  #                                                   summarize_by_factor),
-  #                                  dplyr::funs(.smry_fun))
-  mean_map = as.data.frame(as.matrix(mean_map))
-  # row.names(mean_map) = mean_map[, summarize_by_factor]
   mean_map
 }
 
