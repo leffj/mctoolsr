@@ -33,29 +33,47 @@
 
 #' @keywords internal
 .summarize_map = function(metadata_map, summarize_by_factor) {
-  .smry_fun = function(x){
-    if(is.numeric(x)){
+  .smry_fun = function(x) {
+    if (is.numeric(x)) {
       mean(x)
     } else {
-      if(length(unique(x)) == 1){
+      if (length(unique(x)) == 1) {
         unique(x)
-      } else NA
+      } else
+        NA
     }
   }
   # change row names for NA values in summarize_by_factor with warning
   na_idxs = is.na(metadata_map[, summarize_by_factor])
-  if(sum(na_idxs) > 0) {
-    warning(paste0('NA values present in "summarize_by_factor". NAs will be ', 
-                   'referred to as "NO_VALUE".'))
+  if (sum(na_idxs) > 0) {
+    warning(
+      paste0(
+        'NA values present in "summarize_by_factor". NAs will be ',
+        'referred to as "NO_VALUE".'
+      )
+    )
     vec = as.character(metadata_map[, summarize_by_factor])
     vec[na_idxs] = 'NO_VALUE'
     metadata_map[, summarize_by_factor] = factor(vec)
   }
-  mean_map = dplyr::summarise_each(dplyr::group_by_(metadata_map, 
-                                                    summarize_by_factor), 
-                                   dplyr::funs(.smry_fun))
+  mean_map = NULL
+  for (i in seq_along(metadata_map)) {
+    name = colnames(metadata_map)[i]
+    if (class(unlist(metadata_map[i])) == 'factor') {
+      x = as.character(unlist(metadata_map[i]))
+    } else {
+      x = unlist(metadata_map[i])
+    }
+    result = tapply(x, metadata_map[, summarize_by_factor], .smry_fun)
+    newnames = c(colnames(mean_map), name)
+    mean_map = cbind(mean_map, result)
+    colnames(mean_map) = newnames
+  }
+  # mean_map = dplyr::summarise_each(dplyr::group_by_(metadata_map,
+  #                                                   summarize_by_factor),
+  #                                  dplyr::funs(.smry_fun))
   mean_map = as.data.frame(as.matrix(mean_map))
-  row.names(mean_map) = mean_map[, summarize_by_factor]
+  # row.names(mean_map) = mean_map[, summarize_by_factor]
   mean_map
 }
 
