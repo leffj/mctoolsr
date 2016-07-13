@@ -35,7 +35,7 @@
 .summarize_map = function(metadata_map, summarize_by_factor) {
   .smry_fun = function(x) {
     if (is.numeric(x)) {
-      mean(x)
+      mean(x, na.rm = TRUE)
     } else {
       if (length(unique(x)) == 1) {
         unique(x)
