@@ -172,6 +172,11 @@ plot_taxa_bars = function(tax_table, metadata_map, type_header, num_taxa,
                      "taxon"),
     mean_value = ~ sum(mean_value)
   )
+  # make it so 'Other' appears at bottom of key
+  o = c(unique(to_plot$taxon)[unique(to_plot$taxon) != 'Other'], 'Other')
+  to_plot$taxon = factor(x = to_plot$taxon, levels = o)
+  to_plot = to_plot[order(to_plot$group_by, as.numeric(to_plot$taxon), 
+                          decreasing = T), ]
   if (data_only)
     to_plot
   else {
