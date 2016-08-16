@@ -176,6 +176,8 @@ plot_nmds = function(dm, metadata_map = NULL, color_cat, shape_cat){
 }
 
 #' @title Generate a dendrogram based on a dissimilarity matrix
+#' @description Generating a dendrogram can be useful for visualizing 
+#'   similarities and differences in community compositions among samples.
 #' @param dm Dissimilarity matrix.
 #' @param metadata_map The metadata mapping dataframe. Typically, 
 #'   input$map_loaded.
@@ -293,6 +295,8 @@ convert_dm_to_3_column = function(dm){
 
 #' @title Add metadata to an additional column in column formatted 
 #'   dissimilarities dataframe
+#' @description This is a useful function to quickly add sample data to a 
+#'   data frame containing pairwise dissimilarities.
 #' @param dm_clmns The dissimilarities dataframe produced using 
 #'   \code{\link{convert_dm_to_3_column}}.
 #' @param metadata_map The metadata dataframe.

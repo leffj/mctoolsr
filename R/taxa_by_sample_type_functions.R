@@ -117,7 +117,7 @@
 }
 
 #' @title Further summarize output from summarize_taxonomy by sample type
-#' @details Function to show contributions of specific taxa to variation among 
+#' @description  Function to show contributions of specific taxa to variation among 
 #'   communities using Mann-Whitney (2 factor levels), Kruskal-Wallis (more than
 #'   2) tests, or more complex models.
 #' @param taxa_smry_df Taxa summary data frame.

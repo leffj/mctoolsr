@@ -202,7 +202,7 @@ plot_taxa_bars = function(tax_table, metadata_map, type_header, num_taxa,
 }
 
 #' @title Filter taxa from an individual taxa summary table
-#' @details Can use one or more of the parameters to do filtering. Threshold 
+#' @description Can use one or more of the parameters to do filtering. Threshold 
 #'   filtering takes precidence over taxa filtering. If taxa to keep and taxa to
 #'   remove are both included, taxa to remove will be removed if the parameter
 #'   entries conflict. Note that taxa string matching uses grep, so you can
@@ -256,7 +256,7 @@ filter_taxa_from_table = function(tax_table, filter_thresh, taxa_to_keep,
 }
 
 #' @title Filter taxa from a loaded dataset
-#' @details Can use one or more of the parameters to do filtering. Threshold
+#' @description Can use one or more of the parameters to do filtering. Threshold
 #'          filtering takes precidence over taxa filtering. If taxa to keep and
 #'          taxa to remove are both included, taxa to remove will be
 #'          removed if the parameter entries conflict. Taxa are found using
@@ -515,6 +515,7 @@ calc_taxa_changes = function(ts, metadata_map, block_header,
 }
 
 #' @title Collapse taxonomy dataframe to character vector
+#' @description A quick way to get taxonomy strings for each taxon
 #' @param taxonomy_df The dataframe containing taxonomy as loaded by
 #'   \code{\link{load_taxa_table}}.
 #' @concept Taxonomy-based analyses

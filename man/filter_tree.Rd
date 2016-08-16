@@ -11,6 +11,9 @@ filter_tree(tree, tip_labels)
 
 \item{tip_labels}{The tip labels to retain.}
 }
+\description{
+A quick way to keep certain tips in a tree and remove the others
+}
 \examples{
 \dontrun{
 filter_tree(loaded_tree, taxa_to_keep)

@@ -33,7 +33,7 @@ mean).}
 
 \item{out_fp}{[OPTIONAL] Test results output filepath. Written as a csv file.}
 }
-\details{
+\description{
 Function to show contributions of specific taxa to variation among 
   communities using Mann-Whitney (2 factor levels), Kruskal-Wallis (more than
   2) tests, or more complex models.

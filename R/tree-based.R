@@ -24,6 +24,7 @@ load_tree = function(tree_fp) {
 
 
 #' @title Filter tips in phylogenetic tree
+#' @description A quick way to keep certain tips in a tree and remove the others
 #' @param tree The phylogenetic tree from \code{\link{load_tree}}.
 #' @param tip_labels The tip labels to retain.
 #' @concept Phylogeny

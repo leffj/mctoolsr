@@ -10,6 +10,9 @@ collapse_taxonomy(taxonomy_df)
 \item{taxonomy_df}{The dataframe containing taxonomy as loaded by
 \code{\link{load_taxa_table}}.}
 }
+\description{
+A quick way to get taxonomy strings for each taxon
+}
 \examples{
 collapse_taxonomy(fruits_veggies$taxonomy_loaded)
 }

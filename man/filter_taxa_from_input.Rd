@@ -25,7 +25,7 @@ column(s)).}
 
 \item{taxa_IDs_to_remove}{Remove taxa with these IDs (row names).}
 }
-\details{
+\description{
 Can use one or more of the parameters to do filtering. Threshold
          filtering takes precidence over taxa filtering. If taxa to keep and
          taxa to remove are both included, taxa to remove will be

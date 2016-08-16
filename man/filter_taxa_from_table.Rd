@@ -18,7 +18,7 @@ string.}
 
 \item{taxa_to_remove}{Remove taxa that contain these names. Vector or string.}
 }
-\details{
+\description{
 Can use one or more of the parameters to do filtering. Threshold 
   filtering takes precidence over taxa filtering. If taxa to keep and taxa to
   remove are both included, taxa to remove will be removed if the parameter

@@ -20,6 +20,10 @@ you would like to add to the dissimilarities dataframe.}
 A 5 column data frame with the metadata added. The two additional 
   columns correspond to x1 and x2's metadata values
 }
+\description{
+This is a useful function to quickly add sample data to a 
+  data frame containing pairwise dissimilarities.
+}
 \examples{
 dm = calc_dm(fruits_veggies$data_loaded)
 dm_cols = convert_dm_to_3_column(dm)

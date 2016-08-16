@@ -22,6 +22,10 @@ representing the intended leaf label colors.}
 
 \item{...}{Other parameters passed on to geom_text}
 }
+\description{
+Generating a dendrogram can be useful for visualizing 
+  similarities and differences in community compositions among samples.
+}
 \examples{
 fvrar = single_rarefy(fruits_veggies, 100)
 dm = calc_dm(fvrar$data_loaded)

@@ -21,6 +21,10 @@ If input is a list, returns a list with a taxa table (data_loaded)
   \code{\link{load_taxa_table}}. It will automatically return taxonomy in the
   list if provided in the input.
 }
+\description{
+Use this function with a taxa table or taxa summary table to 
+ return mean values across multiple samples representing a sample type
+}
 \examples{
 calc_taxa_means(fruits_veggies, 'Sample_type')
 }

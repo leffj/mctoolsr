@@ -27,6 +27,8 @@ single_rarefy = function(input, depth) {
 
 
 #' @title Calculate mean taxa values across a specified factor
+#' @description Use this function with a taxa table or taxa summary table to 
+#'  return mean values across multiple samples representing a sample type
 #' @param input The input dataset as loaded by \code{\link{load_taxa_table}} or
 #'  a taxa table of class \code{data.frame}.
 #' @param summarize_by_factor Category in mapping file to summarize by.
