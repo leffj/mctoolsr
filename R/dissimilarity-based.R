@@ -10,7 +10,8 @@
 #'   additional metrics.
 #' @param tax_table The taxa table.
 #' @param method The method to use to calculate the dissimilarity metric. 
-#'   Available methods include: 'bray_sq_trans', 'bray', 'jaccard', '.
+#'   Available methods include: 'bray_sq_trans', 'bray', 'jaccard', 'sorensen'. 
+#'   Sorensen is the presence/absence version of bray.
 #' @return A variable of class \code{dist}.
 #' @concept Dissimilarity calculation and manipulation
 #' @examples
@@ -26,12 +27,14 @@ calc_dm = function(tax_table, method = 'bray_sq_trans'){
     tax_table_xform = t(sqrt(tax_table))
     # create dissimilarity matrix from otu table
     vegan::vegdist(tax_table_xform, method = 'bray')
-  } else if(method == 'bray') {
+  } else if (method == 'bray') {
     vegan::vegdist(t(tax_table), method = 'bray')
-  } else if(method == 'jaccard') {
+  } else if (method == 'jaccard') {
     vegan::vegdist(t(tax_table), method = 'jaccard')
-  } else if(method == 'jaccard') {
+  } else if (method == 'jaccard') {
     vegan::vegdist(t(tax_table), method = 'morisita')
+  } else if (method == 'sorensen') {
+    vegan::vegdist(t(tax_table), binary = TRUE)
   } else {
     stop(paste0('Invalid dissimilarity metric specified. See documentation ', 
                 'for allowable metrics.'))
