@@ -42,13 +42,17 @@ calc_dm = function(tax_table, method = 'bray_sq_trans'){
 }
 
 #' @title Calculate Point Coordinates in an Ordination
-#' @description Use before plotting ordination.
+#' @description Use to generate ordination axis scores to use when plotting
+#'   ordination.
 #' @param dm Dissimilarity matrix.
-#' @param ord_type The type of ordination. 'NMDS' or 'constrained' are the 
-#'   current accepted values.
+#' @param ord_type The type of ordination. 'NMDS', 'PCoA', or 'constrained' are 
+#'   the current accepted values.
 #' @param metadata_map Required if 'constrained' ord_type.
 #' @param constrain_factor Required if 'constrained' ord_type.
 #' @return A data frame consisting of the coordinates.
+#' @details Impliments nonmetric multidimensional scaling, principal coordinates
+#'   analysis, or constrained ordination (via \code{\link{capscale}} in
+#'   \code{\link{vegan}}).
 #' @concept Dissimilarity calculation and manipulation
 #' @examples 
 #' dm = calc_dm(fruits_veggies$data_loaded)
@@ -56,14 +60,22 @@ calc_dm = function(tax_table, method = 'bray_sq_trans'){
 calc_ordination = function(dm, ord_type, metadata_map, constrain_factor){
   dm = as.dist(dm)
   if(ord_type == 'NMDS' | ord_type == 'nmds'){
-    dm_mds = vegan::metaMDS(dm, k=2)
+    dm_mds = vegan::metaMDS(dm, k = 2)
     data.frame(dm_mds$points)
+  }
+  else if(ord_type == 'PCoA' | ord_type == 'pcoa'){
+    pcoa = cmdscale(dm, k = 2, eig = TRUE, add = TRUE)
+    pct_explained = round((pcoa$eig / sum(pcoa$eig)) * 100, 1)
+    pcoa_pts = data.frame(pcoa$points)
+    colnames(pcoa_pts) = c(paste0('PC1 (', pct_explained[1], '%)'),
+                           paste0('PC2 (', pct_explained[2], '%)'))
+    pcoa_pts
   }
   else if(ord_type == 'constrained'){
     cap = vegan::capscale(formula = dm ~ metadata_map[, constrain_factor])
     data.frame(vegan::scores(cap)$sites)
   }
-  else stop('Only NMDS implementd so far.')
+  else stop('Only "NMDS", "PCoA", and "constrained" implementd so far.')
   
 }
 

@@ -9,8 +9,8 @@ calc_ordination(dm, ord_type, metadata_map, constrain_factor)
 \arguments{
 \item{dm}{Dissimilarity matrix.}
 
-\item{ord_type}{The type of ordination. 'NMDS' or 'constrained' are the 
-current accepted values.}
+\item{ord_type}{The type of ordination. 'NMDS', 'PCoA', or 'constrained' are 
+the current accepted values.}
 
 \item{metadata_map}{Required if 'constrained' ord_type.}
 
@@ -20,7 +20,13 @@ current accepted values.}
 A data frame consisting of the coordinates.
 }
 \description{
-Use before plotting ordination.
+Use to generate ordination axis scores to use when plotting
+  ordination.
+}
+\details{
+Impliments nonmetric multidimensional scaling, principal coordinates
+  analysis, or constrained ordination (via \code{\link{capscale}} in
+  \code{\link{vegan}}).
 }
 \examples{
 dm = calc_dm(fruits_veggies$data_loaded)
