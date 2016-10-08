@@ -35,4 +35,7 @@ core_taxa(fruits_veggies, type_header = 'Sample_type')
 # relax the proportion of produce/sample types
 core_taxa(fruits_veggies, type_header = 'Sample_type', prop_types = 0.6)
 }
+\concept{
+Misc analyses
+}
 

@@ -45,4 +45,7 @@ calc_prop_taxa_from_sample_type(
 \seealso{
 \link[mctoolsr]{calc_prop_shared_taxa}
 }
+\concept{
+Misc analyses
+}
 
