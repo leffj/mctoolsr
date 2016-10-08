@@ -35,6 +35,19 @@
 `load_tree()`: Load in a phylogenetic tree
 
 
+## Misc analyses
+
+`calc_prop_shared_taxa()`: Calculate mean proportions of shared taxa between paired samples
+
+`calc_prop_taxa_from_sample_type()`: Calculate the proportion of taxa in a set of samples that are also observed in another sample type
+
+`calc_taxa_changes()`: Calculate the changes in taxonomic relative abundances compared to controls
+
+`core_taxa()`: Determine taxa that are common (core) across sample types
+
+`return_top_taxa()`: Return the most abundant taxa in a dataset
+
+
 ## Phylogeny
 
 `filter_tree()`: Filter tips in phylogenetic tree
@@ -81,8 +94,6 @@
 
 ## Taxonomy-based analyses
 
-`calc_taxa_changes()`: Calculate the changes in taxonomic relative abundances compared to controls
-
 `collapse_taxonomy()`: Collapse taxonomy dataframe to character vector
 
 `filter_taxa_from_input()`: Filter taxa from a loaded dataset
@@ -92,15 +103,4 @@
 `summarize_taxonomy()`: Calculate values for coarser taxonomic groupings
 
 `taxa_summary_by_sample_type()`: Further summarize output from summarize_taxonomy by sample type
-
-
-## Miscellaneous
-
-`calc_prop_shared_taxa()`: Calculate mean proportions of shared taxa between paired samples
-
-`calc_prop_taxa_from_sample_type()`: Calculate the proportion of taxa in a set of samples that are also observed in another sample type
-
-`core_taxa()`: Determine taxa that are common (core) across sample types
-
-`return_top_taxa()`: Return the most abundant taxa in a dataset
 

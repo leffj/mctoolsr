@@ -4,7 +4,7 @@ generate_function_list = function(package) {
   funs = help.search('', fields = c('name', 'concept'),
                      package = package)$matches
   # summarize and group functions without concept into Miscellaneous
-  funs_smry = dcast(funs, Name + Title ~ Field, value.var = 'Entry')
+  funs_smry = reshape2::dcast(funs, Name + Title ~ Field, value.var = 'Entry')
   funs_smry$concept[is.na(funs_smry$concept)] = 'Miscellaneous'
   # filter out datasets
   funs_smry = funs_smry[!funs_smry$concept %in%
@@ -23,6 +23,7 @@ generate_function_list = function(package) {
 
 
 ## write function list markdown file
+devtools::load_all(".")
 
 fundf = generate_function_list('mctoolsr')
 
