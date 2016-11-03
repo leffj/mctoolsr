@@ -10,8 +10,9 @@ calc_dm(tax_table, method = "bray_sq_trans")
 \item{tax_table}{The taxa table.}
 
 \item{method}{The method to use to calculate the dissimilarity metric. 
-Available methods include: 'bray_sq_trans', 'bray', 'jaccard', 'sorensen'. 
-Sorensen is the presence/absence version of bray.}
+Available methods include: 'bray_sq_trans', 'bray', 'jaccard',
+'sorensen'. Jaccard converts data to presence/absence before calculating
+dissimilarity. Sorensen is the presence/absence version of bray.}
 }
 \value{
 A variable of class \code{dist}.
