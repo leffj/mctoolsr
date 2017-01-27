@@ -73,7 +73,11 @@ calc_taxa_means = function(input, summarize_by_factor, metadata_map) {
 #' @examples 
 #' convert_to_relative_abundances(fruits_veggies)
 convert_to_relative_abundances = function(input) {
+  
   if ('map_loaded' %in% names(input)) {
+    if(sum(colSums(input$data_loaded) < 100, na.rm = TRUE) > 0) {
+      warning('Some samples have low sequence counts. NAs may have been produced.')
+    }
     seq_cts = colSums(input$data_loaded)
     rel_abund_table = as.data.frame(t(apply(input$data_loaded, 1,
                                             function(x)
