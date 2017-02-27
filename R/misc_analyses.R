@@ -261,7 +261,7 @@ return_top_taxa = function(input, number_taxa){
 #'   the treatment designations including which samples are controls.
 #' @param control_label The designation within the \code{treatment_header} 
 #'   column that corresponds to the control samples.
-#' @param zero_subsitute [OPTIONAL] A value to substitute in for zeros to avoid
+#' @param zero_substitute [OPTIONAL] A value to substitute in for zeros to avoid
 #'   infinite percent changes. It can be appropriate to use a lower detection
 #'   limit for this value.
 #' @concept Misc analyses

@@ -17,4 +17,3 @@ Taxa table, metadata map, and bacterial taxonomy. Produced using \code{
 mctoolsr::load_taxa_table()}
 }
 \keyword{datasets}
-

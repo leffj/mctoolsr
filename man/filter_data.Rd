@@ -35,4 +35,3 @@ ex_in_filt = filter_data(input = "example_input", filter_cat = "Sample_type",
 \concept{
 Taxa table manipulation
 }
-

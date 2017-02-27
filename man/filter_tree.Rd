@@ -22,4 +22,3 @@ filter_tree(loaded_tree, taxa_to_keep)
 \concept{
 Phylogeny
 }
-

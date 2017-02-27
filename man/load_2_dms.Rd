@@ -40,4 +40,3 @@ load_dm("filepath_to_dissim_matrix1.txt", "filepath_to_dissim_matrix1.txt",
 \concept{
 Load external data
 }
-

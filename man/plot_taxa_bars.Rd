@@ -31,4 +31,3 @@ Stacked bar plots will be generated for each factor level
 \concept{
 Plots
 }
-

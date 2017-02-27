@@ -47,4 +47,3 @@ filter_dm(input_dm = dm_means, filter_cat = 'Sample_type',
 \concept{
 Dissimilarity calculation and manipulation
 }
-

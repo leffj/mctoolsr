@@ -56,4 +56,3 @@ taxa_summary_by_sample_type(
 \concept{
 Taxonomy-based analyses
 }
-

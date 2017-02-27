@@ -19,10 +19,10 @@ Depends:
     R (>= 3.1.0)
 License: GPL-3
 Imports:
+    biomformat,
     dplyr,
     ggplot2,
     tools,
-    biom,
     reshape2,
     vegan,
     nlme,
@@ -37,4 +37,5 @@ Suggests:
     devtools
 LazyData: true
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
+biocViews:

@@ -35,4 +35,3 @@ ord = calc_ordination(dm, "nmds")
 \concept{
 Dissimilarity calculation and manipulation
 }
-

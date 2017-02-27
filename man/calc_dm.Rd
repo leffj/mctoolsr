@@ -28,4 +28,3 @@ dm = calc_dm(fruits_veggies$data_loaded, method = "bray_sq_trans")
 \concept{
 Dissimilarity calculation and manipulation
 }
-

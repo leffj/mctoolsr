@@ -38,4 +38,3 @@ core_taxa(fruits_veggies, type_header = 'Sample_type', prop_types = 0.6)
 \concept{
 Misc analyses
 }
-

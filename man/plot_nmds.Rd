@@ -26,4 +26,3 @@ plot_nmds(dm, metadata_map = fruits_veggies$map_loaded, "Sample_type",
 \concept{
 Plots
 }
-

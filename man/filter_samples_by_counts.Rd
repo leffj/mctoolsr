@@ -29,4 +29,3 @@ filter_samples_by_counts(fruits_veggies, min_seqs = 1100)
 \concept{
 Taxa table manipulation
 }
-

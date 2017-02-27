@@ -22,4 +22,3 @@ load_tree("tree file path")
 \concept{
 Load external data
 }
-

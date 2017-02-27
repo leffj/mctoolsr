@@ -24,7 +24,7 @@ the treatment designations including which samples are controls.}
 \item{control_label}{The designation within the \code{treatment_header} 
 column that corresponds to the control samples.}
 
-\item{zero_subsitute}{[OPTIONAL] A value to substitute in for zeros to avoid
+\item{zero_substitute}{[OPTIONAL] A value to substitute in for zeros to avoid
 infinite percent changes. It can be appropriate to use a lower detection
 limit for this value.}
 }
@@ -43,4 +43,3 @@ calc_taxa_changes(ts_filt, fruits_veggies$map_loaded, 'Sample_type',
 \concept{
 Misc analyses
 }
-

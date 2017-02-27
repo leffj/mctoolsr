@@ -30,4 +30,3 @@ calc_diversity(fruits_veggies$data_loaded, "shannon")
 \concept{
 Diversity
 }
-

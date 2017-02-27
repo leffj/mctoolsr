@@ -48,4 +48,3 @@ calc_prop_taxa_from_sample_type(
 \concept{
 Misc analyses
 }
-

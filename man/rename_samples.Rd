@@ -26,4 +26,3 @@ rename_samples(fruits_veggies, 'alt_id')
 \concept{
 Taxa table manipulation
 }
-

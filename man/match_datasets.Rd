@@ -34,4 +34,3 @@ match_datasets(fruits_veggies, fruits_veggies)
 \concept{
 Taxa table manipulation
 }
-
