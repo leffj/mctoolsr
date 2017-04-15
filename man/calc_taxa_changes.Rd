@@ -43,4 +43,3 @@ calc_taxa_changes(ts_filt, fruits_veggies$map_loaded, 'Sample_type',
 \concept{
 Misc analyses
 }
-

@@ -28,4 +28,3 @@ plot_diversity(fruits_veggies, "Sample_type", "shannon")
 \concept{
 Plots
 }
-

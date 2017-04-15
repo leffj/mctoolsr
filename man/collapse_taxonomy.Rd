@@ -19,4 +19,3 @@ collapse_taxonomy(fruits_veggies$taxonomy_loaded)
 \concept{
 Taxonomy-based analyses
 }
-

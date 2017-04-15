@@ -54,4 +54,3 @@ plot_ts_heatmap(ts, fruits_veggies$map_loaded, 0.03, 'Sample_type')
 \concept{
 Plots
 }
-

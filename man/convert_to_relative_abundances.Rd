@@ -21,4 +21,3 @@ convert_to_relative_abundances(fruits_veggies)
 \concept{
 Taxa table normalization
 }
-

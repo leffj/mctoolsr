@@ -32,4 +32,3 @@ plot_ordination(fvrar, ord, 'Sample_type', 'Farm_type', hulls = TRUE)
 \concept{
 Plots
 }
-

@@ -29,4 +29,3 @@ summarize_taxonomy(fruits_veggies, level = 2)
 \concept{
 Taxonomy-based analyses
 }
-

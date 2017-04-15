@@ -47,4 +47,3 @@ load_taxa_table("filepath_to_taxa_table.txt", "filepath_to_mapping_file.txt",
 \concept{
 Load external data
 }
-

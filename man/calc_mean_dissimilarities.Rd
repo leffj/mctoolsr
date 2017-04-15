@@ -32,4 +32,3 @@ MD = calc_mean_dissimilarities(DM, fruits_veggies$map_loaded, "Sample_type")
 \concept{
 Dissimilarity calculation and manipulation
 }
-

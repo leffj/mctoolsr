@@ -27,4 +27,3 @@ single_rarefy(fruits_veggies, 1000)
 \concept{
 Taxa table normalization
 }
-

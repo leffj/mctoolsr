@@ -38,4 +38,3 @@ load_dm("filepath_to_dissim_matrix.txt", "filepath_to_mapping_file.txt",
 \concept{
 Load external data
 }
-

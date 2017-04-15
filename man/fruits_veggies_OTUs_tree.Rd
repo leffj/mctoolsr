@@ -16,4 +16,3 @@ fruits_veggies_OTUs_tree
 Phylogenetic tree created using pynast and Fasttree
 }
 \keyword{datasets}
-

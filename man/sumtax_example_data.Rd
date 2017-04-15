@@ -17,4 +17,3 @@ Taxa (phyla) relative abundances across all samples in the example dataset.
 Produced using \code{mctoolsr::summarize_taxonomy()}.
 }
 \keyword{datasets}
-

@@ -24,4 +24,3 @@ dm_cols = convert_dm_to_3_column(dm)
 \concept{
 Dissimilarity calculation and manipulation
 }
-

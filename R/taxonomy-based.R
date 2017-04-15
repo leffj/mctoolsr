@@ -8,7 +8,7 @@
 # generates a data frame with all levels of taxanomic info as columns
 .compile_taxonomy = function(biom_dat) {
   # get only taxonomy observation metadata from a biom file
-  obs_md = biom::observation_metadata(biom_dat)
+  obs_md = biomformat::observation_metadata(biom_dat)
   if (class(obs_md) == 'list') {
     # replace label for otus with only 1 taxonomy level
     obs_md = sapply(obs_md, function(x) {

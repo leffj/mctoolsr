@@ -36,8 +36,12 @@ load_taxa_table = function(tab_fp, map_fp, filter_cat, filter_vals, keep_vals,
                            taxa_fp) {
   # load data
   if (tools::file_ext(tab_fp) == 'biom') {
-    data_b = biom::read_biom(tab_fp)
-    data = as.data.frame(as.matrix(biom::biom_data(data_b)))
+    if (!requireNamespace("biomformat", quietly = TRUE)) {
+      stop(paste0("'biomformat' package needs to be installed to load a ", 
+                  "biom table. Install it using bioconductor."), call. = FALSE)
+    }
+    data_b = biomformat::read_biom(tab_fp)
+    data = as.data.frame(as.matrix(biomformat::biom_data(data_b)))
     data_taxonomy = .compile_taxonomy(data_b)
   }
   else if (tools::file_ext(tab_fp) == 'txt') {

@@ -33,4 +33,3 @@ fruits_veggies$map_loaded, "Sample_type")
 \concept{
 Dissimilarity calculation and manipulation
 }
-

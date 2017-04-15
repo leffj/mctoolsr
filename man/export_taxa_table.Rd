@@ -28,4 +28,3 @@ export_taxa_table(fruits_veggies, "exported_taxa_table", "exported_map_file")
 \concept{
 Taxa table manipulation
 }
-
