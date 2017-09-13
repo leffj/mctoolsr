@@ -444,12 +444,14 @@ calc_mean_dissimilarities = function(dm, metadata_map, summarize_by_factor,
 #'   in the same order as the ones in the provided dm.
 #' @param compare_header The header in the metadata mapping dataframe with the 
 #'   factor levels to use for the pairwise comparisons.
+#' @param n_perm a vector that controls the number of permutations required
 #' @return A dataframe with R2 and P values.
 #' @concept Dissimilarity calculation and manipulation
 #' @examples 
 #' dm = calc_dm(fruits_veggies$data_loaded)
 #' calc_pairwise_permanovas(dm, fruits_veggies$map_loaded, "Sample_type")
-calc_pairwise_permanovas = function(dm, metadata_map, compare_header) {
+calc_pairwise_permanovas <- function (dm, metadata_map, compare_header, n_perm) 
+{
   comp_var = metadata_map[, compare_header]
   comp_pairs = combn(levels(comp_var), 2)
   pval = c()
@@ -458,17 +460,15 @@ calc_pairwise_permanovas = function(dm, metadata_map, compare_header) {
     pair = comp_pairs[, i]
     dm_w_map = list(dm_loaded = dm, map_loaded = metadata_map)
     dm_w_map$map_loaded$in_pair = comp_var %in% pair
-    dm_w_map_filt = filter_dm(dm_w_map, filter_cat = 'in_pair',
+    dm_w_map_filt = mctoolsr::filter_dm(dm_w_map, filter_cat = "in_pair", 
                               keep_vals = TRUE)
-    m = vegan::adonis(dm_w_map_filt$dm_loaded ~
-                        dm_w_map_filt$map_loaded[, compare_header])
+    m = vegan::adonis(dm_w_map_filt$dm_loaded ~ dm_w_map_filt$map_loaded[, compare_header], permutations = n_perm)
     pval = c(pval, m$aov.tab$`Pr(>F)`[1])
     R2 = c(R2, m$aov.tab$R2[1])
   }
   results = data.frame(t(comp_pairs), R2, pval)
   results$pvalBon = pval * length(pval)
-  results$pvalFDR = round(
-    pval * (length(pval) / rank(pval, ties.method = "average")), 
-    3)
+  results$pvalFDR = round(pval * (length(pval)/rank(pval, ties.method = "average")), 
+                          3)
   results
 }
