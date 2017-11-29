@@ -17,7 +17,8 @@
 #' @examples 
 #' single_rarefy(fruits_veggies, 1000)
 single_rarefy = function(input, depth) {
-  data_filt_samples = input$data_loaded[, colSums(input$data_loaded) >= depth]
+  data_filt_samples = input$data_loaded[, colSums(input$data_loaded) >= depth, 
+                                        drop = FALSE]
   data_rar = as.data.frame(t(vegan::rrarefy(t(data_filt_samples), depth)))
   matched_data = .match_data_components(data_rar, input$map_loaded, 
                                         input$taxonomy_loaded)
