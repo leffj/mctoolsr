@@ -18,6 +18,4 @@ Convert taxa table or taxon table in data input to relative
 \examples{
 convert_to_relative_abundances(fruits_veggies)
 }
-\concept{
-Taxa table normalization
-}
+\concept{Taxa table normalization}

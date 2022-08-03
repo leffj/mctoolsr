@@ -5,8 +5,13 @@
 \title{Calculate the proportion of taxa in a set of samples that are
  also observed in another sample type}
 \usage{
-calc_prop_taxa_from_sample_type(input, type_header, primary_type, source_type,
-  within_cat)
+calc_prop_taxa_from_sample_type(
+  input,
+  type_header,
+  primary_type,
+  source_type,
+  within_cat
+)
 }
 \arguments{
 \item{input}{The input dataset as loaded by \code{\link{load_taxa_table}}.}
@@ -45,6 +50,4 @@ calc_prop_taxa_from_sample_type(
 \seealso{
 \link[mctoolsr]{calc_prop_shared_taxa}
 }
-\concept{
-Misc analyses
-}
+\concept{Misc analyses}

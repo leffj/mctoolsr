@@ -14,8 +14,7 @@ dm_fp = system.file('extdata', 'fruits_veggies_dm.txt', package = 'mctoolsr')
 
 test_that("Example taxa table (biom) loads correctly.", {
   # Doesn't throw error
-  expect_that(load_taxa_table(tab_fp = tab_fp_biom, map_fp = map_fp), 
-              not(throws_error()))
+  expect_error(load_taxa_table(tab_fp = tab_fp_biom, map_fp = map_fp), NA)
   # Load taxa table
   tmp = load_taxa_table(tab_fp = tab_fp_biom, map_fp = map_fp)
   # First column header in mapping file is correct
@@ -39,8 +38,7 @@ test_that("Example taxa table (biom) loads correctly.", {
 
 test_that("Example taxa table (txt) loads correctly.", {
   # Doesn't throw error
-  expect_that(load_taxa_table(tab_fp = tab_fp_txt, map_fp = map_fp),
-              not(throws_error()))
+  expect_error(load_taxa_table(tab_fp = tab_fp_txt, map_fp = map_fp), NA)
   # Load taxa table
   tmp = load_taxa_table(tab_fp = tab_fp_txt, map_fp = map_fp)
   # First column header in mapping file is correct
@@ -59,7 +57,7 @@ test_that("Example taxa table (txt) loads correctly.", {
 })
 
 test_that("Dissimilarity matrix loads without error.", {
-  expect_that(load_dm(dm_fp = dm_fp, map_fp = map_fp), not(throws_error()))
+  expect_error(load_dm(dm_fp = dm_fp, map_fp = map_fp), NA)
 })
 
 test_that("Matched datasets have the same order of samples.", {
@@ -86,8 +84,7 @@ test_that("Taxa table can be exported and reloaded.", {
   outfp = paste0(basedir, '/exported_taxa_table.txt')
   mapoutfp = paste0(basedir, '/exported_map_file.txt')
   export_taxa_table(fruits_veggies, outfp, mapoutfp)
-  expect_that(load_taxa_table(tab_fp = outfp, map_fp = mapoutfp),
-              not(throws_error()))
+  expect_error(load_taxa_table(tab_fp = outfp, map_fp = mapoutfp), NA)
   unlink(outfp)
   unlink(mapoutfp)
 })
@@ -102,8 +99,7 @@ test_that("Taxa table can be exported and reloaded when sample IDs start with
               sapply(names(fruits_veggies$data_loaded), function(x)
                 paste0('18', x))
             export_taxa_table(fruits_veggies, outfp, mapoutfp)
-            expect_that(load_taxa_table(tab_fp = outfp, map_fp = mapoutfp),
-                        not(throws_error()))
+            expect_error(load_taxa_table(tab_fp = outfp, map_fp = mapoutfp), NA)
             unlink(outfp)
             unlink(mapoutfp)
           })

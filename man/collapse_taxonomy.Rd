@@ -16,6 +16,4 @@ A quick way to get taxonomy strings for each taxon
 \examples{
 collapse_taxonomy(fruits_veggies$taxonomy_loaded)
 }
-\concept{
-Taxonomy-based analyses
-}
+\concept{Taxonomy-based analyses}

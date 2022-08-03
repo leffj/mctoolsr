@@ -4,8 +4,13 @@
 \alias{plot_taxa_bars}
 \title{Plot stacked bar plots to represent taxa compompositions}
 \usage{
-plot_taxa_bars(tax_table, metadata_map, type_header, num_taxa,
-  data_only = FALSE)
+plot_taxa_bars(
+  tax_table,
+  metadata_map,
+  type_header,
+  num_taxa,
+  data_only = FALSE
+)
 }
 \arguments{
 \item{tax_table}{A taxa table dataframe. The output of
@@ -28,6 +33,4 @@ Stacked bar plots will be generated for each factor level
   Only the top few taxa will be displayed as indicated by \code{num_taxa}.
   Mean values are calculated within the factor levels.
 }
-\concept{
-Plots
-}
+\concept{Plots}

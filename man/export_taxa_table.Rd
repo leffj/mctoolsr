@@ -25,6 +25,4 @@ A convenient way to export a loaded taxa table as a text file.
 export_taxa_table(fruits_veggies, "exported_taxa_table", "exported_map_file")
 }
 }
-\concept{
-Taxa table manipulation
-}
+\concept{Taxa table manipulation}

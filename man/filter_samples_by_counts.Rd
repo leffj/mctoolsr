@@ -26,6 +26,4 @@ sort(colSums(fruits_veggies$data_loaded))
 # remove samples with less than 1100 sequences
 filter_samples_by_counts(fruits_veggies, min_seqs = 1100)
 }
-\concept{
-Taxa table manipulation
-}
+\concept{Taxa table manipulation}

@@ -15,6 +15,4 @@ return_top_taxa(input, number_taxa)
 Return the n most abundant taxa as calculated by the mean 
 sequence counts across all samples.
 }
-\concept{
-Misc analyses
-}
+\concept{Misc analyses}

@@ -32,6 +32,4 @@ Impliments nonmetric multidimensional scaling, principal coordinates
 dm = calc_dm(fruits_veggies$data_loaded)
 ord = calc_ordination(dm, "nmds")
 }
-\concept{
-Dissimilarity calculation and manipulation
-}
+\concept{Dissimilarity calculation and manipulation}

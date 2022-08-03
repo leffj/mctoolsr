@@ -4,7 +4,9 @@
 \name{fruits_veggies_OTUs_tree}
 \alias{fruits_veggies_OTUs_tree}
 \title{Fruits and Vegetables Bacterial Phylotype Tree}
-\format{phylo}
+\format{
+phylo
+}
 \source{
 Adapted from \url{
  http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0059310}

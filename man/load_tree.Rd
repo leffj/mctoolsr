@@ -19,6 +19,4 @@ A wrapper for \code{\link[ape]{read.tree}} in
 load_tree("tree file path")
 }
 }
-\concept{
-Load external data
-}
+\concept{Load external data}

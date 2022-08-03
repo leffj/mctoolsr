@@ -4,7 +4,7 @@
 \alias{calc_pairwise_permanovas}
 \title{Calculate pairwise PERMANOVA results}
 \usage{
-calc_pairwise_permanovas(dm, metadata_map, compare_header)
+calc_pairwise_permanovas(dm, metadata_map, compare_header, n_perm)
 }
 \arguments{
 \item{dm}{Dissimilarity matrix of class \code{dist}.}
@@ -14,6 +14,8 @@ in the same order as the ones in the provided dm.}
 
 \item{compare_header}{The header in the metadata mapping dataframe with the 
 factor levels to use for the pairwise comparisons.}
+
+\item{n_perm}{A vector that controls the number of permutations required.}
 }
 \value{
 A dataframe with R2 and P values.
@@ -31,6 +33,4 @@ The \code{\link[vegan]{adonis}} function in the
 dm = calc_dm(fruits_veggies$data_loaded)
 calc_pairwise_permanovas(dm, fruits_veggies$map_loaded, "Sample_type")
 }
-\concept{
-Dissimilarity calculation and manipulation
-}
+\concept{Dissimilarity calculation and manipulation}

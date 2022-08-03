@@ -27,6 +27,4 @@ Richness is the number of unique species per sample. Simpson's
 \examples{
 calc_diversity(fruits_veggies$data_loaded, "shannon")
 }
-\concept{
-Diversity
-}
+\concept{Diversity}

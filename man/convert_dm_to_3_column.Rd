@@ -21,6 +21,4 @@ This is useful for performing analyses on dissimilarity values.
 dm = calc_dm(fruits_veggies$data_loaded)
 dm_cols = convert_dm_to_3_column(dm) 
 }
-\concept{
-Dissimilarity calculation and manipulation
-}
+\concept{Dissimilarity calculation and manipulation}

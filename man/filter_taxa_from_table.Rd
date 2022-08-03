@@ -26,6 +26,4 @@ Can use one or more of the parameters to do filtering. Threshold
   provide partial taxa strings. However, if there are multiple matches, all
   matching taxa will be removed.
 }
-\concept{
-Taxonomy-based analyses
-}
+\concept{Taxonomy-based analyses}

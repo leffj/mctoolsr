@@ -25,6 +25,4 @@ Richness is the number of unique species per sample. Simpson's
 \examples{
 plot_diversity(fruits_veggies, "Sample_type", "shannon")
 }
-\concept{
-Plots
-}
+\concept{Plots}

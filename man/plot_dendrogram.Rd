@@ -34,6 +34,4 @@ plot_dendrogram(
   color_by = 'Farm_type'
 )
 }
-\concept{
-Plots
-}
+\concept{Plots}

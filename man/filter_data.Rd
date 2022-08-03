@@ -32,6 +32,4 @@ ex_in_filt = filter_data(input = "example_input", filter_cat = "Sample_type",
                          filter_vals = c("mushrooms", "strawberries"))
 }
 }
-\concept{
-Taxa table manipulation
-}
+\concept{Taxa table manipulation}
