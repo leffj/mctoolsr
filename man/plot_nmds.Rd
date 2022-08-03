@@ -23,6 +23,4 @@ dm = calc_dm(fruits_veggies$data_loaded)
 plot_nmds(dm, metadata_map = fruits_veggies$map_loaded, "Sample_type",
           "Farm_type")
 }
-\concept{
-Plots
-}
+\concept{Plots}

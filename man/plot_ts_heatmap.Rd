@@ -4,10 +4,19 @@
 \alias{plot_ts_heatmap}
 \title{Plot taxa summary heatmap}
 \usage{
-plot_ts_heatmap(tax_table, metadata_map, min_rel_abund, type_header,
-  scale_by = "all", custom_sample_order, rev_taxa = FALSE,
-  custom_taxa_order, other_label, remove_other = FALSE, colors = c("blue",
-  "white", "red"))
+plot_ts_heatmap(
+  tax_table,
+  metadata_map,
+  min_rel_abund,
+  type_header,
+  scale_by = "all",
+  custom_sample_order,
+  rev_taxa = FALSE,
+  custom_taxa_order,
+  other_label,
+  remove_other = FALSE,
+  colors = c("blue", "white", "red")
+)
 }
 \arguments{
 \item{tax_table}{A taxa table dataframe. The output of 
@@ -51,6 +60,4 @@ A quick way to create a heatmap from a taxa summary dataframe.
 ts = summarize_taxonomy(fruits_veggies, 2)
 plot_ts_heatmap(ts, fruits_veggies$map_loaded, 0.03, 'Sample_type')
 }
-\concept{
-Plots
-}
+\concept{Plots}

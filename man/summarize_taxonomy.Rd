@@ -26,6 +26,4 @@ Given input as generated from \code{\link{load_taxa_table}},
 # Return relative abundances of phyla for each sample
 summarize_taxonomy(fruits_veggies, level = 2)
 }
-\concept{
-Taxonomy-based analyses
-}
+\concept{Taxonomy-based analyses}

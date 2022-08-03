@@ -74,7 +74,7 @@
   }
   # if not all taxonomic levels present for each OTU, this is necessary to
   # convert to data frame
-  if (class(tmp) == 'list') {
+  if (class(tmp)[1] == 'list') {
     n_obs = sapply(tmp, length)
     seq_max = seq_len(max(n_obs))
     tmp = (sapply(tmp, "[", i = seq_max))
@@ -192,7 +192,7 @@ plot_taxa_bars = function(tax_table, metadata_map, type_header, num_taxa,
 #' @keywords internal
 # @param x rows to keep or remove
 .warn_missing_taxa_in_list = function(x) {
-  if (class(x) == 'list') {
+  if (class(x)[1] == 'list') {
     for (i in 1:length(x)) {
       if (length(x[[i]]) == 0) {
         warning(paste0(labels(x)[i]), " not found.")

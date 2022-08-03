@@ -23,6 +23,4 @@ fruits_veggies$map_loaded$alt_id =
 paste0('alt', 1:nrow(fruits_veggies$map_loaded))
 rename_samples(fruits_veggies, 'alt_id')
 }
-\concept{
-Taxa table manipulation
-}
+\concept{Taxa table manipulation}

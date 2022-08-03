@@ -18,6 +18,4 @@ write it to file.}
 \description{
 PLEASE USE \code{export_taxa_table()} INSTEAD.
 }
-\concept{
-dont include
-}
+\concept{dont include}

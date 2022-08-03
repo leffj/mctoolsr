@@ -4,8 +4,14 @@
 \alias{plot_ordination}
 \title{Generate an Ordination Plot}
 \usage{
-plot_ordination(input, ordination_axes, color_cat, shape_cat, hulls = FALSE,
-  ...)
+plot_ordination(
+  input,
+  ordination_axes,
+  color_cat,
+  shape_cat,
+  hulls = FALSE,
+  ...
+)
 }
 \arguments{
 \item{input}{The input dataset as loaded by \code{load_taxa_table()}.}
@@ -29,6 +35,4 @@ fvrar = single_rarefy(fruits_veggies, 100)
 ord = calc_ordination(calc_dm(fvrar$data_loaded), 'nmds')
 plot_ordination(fvrar, ord, 'Sample_type', 'Farm_type', hulls = TRUE)
 }
-\concept{
-Plots
-}
+\concept{Plots}

@@ -4,9 +4,17 @@
 \alias{taxa_summary_by_sample_type}
 \title{Further summarize output from summarize_taxonomy by sample type}
 \usage{
-taxa_summary_by_sample_type(taxa_smry_df, metadata_map, type_header,
-  filter_level, test_type, grouping_factor, custom_test_function,
-  smry_fun = mean, out_fp)
+taxa_summary_by_sample_type(
+  taxa_smry_df,
+  metadata_map,
+  type_header,
+  filter_level,
+  test_type,
+  grouping_factor,
+  custom_test_function,
+  smry_fun = mean,
+  out_fp
+)
 }
 \arguments{
 \item{taxa_smry_df}{Taxa summary data frame.}
@@ -53,6 +61,4 @@ taxa_summary_by_sample_type(
   test_type = '2WNP', grouping_factor = 'Sample_type'
 )
 }
-\concept{
-Taxonomy-based analyses
-}
+\concept{Taxonomy-based analyses}

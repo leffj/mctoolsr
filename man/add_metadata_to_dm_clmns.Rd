@@ -30,6 +30,4 @@ dm_cols = convert_dm_to_3_column(dm)
 dm_cols_with_metadata = add_metadata_to_dm_clmns(dm_cols, 
 fruits_veggies$map_loaded, "Sample_type")  
 }
-\concept{
-Dissimilarity calculation and manipulation
-}
+\concept{Dissimilarity calculation and manipulation}

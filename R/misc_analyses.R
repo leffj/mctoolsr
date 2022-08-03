@@ -26,7 +26,7 @@
 #' # relax the proportion of produce/sample types
 #' core_taxa(fruits_veggies, type_header = 'Sample_type', prop_types = 0.6)
 core_taxa = function(input, type_header, prop_types = 1, prop_reps = 0.5) {
-  # indicate taxa that are present within ≥ <prop_reps> of replicates
+  # indicate taxa that are present within greater than or equal to <prop_reps> of replicates
   df = as.data.frame(t(input$data_loaded))
   df$type = input$map_loaded[, type_header]
   df_m = reshape2::melt(df, id.vars = 'type', variable.name = 'OTU_ID')
@@ -115,8 +115,8 @@ calc_prop_shared_taxa = function(input, type_header, sample_types, within_cat) {
         pairs$S1_type %in% sample_types & pairs$S2_type %in% sample_types
       pairs = pairs[conds,]
       # check if missing sample type(s)
-      mis_sts = sample_types[!sample_types %in% c(levels(pairs$S1_type),
-                                                  levels(pairs$S2_type))]
+      mis_sts = sample_types[!sample_types %in% c(unique(pairs$S1_type),
+                                                  unique(pairs$S2_type))]
       if (length(mis_sts) > 0) {
         stop(paste("Missing sample type: ", mis_sts, " "))
       }
@@ -200,7 +200,7 @@ calc_prop_taxa_from_sample_type = function(input, type_header, primary_type,
       pairs$S1_type %in% types & pairs$S2_type %in% types
     pairs = pairs[conds,]
     # check if missing sample type(s)
-    mis_sts = types[!types %in% c(levels(pairs$S1_type), levels(pairs$S2_type))]
+    mis_sts = types[!types %in% c(unique(pairs$S1_type), unique(pairs$S2_type))]
     if (length(mis_sts) > 0)
       stop(paste("Missing sample type: ", mis_sts, " "))
     # function to calc proportion shared for each pair

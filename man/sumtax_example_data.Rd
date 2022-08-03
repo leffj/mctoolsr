@@ -4,7 +4,9 @@
 \name{sumtax_example_data}
 \alias{sumtax_example_data}
 \title{Taxa Summary from Produce Dataset}
-\format{A data frame}
+\format{
+A data frame
+}
 \source{
 Adapted from \url{
  http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0059310}

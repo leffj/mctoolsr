@@ -4,8 +4,12 @@
 \alias{calc_mean_dissimilarities}
 \title{Calculate mean dissimilarities using a metadata factor}
 \usage{
-calc_mean_dissimilarities(dm, metadata_map, summarize_by_factor,
-  return_map = FALSE)
+calc_mean_dissimilarities(
+  dm,
+  metadata_map,
+  summarize_by_factor,
+  return_map = FALSE
+)
 }
 \arguments{
 \item{dm}{Dissimilarity matrix - typically created using
@@ -29,6 +33,4 @@ Calculate mean dissimilarities across all levels of a given
 DM = calc_dm(fruits_veggies$data_loaded)
 MD = calc_mean_dissimilarities(DM, fruits_veggies$map_loaded, "Sample_type")
 }
-\concept{
-Dissimilarity calculation and manipulation
-}
+\concept{Dissimilarity calculation and manipulation}

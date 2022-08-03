@@ -44,6 +44,4 @@ dm_means = calc_mean_dissimilarities(dm = dm,
 filter_dm(input_dm = dm_means, filter_cat = 'Sample_type',
           keep_vals = c('Lettuce', 'Spinach'))
 }
-\concept{
-Dissimilarity calculation and manipulation
-}
+\concept{Dissimilarity calculation and manipulation}

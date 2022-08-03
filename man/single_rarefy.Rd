@@ -24,6 +24,4 @@ Rarefying means to randomly select a specified number of
 \examples{
 single_rarefy(fruits_veggies, 1000)
 }
-\concept{
-Taxa table normalization
-}
+\concept{Taxa table normalization}

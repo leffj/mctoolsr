@@ -44,6 +44,4 @@ load_taxa_table("filepath_to_taxa_table.txt", "filepath_to_mapping_file.txt",
   "sample_type", filter_vals = "blank")
 }
 }
-\concept{
-Load external data
-}
+\concept{Load external data}

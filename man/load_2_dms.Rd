@@ -37,6 +37,4 @@ load_dm("filepath_to_dissim_matrix1.txt", "filepath_to_dissim_matrix1.txt",
   "filepath_to_mapping_file.txt", "sample_type", filter_vals = "blank")
 }
 }
-\concept{
-Load external data
-}
+\concept{Load external data}

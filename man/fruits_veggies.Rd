@@ -4,7 +4,9 @@
 \name{fruits_veggies}
 \alias{fruits_veggies}
 \title{Fruits and Vegetables Bacterial Community Data}
-\format{A list with 3 elements.}
+\format{
+A list with 3 elements.
+}
 \source{
 Adapted from \url{
  http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0059310}

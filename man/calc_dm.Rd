@@ -25,6 +25,4 @@ The default is to calculate Bray-Curtis dissimilarities after
 \examples{
 dm = calc_dm(fruits_veggies$data_loaded, method = "bray_sq_trans")
 }
-\concept{
-Dissimilarity calculation and manipulation
-}
+\concept{Dissimilarity calculation and manipulation}

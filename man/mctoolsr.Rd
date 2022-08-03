@@ -3,7 +3,6 @@
 \docType{package}
 \name{mctoolsr}
 \alias{mctoolsr}
-\alias{mctoolsr-package}
 \title{Microbial Community Data Analysis Tools}
 \description{
 The mctoolsr package provides various functions for facilitating data 
@@ -33,6 +32,4 @@ Need to add more documentation here
 Need to add more documentation here
 }
 
-\concept{
-dont include
-}
+\concept{dont include}

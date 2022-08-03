@@ -28,6 +28,4 @@ Use this function with a taxa table or taxa summary table to
 \examples{
 calc_taxa_means(fruits_veggies, 'Sample_type')
 }
-\concept{
-Taxa table manipulation
-}
+\concept{Taxa table manipulation}

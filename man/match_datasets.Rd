@@ -31,6 +31,4 @@ Function to match up sample order and optionally,  taxa order
 # data for the same samples and wanted to compare the two.
 match_datasets(fruits_veggies, fruits_veggies)
 }
-\concept{
-Taxa table manipulation
-}
+\concept{Taxa table manipulation}

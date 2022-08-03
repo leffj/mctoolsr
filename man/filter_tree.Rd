@@ -19,6 +19,4 @@ A quick way to keep certain tips in a tree and remove the others
 filter_tree(loaded_tree, taxa_to_keep)
 }
 }
-\concept{
-Phylogeny
-}
+\concept{Phylogeny}
