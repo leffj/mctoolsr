@@ -432,10 +432,10 @@ calc_mean_dissimilarities = function(dm, metadata_map, summarize_by_factor,
 }
 
 #' @title Calculate pairwise PERMANOVA results
-#' @description The \code{\link[vegan]{adonis}} function in the 
+#' @description The \code{\link[vegan]{adonis2}} function in the 
 #'   \code{\link[vegan]{vegan}} package does not provide a way to calculate 
 #'   pairwise post-hoc comparisons between factor levels. This function 
-#'   calculates PERMANOVA results using the \code{\link[vegan]{adonis}}
+#'   calculates PERMANOVA results using the \code{\link[vegan]{adonis2}}
 #'   function for all factor level pairs. Raw p values are returned, but it is
 #'   recommended to use the provided FDR corrected p values since the multiple
 #'   comparisons can raise your likelihood of false positive differences.
@@ -463,14 +463,14 @@ calc_pairwise_permanovas = function (dm, metadata_map, compare_header, n_perm)
     dm_w_map_filt = mctoolsr::filter_dm(dm_w_map, filter_cat = "in_pair",
                                         keep_vals = TRUE)
     if (!missing(n_perm)) {
-      m = vegan::adonis(dm_w_map_filt$dm_loaded ~ dm_w_map_filt$map_loaded[, compare_header],
+      m = vegan::adonis2(dm_w_map_filt$dm_loaded ~ dm_w_map_filt$map_loaded[, compare_header],
                         permutations = n_perm)
     } else {
-      m = vegan::adonis(dm_w_map_filt$dm_loaded ~ dm_w_map_filt$map_loaded[, compare_header])
+      m = vegan::adonis2(dm_w_map_filt$dm_loaded ~ dm_w_map_filt$map_loaded[, compare_header])
     }
     
-    pval = c(pval, m$aov.tab$`Pr(>F)`[1])
-    R2 = c(R2, m$aov.tab$R2[1])
+    pval[i] <- m["Model", "Pr(>F)"]
+    R2[i] <- m["Model", "R2"]
   }
   results = data.frame(t(comp_pairs), R2, pval)
   results$pvalBon = pval * length(pval)
